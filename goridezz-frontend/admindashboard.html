@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goridezz – Admin Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <!-- PREMIUM HEADER -->
+  <header class="header-premium">
+    <div class="logo">🚀 Goridezz Admin</div>
+
+    <!-- Desktop Logout Button -->
+    <button class="logout-btn desktop-only" onclick="logout()">Logout</button>
+
+    <!-- Mobile Menu Icon -->
+    <div class="menu-dots mobile-only" onclick="toggleMenu()">
+      ⋮
+    </div>
+
+    <!-- Mobile Dropdown -->
+    <div id="mobileMenu" class="mobile-menu">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+
+  <div class="main">
+
+    <!-- PREMIUM TITLE -->
+    <h1 class="dash-title">Admin Dashboard</h1>
+    <p class="dash-sub">Manage Cars, Users & Bookings with a clean premium interface.</p>
+
+    <div class="menu-grid premium-grid">
+
+      <a href="addcar.html" class="menu-card premium-card">
+        <div class="menu-icon">🚗</div>
+        <h3>Add Car</h3>
+        <p>Add new cars to your platform.</p>
+      </a>
+
+      <a href="allcars.html" class="menu-card premium-card">
+        <div class="menu-icon">🚘</div>
+        <h3>All Cars</h3>
+        <p>View & delete all listed cars.</p>
+      </a>
+
+      <a href="allbookings.html" class="menu-card premium-card">
+        <div class="menu-icon">📑</div>
+        <h3>All Bookings</h3>
+        <p>Track all customer bookings.</p>
+      </a>
+
+      
+
+      <a href="updateqr.html" class="menu-card premium-card">
+        <div class="menu-icon">🧾</div>
+        <h3>Update QR</h3>
+        <p>Change payment QR code.</p>
+      </a>
+
+      <a href="adminsettings.html" class="menu-card premium-card">
+        <div class="menu-icon">⚙️</div>
+        <h3>Admin Settings</h3>
+        <p>Change username & password</p>
+      </a>
+
+      <a href="offers.html" class="menu-card premium-card">
+        <div class="menu-icon">🎟️</div>
+        <h3>Offers</h3>
+        <p>Create & manage coupons</p>
+      </a>
+
+
+    </div>
+
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>

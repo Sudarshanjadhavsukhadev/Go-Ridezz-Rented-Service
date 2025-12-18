@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goridezz – Rent Your Dream Car</title>
+
+<!-- FAST FONT LOAD -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ================= GLOBAL ================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #0d0d0d, #1c1c1c);
+  color: white;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ================= HEADER ================= */
+header {
+  padding: 18px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(15, 15, 15, 0.9);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.25);
+  text-align: center;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 130px 20px 110px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.45);
+  z-index: -1;
+}
+
+.hero h1 {
+  font-size: 48px;
+  color: #ffd700;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  max-width: 650px;
+  margin: auto;
+  font-size: 18px;
+  color: #e0e0e0;
+}
+
+.btn-main {
+  display: inline-block;
+  margin-top: 26px;
+  padding: 14px 30px;
+  background: linear-gradient(45deg, #ffd700, #ffb300);
+  color: #111;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.btn-main:hover {
+  transform: scale(1.05);
+}
+
+/* ================= WHY ================= */
+.why {
+  padding: 70px 20px;
+  text-align: center;
+  contain: layout paint;
+}
+
+.why h2 {
+  font-size: 34px;
+  color: #ffd700;
+  margin-bottom: 40px;
+}
+
+.why-grid {
+  max-width: 1000px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.why-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 18px;
+  padding: 24px;
+  min-height: 130px;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  animation: fadeIn 0.35s ease forwards;
+}
+
+.why-card h3 {
+  color: #ffd700;
+  margin-bottom: 10px;
+}
+
+.why-card p {
+  color: #ccc;
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ================= STEPS ================= */
+.steps {
+  padding: 70px 20px;
+  text-align: center;
+  background: rgba(255, 215, 0, 0.04);
+}
+
+.steps h2 {
+  color: #ffd700;
+  margin-bottom: 40px;
+}
+
+.step-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.step {
+  width: 190px;
+}
+
+.step span {
+  display: inline-block;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ffd700, #ffb300);
+  color: #111;
+  font-weight: 700;
+  line-height: 55px;
+  margin-bottom: 12px;
+}
+
+.step p {
+  color: #ddd;
+}
+
+/* ================= MODES ================= */
+.modes {
+  padding: 70px 20px;
+  text-align: center;
+}
+
+.modes h2 {
+  color: #ffd700;
+  margin-bottom: 35px;
+}
+
+.mode-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.mode-card {
+  width: 260px;
+  padding: 26px;
+  background: #111;
+  border-radius: 18px;
+  border: 1px solid rgba(255,215,0,0.35);
+}
+
+.mode-card h3 {
+  color: #ffd700;
+}
+
+.mode-card p {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* ================= TRUST ================= */
+.trust {
+  padding: 35px 20px;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  font-weight: 600;
+  color: #ffd700;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  padding: 35px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #aaa;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .hero {
+    padding: 110px 20px 90px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .why-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .why-card {
+    backdrop-filter: none;
+    background: #111;
+    transform: translateZ(0);
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Go Ridezz</div>
+</header>
+
+<section class="hero">
+  <img
+    src="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1400&q=70"
+    class="hero-bg"
+    alt="Premium Car"
+    loading="lazy"
+  >
+
+  <h1>Rent Your Dream Car</h1>
+  <p>Premium cars, flexible rental plans & subscriptions — drive your way.</p>
+  <a href="cars.html" class="btn-main">Browse Cars</a>
+</section>
+
+<section class="why">
+  <h2>Why Choose Goridezz?</h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <h3>🚗 Premium Cars</h3>
+      <p>Luxury, comfort and performance in every ride.</p>
+    </div>
+    <div class="why-card">
+      <h3>💰 Transparent Pricing</h3>
+      <p>No hidden charges. Pay exactly what you see.</p>
+    </div>
+    <div class="why-card">
+      <h3>🛡 Verified Bookings</h3>
+      <p>Aadhaar & license verification for safety.</p>
+    </div>
+    <div class="why-card">
+      <h3>⚡ Instant Booking</h3>
+      <p>Quick checkout & immediate confirmation.</p>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <h2>How It Works</h2>
+  <div class="step-grid">
+    <div class="step"><span>1</span><p>Select a car</p></div>
+    <div class="step"><span>2</span><p>Choose rent or subscribe</p></div>
+    <div class="step"><span>3</span><p>Pay & drive away</p></div>
+  </div>
+</section>
+
+<section class="modes">
+  <h2>Rent or Subscribe</h2>
+  <div class="mode-grid">
+    <div class="mode-card">
+      <h3>🚘 Rent</h3>
+      <p>Perfect for trips & short journeys.</p>
+    </div>
+    <div class="mode-card">
+      <h3>📆 Subscribe</h3>
+      <p>Best for long-term usage.</p>
+    </div>
+  </div>
+</section>
+
+<section class="trust">
+  <div>5000+ Customers</div>
+  <div>50+ Cars</div>
+  <div>24×7 Support</div>
+</section>
+
+<div class="footer">
+  © 2025 Goridezz. All Rights Reserved.
+</div>
+
+</body>
+</html>

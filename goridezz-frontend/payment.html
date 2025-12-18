@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Go Ridezz – Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1b1b1b 0%, #020202 55%, #000 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .payment-card {
+      width: 92%;
+      max-width: 380px;
+      padding: 30px 22px;
+      background: rgba(255, 215, 0, 0.06);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 22px;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.35);
+      text-align: center;
+    }
+
+    h2 {
+      background: linear-gradient(90deg, #ffd700, #ffb300);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .amount {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #ffd700;
+      font-weight: 500;
+    }
+
+    .qr-box {
+      background: white;
+      padding: 12px;
+      border-radius: 16px;
+      width: fit-content;
+      margin: 15px auto;
+    }
+
+    .qr-box img {
+      width: 200px;
+      height: 200px;
+      display: block;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #ccc;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      background: rgba(0, 0, 0, 0.6);
+      color: #ffd700;
+      font-size: 15px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(45deg, #ffd700, #ffb300);
+      color: #222;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="payment-card">
+    <h2>Scan & Pay</h2>
+
+    <div class="amount">
+      Advance Amount: ₹500
+    </div>
+
+    <div class="qr-box">
+      <img src="http://localhost:5000/api/qr/qr" alt="UPI QR">
+    </div>
+
+    <div class="note">
+      After payment, enter your<br>
+      <b>UPI Transaction ID</b>
+    </div>
+
+    <input type="text" id="txnId" placeholder="Enter Transaction ID">
+
+    <button onclick="confirmBooking()">Confirm Booking</button>
+  </div>
+
+  <script>
+    async function confirmBooking() {
+
+      const txnId = document.getElementById("txnId").value.trim();
+      if (txnId.length < 6) {
+        alert("Please enter a valid Transaction ID");
+        return;
+      }
+
+      const booking = JSON.parse(localStorage.getItem("bookingData"));
+      const totalAmount = localStorage.getItem("bookingTotalAmount");
+      const token = localStorage.getItem("token");
+
+      if (!booking || !token) {
+        alert("Session expired. Please book again.");
+        window.location.href = "booking.html";
+        return;
+      }
+
+      const form = new FormData();
+
+      Object.keys(booking).forEach(key => {
+        form.append(key, booking[key]);
+      });
+
+      form.append("carId", localStorage.getItem("selectedCar"));
+      form.append("txnId", txnId);
+      form.append("totalAmount", totalAmount);
+      form.append("advancePaid", 500);
+
+      const response = await fetch("http://localhost:5000/api/bookings", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: form
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("🎉 Booking Confirmed Successfully!");
+        localStorage.removeItem("bookingData");
+        localStorage.removeItem("bookingTotalAmount");
+        window.location.href = "mybookings.html";
+      } else {
+        alert("❌ Booking Failed: " + result.message);
+      }
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Users – Goridezz Admin</title>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<header class="header-premium">
+
+  <div class="logo">🏎️ Add Car</div>
+
+  <!-- Desktop Buttons -->
+  <div class="desktop-only">
+    <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+    <a href="adminlogin.html" onclick="logout()" class="logout-btn">Logout</a>
+  </div>
+
+  <!-- Mobile Menu (3 dots) -->
+  <div class="menu-dots mobile-only" onclick="toggleMenu()">⋮</div>
+
+  <!-- Mobile Popup Menu -->
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="admindashboard.html" class="back-btn" style="display:block;margin-bottom:8px;">⬅ Back</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+</header>
+
+<h1 class="dash-title" style="margin-top:25px;">All Users</h1>
+<p class="dash-sub">List of all registered customers</p>
+
+<div class="excel-table-wrapper" style="width:95%; margin:auto;">
+  <table class="excel-table">
+
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Registered On</th>
+      </tr>
+    </thead>
+    <tbody id="usersList"></tbody>
+  </table>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

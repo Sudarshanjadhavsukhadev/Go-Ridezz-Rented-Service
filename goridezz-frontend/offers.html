@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Festival Offers – Goridezz</title>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <!-- HEADER (MATCHES ADMIN SETTINGS) -->
+  <header class="header-premium">
+    <div class="logo">🎉 Festival Offers</div>
+
+    <div class="desktop-only">
+      <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+      <a href="adminlogin.html" onclick="logout()" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="menu-dots mobile-only" onclick="toggleMenu()">⋮</div>
+
+    <div id="mobileMenu" class="mobile-menu">
+      <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- TITLE -->
+  <h1 class="dash-title" style="margin-top:25px;">Festival Offer Management</h1>
+  <p class="dash-sub">Create, manage and remove festival-based rental offers</p>
+
+  <!-- MAIN SECTION -->
+  <div class="section" style="
+  width:90%;
+  margin:auto;
+  padding:25px;
+  background:#111;
+  border-radius:12px;
+  border:1px solid rgba(255,215,0,0.25);
+  box-shadow:0 0 20px rgba(255,215,0,0.25);
+">
+
+    <h2 style="color:#ffcc00;">Create New Festival Offer</h2>
+
+    <input type="text" id="title" placeholder="Offer Title (e.g. Diwali Bonanza)" style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+    <input type="text" id="desc" placeholder="Description (Rent 3 days & get 10% off)" style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+    <select id="type" style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+      <option value="PERCENT">Percentage Discount (%)</option>
+      <option value="FLAT">Flat Discount (₹)</option>
+    </select>
+
+    <input type="number" id="value" placeholder="Discount Value (10 or 500)" style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+    <input type="number" id="minDays" placeholder="Minimum Days (e.g. 3)" style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+    <!-- EXPIRY DATE -->
+    <label style="color:#ffcc00;margin-top:15px;display:block;">
+      Expiry Date
+    </label>
+    <input type="date" id="expiryDate" style="width:100%;padding:12px;margin-top:6px;background:#222;color:white;
+  border:1px solid #444;border-radius:8px;">
+
+    <!-- EXPIRY TIME -->
+    <label style="color:#ffcc00;margin-top:15px;display:block;">
+      Expiry Time
+    </label>
+    <input type="time" id="expiryTime" style="width:100%;padding:12px;margin-top:6px;background:#222;color:white;
+  border:1px solid #444;border-radius:8px;">
+
+
+    <button class="btn" onclick="createOffer()">Create Festival Offer</button>
+
+    <!-- MESSAGE BOX -->
+    <div id="msgBox" style="
+    display:none;
+    width:90%;
+    margin:15px auto;
+    padding:12px;
+    text-align:center;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:600;
+  "></div>
+  </div>
+
+  <!-- ACTIVE OFFERS -->
+  <div class="section" style="
+  width:90%;
+  margin:30px auto;
+  padding:25px;
+  background:#0e0e0e;
+  border-radius:12px;
+  border:1px solid rgba(255,215,0,0.25);
+">
+
+    <h2 style="color:#ffcc00;">Active Festival Offers</h2>
+
+    <div id="offerList" style="margin-top:15px;"></div>
+  </div>
+
+  <script src="admin.js"></script>
+
+  <script>
+    const API = "http://localhost:5000/api/offers";
+
+    async function createOffer() {
+  const expiryDate = document.getElementById("expiryDate").value;
+  const expiryTime = document.getElementById("expiryTime").value || "23:59";
+
+  if (!expiryDate) {
+    showMessage("⚠️ Please select expiry date", false);
+    return;
+  }
+
+  const expiryDateTime = `${expiryDate}T${expiryTime}`;
+
+  const payload = {
+    title: title.value.trim(),
+    description: desc.value.trim(),
+    discountType: type.value,
+    discountValue: Number(value.value),
+    minDays: Number(minDays.value),
+    expiry: expiryDateTime,
+    active: true
+  };
+
+  try {
+    const res = await fetch("http://localhost:5000/api/offers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      showMessage("❌ Failed: " + data.message, false);
+      return;
+    }
+
+    // ✅ SUCCESS MESSAGE
+    showMessage(
+      "🎉 Festival offer created successfully! Redirecting to dashboard...",
+      true
+    );
+
+    // OPTIONAL: reload offers list
+    loadOffers();
+
+    // 🔁 REDIRECT AFTER 2.5s
+    setTimeout(() => {
+      window.location.href = "admindashboard.html";
+    }, 2500);
+
+  } catch (err) {
+    showMessage("⚠️ Network error. Please try again.", false);
+  }
+}
+
+
+    async function loadOffers() {
+      const res = await fetch(API);
+      const data = await res.json();
+
+      offerList.innerHTML = data.offers.map(o => `
+    <div style="
+      padding:15px;
+      margin-bottom:12px;
+      background:#1a1a1a;
+      border:1px solid rgba(255,215,0,0.3);
+      border-radius:10px;
+    ">
+      <b style="color:#ffd700">${o.title}</b>
+      <p style="color:#ccc">${o.description}</p>
+      <p style="color:#aaa">Min Days: ${o.minDays}</p>
+      <p style="color:#aaa">
+        Discount: ${o.discountValue}${o.discountType === "PERCENT" ? "%" : "₹"}
+      </p>
+      <button class="btn" style="margin-top:10px;background:#ff4444"
+        onclick="deleteOffer('${o._id}')">
+        Delete
+      </button>
+    </div>
+  `).join("");
+    }
+
+    async function deleteOffer(id) {
+      await fetch(`${API}/${id}`, { method: "DELETE" });
+      showMessage("Offer deleted", true);
+      loadOffers();
+    }
+
+    function showMessage(msg, success) {
+      const box = document.getElementById("msgBox");
+      box.textContent = msg;
+      box.style.display = "block";
+      box.style.color = success ? "#00ff6a" : "#ff4444";
+      box.style.border = `1px solid ${success ? "#00ff6a" : "#ff4444"}`;
+      box.style.boxShadow = `0 0 10px ${success ? "#00ff6a70" : "#ff444470"}`;
+
+      setTimeout(() => box.style.display = "none", 3000);
+    }
+
+    loadOffers();
+
+
+    function toggleMenu() {
+      const menu = document.getElementById("mobileMenu");
+      if (menu) {
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+      }
+    }
+
+
+  </script>
+
+</body>
+
+</html>

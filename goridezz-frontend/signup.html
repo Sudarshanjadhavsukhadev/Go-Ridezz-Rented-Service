@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Goridezz – Signup</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+      background: #000;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* MAIN WRAPPER */
+    body {
+      min-height: 100vh;
+      padding: 80px 0;
+      /* centers card vertically while keeping scroll */
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      position: relative;
+      background: radial-gradient(circle at top, #1b1b1b 0%, #020202 55%, #000 100%);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+
+
+    /* GOLD BACKGROUND SHAPES (same as login) */
+    .shape-left {
+      position: absolute;
+      top: -20px;
+      left: -90px;
+      width: 330px;
+      height: 150%;
+      transform: rotate(-15deg);
+      background: linear-gradient(160deg, rgba(255, 215, 0, 0.15), rgba(0, 0, 0, 0.95));
+      border-right: 3px solid rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 60px rgba(255, 215, 0, 0.10);
+      opacity: 0.6;
+    }
+
+    .shape-right {
+      position: absolute;
+      top: -20px;
+      right: -90px;
+      width: 330px;
+      height: 150%;
+      transform: rotate(15deg);
+      background: linear-gradient(200deg, rgba(255, 165, 0, 0.18), rgba(0, 0, 0, 0.95));
+      border-left: 3px solid rgba(255, 185, 0, 0.5);
+      box-shadow: 0 0 60px rgba(255, 185, 0, 0.35);
+      opacity: 0.6;
+    }
+
+    /* GOLD GLOWS */
+    body::before,
+    body::after {
+      content: "";
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: blur(90px);
+      pointer-events: none;
+    }
+
+    body::before {
+      top: -150px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 70%);
+    }
+
+    body::after {
+      bottom: -150px;
+      background: radial-gradient(circle, rgba(255, 165, 0, 0.22), transparent 70%);
+    }
+
+    /* CARD (Premium Gold Glass) */
+    .card {
+      width: 92%;
+      max-width: 390px;
+      padding: 42px 35px;
+
+      background: rgba(255, 215, 0, 0.06);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      border-radius: 18px;
+      border: 1.5px solid rgba(255, 215, 0, 0.35);
+
+      box-shadow:
+        0 0 10px rgba(255, 215, 0, 0.15),
+        0 0 15px rgba(255, 165, 0, 0.12),
+        inset 0 0 8px rgba(255, 215, 0, 0.10);
+
+      animation: fadeIn .8s ease-out;
+      z-index: 10;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* TITLE */
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 22px;
+      background: linear-gradient(90deg, #ffd700, #ffb300);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 18px rgba(255, 215, 0, 0);
+    }
+
+    /* INPUT GROUP */
+    .input-group {
+      width: 100%;
+      margin: 18px 0;
+      position: relative;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      transition: .3s;
+    }
+
+    .input-group input:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.55);
+      outline: none;
+    }
+
+    .input-group label {
+      position: absolute;
+      left: 15px;
+      top: 17px;
+      font-size: 14px;
+      color: #ccc;
+      transition: .25s;
+      pointer-events: none;
+    }
+
+    .input-group input:focus+label,
+    .input-group input:not(:placeholder-shown)+label {
+      top: -9px;
+      left: 12px;
+      font-size: 12px;
+      background: #000;
+      padding: 0 6px;
+      color: #ffd700;
+      border-radius: 4px;
+    }
+
+    /* BUTTON */
+    .btn {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #ffd700, #ffb300);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #000;
+      transition: .3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.55);
+    }
+
+    /* PASSWORD RULES */
+    #password-rules {
+      text-align: left;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #ff6b6b;
+      line-height: 18px;
+    }
+
+    .valid {
+      color: #00ff99 !important;
+    }
+
+    /* LINK */
+    .bottom-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .bottom-text a {
+      color: #ffd700;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Background Shapes -->
+  <div class="shape-left"></div>
+  <div class="shape-right"></div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <div class="title">Create Account</div>
+
+    <div class="input-group">
+      <input type="text" id="name" placeholder=" ">
+      <label>Full Name</label>
+    </div>
+
+    <div class="input-group">
+      <input type="email" id="email" placeholder=" ">
+      <label>Email Address</label>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="phone" placeholder=" ">
+      <label>Phone Number</label>
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="password" placeholder=" ">
+      <label>Password</label>
+    </div>
+
+    <!-- PASSWORD RULE BOX -->
+    <div id="password-rules">
+      <p id="rule-capital">✘ First letter must be CAPITAL</p>
+      <p id="rule-length">✘ Length must be 6–10 characters</p>
+      <p id="rule-special">✘ Must include at least 1 special symbol (! @ # $ % ^ & *)</p>
+    </div>
+
+    <div class="input-group">
+      <input type="password" id="confirmPassword" placeholder=" ">
+      <label>Confirm Password</label>
+    </div>
+
+
+    <button class="btn" onclick="registerUser()">Signup</button>
+
+    <p class="bottom-text">
+      Already have an account? <a href="login.html">Login</a>
+    </p>
+
+  </div>
+
+
+  <!-- JS -->
+  <script>
+  const API = "http://localhost:5000/api/auth/register";
+
+  function validatePassword(password) {
+    const regex = /^[A-Z](?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{5,9}$/;
+    return regex.test(password);
+  }
+
+  async function registerUser() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+    if (!name || !email || !phone || !password || !confirmPassword) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      alert(
+        "❌ Invalid Password\n\nPassword Rules:\n• First letter must be CAPITAL\n• Length must be 6–10 characters\n• Must include 1 special character"
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("❌ Password and Confirm Password do not match");
+      return;
+    }
+
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, phone, password })
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      alert(data.message || "Registration failed");
+      return;
+    }
+
+    alert("✅ Account created successfully!");
+    window.location.href = "login.html";
+  }
+</script>
+
+</body>
+
+</html>

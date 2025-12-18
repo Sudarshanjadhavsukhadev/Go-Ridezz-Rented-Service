@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Goridezz – User Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --vh: 100%;
+}
+
+/* REAL MOBILE HEIGHT FIX */
+html, body {
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* MAIN WRAPPER */
+.body-center {
+  height: calc(var(--vh) * 100);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(circle at top, #1b1b1b 0%, #020202 55%, #000 100%);
+  font-family: "Poppins", sans-serif;
+}
+
+/* GOLD SPORTY BACKGROUND SHAPES */
+.bg-stripe {
+  position: absolute;
+  top: -20px;
+  left: -90px;
+  width: 320px;
+  height: 140%;
+  transform: rotate(-14deg);
+  background: linear-gradient(160deg, rgba(255,215,0,0.15), rgba(0,0,0,0.95));
+  border-right: 3px solid rgba(255,215,0,0.5);
+  box-shadow: 0 0 55px rgba(255,215,0,0.35);
+  opacity: 0.6;
+}
+
+.bg-stripe-2 {
+  position: absolute;
+  top: -20px;
+  right: -90px;
+  width: 320px;
+  height: 140%;
+  transform: rotate(14deg);
+  background: linear-gradient(200deg, rgba(255,165,0,0.18), rgba(0,0,0,0.95));
+  border-left: 3px solid rgba(255,185,0,0.5);
+  box-shadow: 0 0 55px rgba(255,185,0,0.35);
+  opacity: 0.6;
+}
+
+/* EXTRA GOLD GLOWS */
+.body-center::before,
+.body-center::after {
+  content: "";
+  position: absolute;
+  width: 460px;
+  height: 460px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.body-center::before {
+  top: -170px;
+  background: radial-gradient(circle, rgba(255,215,0,0.10), transparent 90%);
+}
+
+.body-center::after {
+  bottom: -170px;
+  background: radial-gradient(circle, rgba(255,165,0,0.10), transparent 90%);
+}
+
+/* LOGIN CARD */
+.card {
+  width: 360px;
+  padding: 40px 45px;
+
+  /* 🔥 Transparent gold glass effect */
+  background: rgba(255, 215, 0, 0.07); /* light golden tint */
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border-radius: 16px;
+  border: 1.5px solid rgba(255, 215, 0, 0.35);
+
+  /* 🔥 Strong luxury glow */
+  box-shadow:
+    0 0 10px rgba(255, 215, 0, 0.15),
+    0 0 15px rgba(255, 185, 0, 0.12),
+    inset 0 0 8px rgba(255, 215, 0, 0.10);
+
+  position: relative;
+  z-index: 10;
+  animation: fadeIn 0.8s ease-out;
+}
+
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* LOGO / TITLE */
+.logo {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(90deg, #ffd700, #ffb300);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 25px;
+  text-shadow: 0 0 18px rgba(255, 215, 0, 0.10);
+}
+
+/* INPUT BOX */
+.input-box {
+  width: 100%;
+  margin: 15px 0;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  background: #050505;
+  color: white;
+  font-size: 15px;
+  transition: 0.3s;
+}
+
+.input-box input::placeholder {
+  color: #888;
+}
+
+.input-box input:focus {
+  border-color: #ffd700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.55);
+  outline: none;
+}
+
+/* LOGIN BUTTON */
+.btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 18px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(45deg,#ffd700,#ffb300);
+  color: #111;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .3s;
+  letter-spacing: 0.3px;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.65);
+}
+
+/* EXTRA LINKS */
+.bottom-text, .forgot {
+  text-align: center;
+  margin-top: 15px;
+  color: #ddd;
+  font-size: 14px;
+}
+
+.bottom-text a, .forgot a {
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.bottom-text a:hover, .forgot a:hover {
+  text-decoration: underline;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .card {
+    width: 88%;
+    padding: 30px 25px;
+  }
+  .logo { font-size: 28px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="body-center">
+
+  <!-- Background layers -->
+  <div class="bg-stripe"></div>
+  <div class="bg-stripe-2"></div>
+
+  <!-- Login Card -->
+  <div class="card">
+    <div class="logo">Go Ridezz</div>
+
+    <div class="input-box">
+      <input type="text" id="email" placeholder="Email">
+    </div>
+
+    <div class="input-box">
+      <input type="password" id="password" placeholder="Password">
+    </div>
+
+    <div class="forgot">
+      <a href="forgot-password.html">Forgot Password?</a>
+    </div>
+
+    <button class="btn" onclick="loginUser()">Login</button>
+
+    <p class="bottom-text">
+      New user? <a href="signup.html">Create an account</a>
+    </p>
+  </div>
+
+</div>
+
+<script>
+/* REAL MOBILE HEIGHT FIXER */
+function fixVH() {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+fixVH();
+window.addEventListener('resize', fixVH);
+
+/* LOGIN FUNCTION */
+async function loginUser() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if (!email || !password) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  if (email === "admin" && password === "Admin@123456") {
+    alert("Admin Login Successful!");
+    localStorage.setItem("adminToken", "ADMIN-LOCAL");
+    window.location.href = "admindashboard.html";
+    return;
+  }
+
+  const res = await fetch("http://localhost:5000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  });
+
+  const data = await res.json();
+
+  if (!data.success) {
+    alert(data.message || "Login failed");
+    return;
+  }
+
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("username", data.user.name);
+  localStorage.setItem("userId", data.user.id);
+
+  window.location.href = "cars.html";
+}
+</script>
+
+</body>
+</html>

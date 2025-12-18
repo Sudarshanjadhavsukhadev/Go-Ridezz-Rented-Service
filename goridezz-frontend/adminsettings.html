@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Settings – Goridezz</title>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<header class="header-premium">
+  <div class="logo">🏎️ Admin Settings</div>
+
+  <div class="desktop-only">
+    <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+    <a href="adminlogin.html" onclick="logout()" class="logout-btn">Logout</a>
+  </div>
+
+  <div class="menu-dots mobile-only" onclick="toggleMenu()">⋮</div>
+
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<h1 class="dash-title" style="margin-top:25px;">Admin Account Settings</h1>
+<p class="dash-sub">Update your username or password</p>
+
+<div class="section" style="
+  width:90%;margin:auto;padding:25px;
+  background:#111;border-radius:12px;
+  border:1px solid rgba(255,215,0,0.25);
+  box-shadow:0 0 20px rgba(255,0,0,0.25);
+">
+
+  <h2 style="color:#ffcc00;">Update Admin Details</h2>
+
+  <!-- New Username -->
+  <input type="email" id="newEmail" placeholder="New Email"
+    style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+  <!-- Old Password -->
+  <input type="password" id="oldPassword" placeholder="Current Password"
+    style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+  <!-- New Password -->
+  <input type="password" id="newPassword" placeholder="New Password"
+    style="width:100%;padding:12px;margin-top:10px;background:#222;color:white;
+    border:1px solid #444;border-radius:8px;">
+
+  <!-- ONE BUTTON ONLY -->
+ <button class="btn" onclick="updateAdminDetails()">Update Admin Details</button>
+
+
+  <div id="msgBox" style="
+  display:none;
+  width:90%;
+  margin:15px auto;
+  padding:12px;
+  background:#0f0a;
+  color:#00ff6a;
+  text-align:center;
+  border:1px solid #00ff6a;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:600;
+  box-shadow:0 0 10px #00ff6a70;
+"></div>
+</div>
+
+
+
+
+<script src="admin.js"></script>
+
+<script>
+
+async function updateAdminDetails() {
+  const newEmail = document.getElementById("newEmail").value.trim();
+  const oldPassword = document.getElementById("oldPassword").value.trim();
+  const newPassword = document.getElementById("newPassword").value.trim();
+  const token = localStorage.getItem("adminToken");
+
+  let updateSuccess = false;
+
+  // UPDATE EMAIL
+  if (newEmail) {
+    const res = await fetch("http://localhost:5000/api/admin/update-email", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({ newEmail })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      updateSuccess = true;
+    } else {
+      showMessage(data.message, false);
+      return;
+    }
+  }
+
+  // UPDATE PASSWORD
+  if (oldPassword && newPassword) {
+    const res = await fetch("http://localhost:5000/api/admin/update-password", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({ oldPassword, newPassword })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      updateSuccess = true;
+    } else {
+      showMessage(data.message, false);
+      return;
+    }
+  }
+
+  if (!newEmail && !(oldPassword && newPassword)) {
+    showMessage("⚠️ Fill at least one field to update!", false);
+    return;
+  }
+
+  // ✅ FINAL SUCCESS MESSAGE + REDIRECT
+  if (updateSuccess) {
+    showMessage(
+      "✅ Admin details updated successfully! Redirecting to dashboard...",
+      true
+    );
+
+    setTimeout(() => {
+      window.location.href = "admindashboard.html";
+    }, 2200);
+  }
+}
+
+</script>
+
+
+</body>
+</html>
