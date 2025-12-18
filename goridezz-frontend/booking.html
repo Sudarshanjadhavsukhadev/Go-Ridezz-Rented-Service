@@ -1175,7 +1175,7 @@
 
 
 
-      const res = await fetch("http://localhost:5000/api/bookings", {
+      const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: form
@@ -1686,7 +1686,7 @@
     }
 
     async function loadActiveOffer() {
-      const res = await fetch("http://localhost:5000/api/offers/active");
+      const res = await fetch("https://goridezz-backend.onrender.com/api/offers/active");
       const data = await res.json();
 
       if (data.offer) {

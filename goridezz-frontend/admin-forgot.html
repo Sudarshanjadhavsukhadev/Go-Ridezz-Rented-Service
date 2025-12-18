@@ -344,7 +344,7 @@
       btn.classList.add("loading");
 
       try {
-        const res = await fetch("http://localhost:5000/api/otp/send", {
+        const res = await fetch("https://goridezz-backend.onrender.com/api/otp/send", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email })
@@ -386,7 +386,7 @@
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/otp/verify", {
+        const res = await fetch("https://goridezz-backend.onrender.com/api/otp/verify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, otp })
@@ -433,7 +433,7 @@
   }
 
   try {
-    const res = await fetch("http://localhost:5000/api/otp/reset", {
+    const res = await fetch("https://goridezz-backend.onrender.com/api/otp/reset", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })

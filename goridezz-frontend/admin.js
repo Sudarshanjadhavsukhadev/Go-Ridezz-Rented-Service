@@ -201,7 +201,7 @@ fd.append("name", finalModel);
    
   
 
-  const res = await fetch("http://localhost:5000/api/cars", {
+  const res = await fetch("https://goridezz-backend.onrender.com/api/cars", {
     method: "POST",
     headers: { Authorization: "Bearer " + token },
     body: fd
@@ -236,7 +236,7 @@ async function loadCars() {
   const list = document.getElementById("carsList");
   if (!list) return;
 
-  const res = await fetch("http://localhost:5000/api/cars");
+  const res = await fetch("https://goridezz-backend.onrender.com/api/cars");
   const data = await res.json();
 
   list.innerHTML = "";
@@ -274,7 +274,7 @@ async function loadCars() {
    DELETE CAR
 --------------------------------------------------- */
 async function deleteCar(id) {
-  await fetch(`http://localhost:5000/api/cars/${id}`, {
+  await fetch(`https://goridezz-backend.onrender.com/api/cars/${id}`, {
     method: "DELETE",
     headers: { Authorization: "Bearer " + token }
   });
@@ -293,7 +293,7 @@ async function loadBookings() {
 
   const token = localStorage.getItem("adminToken");
 
-  const res = await fetch("http://localhost:5000/api/bookings", {
+  const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
     headers: { Authorization: "Bearer " + token }
   });
 
@@ -368,7 +368,7 @@ async function loadUsers() {
   const box = document.getElementById("usersList");
   if (!box) return;
 
-  const res = await fetch("http://localhost:5000/api/auth/users");
+  const res = await fetch("https://goridezz-backend.onrender.com/api/auth/users");
   const data = await res.json();
 
   box.innerHTML = "";
@@ -494,7 +494,7 @@ function downloadBooking(bookingId) {
 
   // Open PDF in new tab
   window.open(
-    `http://localhost:5000/api/bookings/pdf/${bookingId}?token=${token}`,
+    `https://goridezz-backend.onrender.com/api/bookings/pdf/${bookingId}?token=${token}`,
     "_blank"
   );
 }

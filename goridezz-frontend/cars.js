@@ -1,4 +1,4 @@
-const API = "http://localhost:5000/api/cars";
+const API = "https://goridezz-backend.onrender.com/api/cars";
 
 let allBookings = [];
 let allCars = [];
@@ -17,7 +17,7 @@ initPage();
 
 async function loadBookings() {
   try {
-    const res = await fetch("http://localhost:5000/api/bookings", {
+    const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
@@ -253,7 +253,7 @@ async function checkCarDates() {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/cars/${selectedCarId}/availability?start=${start}&end=${end}`
+      `https://goridezz-backend.onrender.com/api/cars/${selectedCarId}/availability?start=${start}&end=${end}`
     );
     const data = await res.json();
 
@@ -281,7 +281,7 @@ async function checkCarDates() {
 // ================= OFFERS =================
 async function loadOffer() {
   try {
-    const res = await fetch("http://localhost:5000/api/offers/active");
+    const res = await fetch("https://goridezz-backend.onrender.com/api/offers/active");
     const data = await res.json();
 
     if (!data.success || !data.offer) {

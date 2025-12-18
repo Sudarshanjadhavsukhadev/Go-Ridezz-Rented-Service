@@ -157,7 +157,7 @@
       form.append("totalAmount", totalAmount);
       form.append("advancePaid", 500);
 
-      const response = await fetch("http://localhost:5000/api/bookings", {
+      const response = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`

@@ -111,7 +111,7 @@
   <script src="admin.js"></script>
 
   <script>
-    const API = "http://localhost:5000/api/offers";
+    const API = "https://goridezz-backend.onrender.com/api/offers";
 
     async function createOffer() {
   const expiryDate = document.getElementById("expiryDate").value;
@@ -135,7 +135,7 @@
   };
 
   try {
-    const res = await fetch("http://localhost:5000/api/offers", {
+    const res = await fetch("https://goridezz-backend.onrender.com/api/offers", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)

@@ -303,7 +303,7 @@ let popupImages = [];
 
 /* LOAD BOOKINGS */
 async function loadBookings() {
-  const res = await fetch("http://localhost:5000/api/bookings/mine", {
+  const res = await fetch("https://goridezz-backend.onrender.com/api/bookings/mine", {
     headers: { Authorization: "Bearer " + token }
   });
 
@@ -504,7 +504,7 @@ async function confirmCancelYes() {
 
   try {
     const res = await fetch(
-      `http://localhost:5000/api/bookings/cancel/${pendingCancelId}`,
+      `https://goridezz-backend.onrender.com/api/bookings/cancel/${pendingCancelId}`,
       {
         method: "PUT",
         headers: {
@@ -569,7 +569,7 @@ function downloadInvoice(bookingId) {
   }
 
   window.open(
-    `http://localhost:5000/api/bookings/invoice/${bookingId}?token=${token}`,
+    `https://goridezz-backend.onrender.com/api/bookings/invoice/${bookingId}?token=${token}`,
     "_blank"
   );
 }
