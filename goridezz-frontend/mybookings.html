@@ -296,27 +296,49 @@ h2 {
 
 <script>
 const token = localStorage.getItem("token");
-if (!token) window.location.href = "login.html";
 
 let currentPopupIndex = 0;
 let popupImages = [];
 
 /* LOAD BOOKINGS */
 async function loadBookings() {
-  const res = await fetch("https://goridezz-backend.onrender.com/api/bookings/mine", {
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  const data = await res.json();
   const box = document.getElementById("bookingList");
 
-  if (!data.success || data.bookings.length === 0) {
-    box.innerHTML = `<p style="text-align:center;color:#ccc;">No bookings found.</p>`;
+  // ✅ NO TOKEN → JUST OPEN PAGE (NO API CALL)
+  if (!token) {
+    box.innerHTML = `
+      <p style="
+        text-align:center;
+        color:#ccc;
+        font-size:16px;
+        margin-top:40px;
+      ">
+        No bookings available yet.
+      </p>
+    `;
     return;
   }
 
-  box.innerHTML = "";
+  // ✅ TOKEN EXISTS → FETCH BOOKINGS
+  try {
+    const res = await fetch(
+      "https://goridezz-backend.onrender.com/api/bookings/mine",
+      {
+        headers: { Authorization: "Bearer " + token }
+      }
+    );
 
+    const data = await res.json();
+
+    if (!data.success || data.bookings.length === 0) {
+      box.innerHTML = `
+        <p style="text-align:center;color:#ccc;">
+          No bookings found.
+        </p>`;
+      return;
+    }
+
+    box.innerHTML = "";
   // 1️⃣ Separate bookings
 const upcomingBookings = data.bookings.filter(
   b => b.status !== "cancelled"
@@ -438,6 +460,13 @@ ${b.status !== "cancelled" ? `
 
       </div>`;
   });
+} catch (err) {
+    console.error(err);
+    box.innerHTML = `
+      <p style="text-align:center;color:#ff6b6b;">
+        Unable to load bookings.
+      </p>`;
+  }
 }
 
 /* POPUP FUNCTIONS */
