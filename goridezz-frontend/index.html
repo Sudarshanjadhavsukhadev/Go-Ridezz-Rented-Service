@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="qrcode.jpg" type="image/jpeg">
+<link rel="icon" href="logo.png" type="image/jpeg">
 
 <style>
 
@@ -323,6 +323,347 @@ header {
   margin-top: 6px;
 }
 
+/* ================= DOWN ARROW ================= */
+.down-arrow {
+  margin-top: 35px;
+  font-size: 36px;
+  color: #ffd700;
+  cursor: pointer;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+/* ================= BROWSE CARS SECTION ================= */
+.browse-section {
+  padding: 80px 20px;
+  text-align: center;
+  background:
+    radial-gradient(circle at center, rgba(255,215,0,0.15), transparent 60%),
+    linear-gradient(135deg, #0b0b0b, #1a1a1a);
+  border-top: 1px solid rgba(255,215,0,0.25);
+}
+
+.browse-section h2 {
+  font-size: 36px;
+  color: #ffd700;
+  margin-bottom: 12px;
+}
+
+.browse-section p {
+  color: #ccc;
+  font-size: 16px;
+  margin-bottom: 28px;
+}
+
+.featured {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.featured h2 {
+  color: #ffd700;
+  font-size: 36px;
+}
+
+.featured p {
+  color: #ccc;
+  margin-bottom: 35px;
+}
+
+
+
+.faq {
+  padding: 70px 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.faq h2 {
+  text-align: center;
+  color: #ffd700;
+  margin-bottom: 35px;
+}
+
+.faq-item {
+  background: #111;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255,215,0,0.25);
+}
+
+.faq-item h4 {
+  color: #ffd700;
+  margin-bottom: 6px;
+}
+
+.faq-item p {
+  color: #ccc;
+  font-size: 14px;
+}
+
+/* ================= CINEMATIC INTRO ================= */
+
+
+.intro-content {
+  text-align: center;
+  transform: scale(0.3);
+  opacity: 0;
+}
+
+
+.intro-active .intro-content {
+  animation: zoomIn 10s ease forwards;
+  opacity: 1;
+}
+
+.intro-title {
+  font-size: 64px;
+  color: #ffd700;
+  letter-spacing: 4px;
+  animation: glow 4s infinite alternate;
+}
+
+.intro-line {
+  font-size: 20px;
+  color: #ddd;
+  margin-top: 12px;
+  opacity: 0;
+}
+
+/* Each line appears and STAYS */
+.line1 { animation: fadeStay 10s forwards; animation-delay: 1s; }
+.line2 { animation: fadeStay 10s forwards; animation-delay: 2.5s; }
+.line3 { animation: fadeStay 10s forwards; animation-delay: 4s; }
+.line4 { animation: fadeStay 10s forwards; animation-delay: 5.5s; }
+.line5 { animation: fadeStay 10s forwards; animation-delay: 7s; }
+
+@keyframes fadeStay {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Mobile adjust */
+@media (max-width: 768px) {
+  .intro-title { font-size: 42px; }
+  .intro-line { font-size: 16px; }
+}
+
+/* ================= MOVING CARS ================= */
+.car {
+  position: absolute;
+  bottom: 15%;
+  width: 220px;
+  height: 80px;
+  background: linear-gradient(90deg, #222, #555);
+  border-radius: 40px 40px 12px 12px;
+  box-shadow: 0 0 20px rgba(255,215,0,0.3);
+  opacity: 0.85;
+  animation: drive 10s linear forwards;
+}
+
+/* wheels illusion */
+.car::before,
+.car::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  width: 28px;
+  height: 28px;
+  background: #000;
+  border-radius: 50%;
+}
+
+.car::before { left: 30px; }
+.car::after { right: 30px; }
+
+/* car variations */
+.car1 {
+  bottom: 18%;
+  animation-delay: 0s;
+}
+
+.car2 {
+  bottom: 28%;
+  width: 180px;
+  opacity: 0.6;
+  animation-delay: 2s;
+}
+
+.car3 {
+  bottom: 10%;
+  width: 260px;
+  opacity: 1;
+  animation-delay: 4s;
+}
+
+/* movement */
+@keyframes drive {
+  from {
+    left: -300px;
+    filter: blur(2px);
+  }
+  to {
+    left: 110%;
+    filter: blur(0);
+  }
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .car {
+    width: 150px;
+    height: 60px;
+  }
+}
+
+.fade-out {
+  animation: fadePage 0.6s ease forwards;
+}
+
+@keyframes fadePage {
+  to { opacity: 0; }
+}
+
+/* ================= CINEMATIC FILM ================= */
+#carIntro {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #111, #000);
+  z-index: 10000;
+  display: none;
+  overflow: hidden;
+}
+
+/* cinematic background pulse */
+.cinema-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,215,0,0.25), transparent 60%);
+  animation: pulse 4s infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.4; }
+  to { opacity: 0.9; }
+}
+
+/* light streak */
+.light-streak {
+  position: absolute;
+  top: 40%;
+  left: -120%;
+  width: 200%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffd700, transparent);
+  animation: streak 3s linear infinite;
+}
+
+@keyframes streak {
+  to { left: 120%; }
+}
+
+/* ================= CARS ================= */
+.car {
+  position: absolute;
+  bottom: 20%;
+  width: 240px;
+  height: 80px;
+  background: linear-gradient(90deg, #222, #555);
+  border-radius: 40px;
+  opacity: 0.85;
+  animation: drive 6s linear forwards;
+}
+
+.car::before,
+.car::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  width: 28px;
+  height: 28px;
+  background: #000;
+  border-radius: 50%;
+}
+
+.car::before { left: 30px; }
+.car::after { right: 30px; }
+
+.car1 { animation-delay: 0s; bottom: 18%; }
+.car2 { animation-delay: 1.5s; bottom: 28%; width: 180px; opacity: 0.6; }
+.car3 { animation-delay: 3s; bottom: 12%; width: 280px; }
+
+@keyframes drive {
+  from {
+    left: -300px;
+    filter: blur(3px);
+  }
+  to {
+    left: 120%;
+    filter: blur(0);
+  }
+}
+
+/* ================= TEXT ================= */
+.cinema-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #ffd700;
+}
+
+.cinema-text h1 {
+  font-size: 64px;
+  letter-spacing: 6px;
+  opacity: 0;
+  animation: textIn 2s forwards;
+  animation-delay: 3.5s;
+}
+
+.cinema-text p {
+  color: #ddd;
+  font-size: 18px;
+  opacity: 0;
+}
+
+.t1 { animation: textIn 1.5s forwards; animation-delay: 5.5s; }
+.t2 { animation: textIn 1.5s forwards; animation-delay: 6.8s; }
+.t3 { animation: textIn 1.5s forwards; animation-delay: 8s; }
+
+@keyframes textIn {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .cinema-text h1 { font-size: 40px; }
+  .cinema-text p { font-size: 14px; }
+}
+
 
 </style>
 </head>
@@ -360,7 +701,8 @@ header {
 
   <h1>Rent Your Dream Car</h1>
   <p>Premium cars, flexible rental plans & subscriptions — drive your way.</p>
-  <a href="cars.html" class="btn-main">Browse Cars</a>
+  <div class="down-arrow" onclick="scrollToBrowse()">⬇</div>
+
 </section>
 
 <section class="why">
@@ -408,49 +750,154 @@ header {
   </div>
 </section>
 
+
+<section class="faq">
+  <h2>Frequently Asked Questions</h2>
+
+  <div class="faq-item">
+    <h4>Is license verification mandatory?</h4>
+    <p>Yes, all users must upload a valid driving license.</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Is there any security deposit?</h4>
+    <p>Only a refundable advance depending on the car type.</p>
+  </div>
+
+  <div class="faq-item">
+    <h4>Can I cancel my booking?</h4>
+    <p>Yes, cancellation is allowed as per policy.</p>
+  </div>
+</section>
+
 <section class="trust">
   <div>5000+ Customers</div>
   <div>50+ Cars</div>
   <div>24×7 Support</div>
 </section>
 
-<div class="footer">
-  © 2025 Goridezz. All Rights Reserved.
-</div>
-<script>
-  // Wake backend immediately
-  fetch("https://goridezz-backend.onrender.com/api/health")
-    .catch(() => {});
+<section id="browseSection" class="browse-section">
+  <h2>Ready to Drive?</h2>
+  <p>Explore our premium cars and book your perfect ride today.</p>
 
+  <button class="btn-main" onclick="startCarIntro()">Browse Cars</button>
+
+</section>
+<div id="carIntro">
+  <div class="cinema-bg"></div>
+
+  <div class="light-streak"></div>
+
+  <div class="car car1"></div>
+  <div class="car car2"></div>
+  <div class="car car3"></div>
+
+  <div class="cinema-text">
+    <h1>GORIDEZZ</h1>
+    <p class="t1">Premium Cars</p>
+    <p class="t2">Luxury • Comfort • Power</p>
+    <p class="t3">Your Journey Starts Now</p>
+  </div>
+</div>
+
+
+</div>
+
+<div class="footer">
+  © 2025 Goridezz. All Rights Reserved By WebNova Technology
+</div>
+
+<script>
+  // ===== SCROLL RESET =====
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.addEventListener('load', () => window.scrollTo(0, 0));
+
+  // ===== ELEMENTS =====
   const progressBar = document.getElementById("progressBar");
   const statusText = document.getElementById("loaderStatus");
   const loader = document.getElementById("entryLoader");
 
-  const steps = [
-    { p: 20, text: "Checking available cars..." },
-    { p: 45, text: "Verifying locations..." },
-    { p: 70, text: "Preparing premium experience..." },
-    { p: 90, text: "Almost ready..." },
-    { p: 100, text: "Welcome to Goridezz 🚗" }
+  // ===== DYNAMIC LOADER TEXT =====
+  const loaderMessages = [
+    "Starting your premium journey 🚗",
+    "Unlocking luxury rides…",
+    "Preparing elite cars for you ✨",
+    "Matching you with the perfect drive",
+    "Your road. Your rules.",
+    "Performance meets comfort",
+    "Crafting your driving experience"
   ];
 
-  let i = 0;
+  const statusMessages = [
+    "Checking available cars…",
+    "Optimizing routes…",
+    "Verifying safety checks…",
+    "Loading trusted partners…",
+    "Finalizing experience…"
+  ];
 
-  const interval = setInterval(() => {
-    progressBar.style.width = steps[i].p + "%";
-    statusText.textContent = steps[i].text;
-    i++;
+  const randomItem = arr => arr[Math.floor(Math.random() * arr.length)];
 
-    if (i === steps.length) {
-      clearInterval(interval);
-      setTimeout(() => {
-        loader.style.opacity = "0";
-        loader.style.pointerEvents = "none";
-        setTimeout(() => loader.style.display = "none", 400);
-      }, 1200);
-    }
-  }, 2500); // total ~12 seconds
+  document.querySelector(".loader-box h2").innerHTML = randomItem(loaderMessages);
+
+  statusText.innerText = randomItem(statusMessages);
+
+  // ===== WAKE BACKEND (NON-BLOCKING) =====
+  fetch("https://goridezz-backend.onrender.com/api/health").catch(() => {});
+
+  // ===== LOADER TIMING (FEELS NATURAL) =====
+  const MIN_TIME = 3000;
+  const MAX_TIME = 6500;
+  const LOADER_TIME = Math.floor(Math.random() * (MAX_TIME - MIN_TIME)) + MIN_TIME;
+
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    progress += Math.floor(Math.random() * 12) + 8;
+    if (progress > 90) progress = 90;
+    progressBar.style.width = progress + "%";
+  }, 600);
+
+  setTimeout(finishLoader, LOADER_TIME);
+
+ 
+
+
+  function finishLoader() {
+    clearInterval(progressInterval);
+    progressBar.style.width = "100%";
+    statusText.innerText = "Welcome to Goridezz 🚗";
+
+    setTimeout(() => {
+      loader.style.opacity = "0";
+      loader.style.pointerEvents = "none";
+      setTimeout(() => loader.style.display = "none", 400);
+    }, 800);
+  }
+
+  // ===== SCROLL BUTTON =====
+  function scrollToBrowse() {
+    document.getElementById("browseSection")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+  // ===== CINEMATIC INTRO (SMART) =====
+  function startCarIntro() {
+  const intro = document.getElementById("carIntro");
+
+  intro.style.display = "block";
+  intro.offsetHeight; // 🔥 force repaint
+  document.body.style.overflow = "hidden";
+
+  setTimeout(() => {
+    window.location.href = "cars.html";
+  }, 10000);
+}
+
+
 </script>
+
 
 
 </body>
