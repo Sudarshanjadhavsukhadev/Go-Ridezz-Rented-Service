@@ -20,17 +20,39 @@ body {
 }
 
 header {
-  padding: 18px 24px;
-  background: rgba(10, 10, 10, 0.75);
+  width: 100%;
+  padding: 16px;
+  background: rgba(10, 10, 10, 0.85);
   border-bottom: 1px solid rgba(255, 215, 0, 0.35);
+
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   position: sticky;
   top: 0;
-  z-index: 50;
-  backdrop-filter: blur(10px);
+  z-index: 100;
+
+  box-sizing: border-box;
 }
+
+.dots-menu {
+  position: fixed;   /* 🔥 instead of absolute */
+  top: 70px;
+  right: 16px;
+
+  width: 200px;
+  border-radius: 18px;
+  padding: 12px 0;
+
+  background: rgba(20,20,20,0.95);
+  border: 1px solid rgba(255,215,0,0.4);
+
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+}
+
 
 .logo {
   font-size: 28px;
@@ -46,18 +68,7 @@ header {
   cursor: pointer;
 }
 
-.dots-menu {
-  position: absolute;
-  top: 70px;
-  right: 18px;
-  width: 200px;
-  border-radius: 18px;
-  padding: 12px 0;
-  background: rgba(20,20,20,0.95);
-  border: 1px solid rgba(255,215,0,0.4);
-  display: none;
-  flex-direction: column;
-}
+
 
 .dots-menu a {
   padding: 14px 20px;
@@ -74,18 +85,21 @@ h2 {
 
 /* === BOOKING CARD === */
 .booking-card {
-  width: 88%;
-  margin: 25px auto;
+  width: calc(100% - 32px);
+  margin: 20px auto;
   padding: 18px;
+
   background: rgba(15, 15, 15, 0.55);
   border-radius: 22px;
   border: 1px solid rgba(255, 215, 0, 0.25);
-  box-shadow: 0 0 35px rgba(255,215,0,0.18);
+
+  box-shadow: 0 0 25px rgba(255,215,0,0.18);
 }
+
 
 .booking-card img {
   width: 100%;
-  height: 160px;
+  height: 180px;
   object-fit: cover;
   border-radius: 16px;
   cursor: pointer;

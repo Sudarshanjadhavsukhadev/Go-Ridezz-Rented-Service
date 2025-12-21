@@ -10,8 +10,28 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="icon" href="logo.png" type="image/jpeg">
+<script>
+  (function loadDeviceCSS() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/iPhone|iPad|iPod/i.test(ua)) {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "iphone.css";
+      document.head.appendChild(link);
+
+      console.log("📱 iPhone detected → iOS CSS loaded");
+    }
+  })();
+</script>
 
 <style>
+  @supports not (backdrop-filter: blur(6px)) {
+  .why-card {
+    background: #111 !important;
+  }
+}
+
 
 /* ================= GLOBAL ================= */
 * {
@@ -21,10 +41,12 @@
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #0d0d0d, #1c1c1c);
+  background-color: #0d0d0d; /* ✅ fallback */
+  background-image: linear-gradient(135deg, #0d0d0d, #1c1c1c);
   color: white;
   overflow-x: hidden;
 }
+
 
 a {
   text-decoration: none;
@@ -267,6 +289,7 @@ header {
   position: fixed;
   inset: 0;
   background: radial-gradient(circle at top, #1b1b1b 0%, #020202 60%);
+  background-color: #000; /* fallback */
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -673,7 +696,7 @@ header {
 <div id="entryLoader">
   <div class="loader-box">
     <div class="spinner"></div>
-    <h2>Preparing your ride 🚗</h2>
+    <h2>Preparing your ride </h2>
     <p>Loading premium cars for you...</p>
     <div class="progress-wrap">
   <div class="progress-bar" id="progressBar"></div>
@@ -808,6 +831,8 @@ header {
 </div>
 
 <script>
+  
+  
   // ===== SCROLL RESET =====
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';

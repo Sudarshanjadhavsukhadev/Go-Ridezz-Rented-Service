@@ -1,0 +1,87 @@
+/* ===============================
+   iPHONE / iOS ONLY STYLES
+   =============================== */
+
+/* Disable heavy blur (Safari bug) */
+.why-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: #111 !important;
+}
+
+/* Fix vh bug */
+.hero {
+  min-height: 100svh;
+   position: relative;
+
+}
+
+/* Fix animation flicker */
+#entryLoader,
+#carIntro {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Reduce blur for performance */
+.car {
+  filter: none !important;
+}
+
+/* Prevent Safari zoom & jitter */
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove tap highlight */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve animation stability */
+* {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+/* ===============================
+   iPHONE SAFARI ARROW FIX
+   =============================== */
+
+/* Hide emoji arrow only on iPhone */
+.down-arrow {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  font-size: 0;              /* 👈 hides emoji */
+}
+
+/* Draw Safari-safe arrow */
+.down-arrow::before {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-right: 4px solid #ffd700;
+  border-bottom: 4px solid #ffd700;
+  transform: rotate(45deg);
+  margin: auto;
+  animation: bounce-ios 1.4s infinite;
+   border-color: red;
+}
+
+/* Safari-safe animation */
+@keyframes bounce-ios {
+  0%, 100% {
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    transform: rotate(45deg) translateY(8px);
+  }
+}
+

@@ -18,6 +18,7 @@ body {
     flex-direction: column;
    
     overflow-x: hidden;
+    align-items: stretch;
 }
 
 /* GOLD BACKGROUND GLOW */
@@ -25,8 +26,8 @@ body::before,
 body::after {
     content: "";
     position: fixed;
-    width: 480px;
-    height: 480px;
+    width: 100vw;
+    height: 100vw;
     left: 50%;
     transform: translateX(-50%);
     filter: blur(95px);
@@ -50,8 +51,11 @@ body::after {
 
 .premium-header {
     width: 100%;
-    max-width: 480px;  /* matches login page width */
-    padding: 18px 22px;
+    max-width: 100vw;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;  /* matches login page width */
+    padding: 18px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -391,6 +395,8 @@ input[type="date"] {
       CUSTOMER REVIEWS
 ============================ */
 .reviews-section {
+  width: 100%;
+  max-width: 100vw;
     padding: 20px;
     margin-top: 25px;
     text-align: center;
