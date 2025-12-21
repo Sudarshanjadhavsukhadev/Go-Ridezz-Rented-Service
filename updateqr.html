@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update QR – Goridezz Admin</title>
+<link rel="icon" href="logo.png" type="image/jpeg">
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<header class="header-premium">
+
+  <div class="logo">🏎️ Update QR</div>
+
+  <!-- Desktop Buttons -->
+  <div class="desktop-only">
+    <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+    <a href="adminlogin.html" onclick="logout()" class="logout-btn">Logout</a>
+  </div>
+
+  <!-- Mobile Menu (3 dots) -->
+  <div class="menu-dots mobile-only" onclick="toggleMenu()">⋮</div>
+
+  <!-- Mobile Popup Menu -->
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+</header>
+
+<h1 class="dash-title" style="margin-top:25px;">Update Payment QR</h1>
+<p class="dash-sub">Upload new QR code for user payments</p>
+
+<!-- QR Section -->
+<div class="section" style="
+    width: 90%;
+    margin: 30px auto;
+    padding: 25px;
+    background: #111;
+    border-radius: 12px;
+    border: 1px solid rgba(255,215,0,0.25);
+    box-shadow: 0 0 20px rgba(255,0,0,0.25);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+">
+
+    <h2 style="color:#ff9800; margin-bottom:15px;">Current QR Code</h2>
+
+    <!-- CURRENT QR PREVIEW -->
+    <img id="previewQR" 
+         src="https://goridezz-backend.onrender.com/api/qr/qr"
+         style="width:250px;height:auto;border-radius:12px;
+                border:3px solid #ffcc00;margin-bottom:20px;">
+
+    <h3 style="color:#ffcc00;margin-bottom:10px;">Upload New QR</h3>
+
+    <!-- FILE INPUT -->
+    <input type="file" id="qrFile" accept="image/*"
+      style="
+        background:#222;
+        color:white;
+        padding:12px;
+        border-radius:8px;
+        border:1px solid #444;
+        width:100%;
+        max-width:400px;
+        margin-bottom:18px;
+      "
+    >
+
+    <!-- UPLOAD BUTTON -->
+    <button class="btn" onclick="uploadQR()"
+      style="max-width:200px;">
+      Upload New QR
+    </button>
+</div>
+
+<div id="qrMsgBox" style="
+  display:none;
+  margin-top:15px;
+  padding:12px 16px;
+  border-radius:10px;
+  border:1px solid #00ff9c;
+  color:#00ff9c;
+  font-weight:600;
+  background:#0d1a14;
+  box-shadow:0 0 12px #00ff9c70;
+  animation: fadeIn 0.4s ease;
+">
+</div>
+
+<script>
+  async function uploadQR() {
+  const fileInput = document.getElementById("qrFile");
+  const msgBox = document.getElementById("qrMsgBox");
+  const preview = document.getElementById("previewQR");
+
+  const file = fileInput.files[0];
+  if (!file) {
+    msgBox.style.display = "block";
+    msgBox.style.borderColor = "#ff4d4d";
+    msgBox.style.color = "#ff4d4d";
+    msgBox.style.boxShadow = "0 0 12px #ff4d4d70";
+    msgBox.innerHTML = "⚠️ Please select a QR image first.";
+    return;
+  }
+
+  const fd = new FormData();
+  fd.append("qr", file);
+
+  try {
+    const res = await fetch("https://goridezz-backend.onrender.com/api/qr/upload-qr", {
+      method: "POST",
+      body: fd
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      msgBox.style.display = "block";
+      msgBox.style.borderColor = "#00ff9c";
+      msgBox.style.color = "#00ff9c";
+      msgBox.style.boxShadow = "0 0 12px #00ff9c70";
+      msgBox.innerHTML =
+        "✅ New QR code uploaded successfully!<br>Redirecting to dashboard...";
+
+      // refresh QR preview
+      preview.src =
+        "https://goridezz-backend.onrender.com/api/qr/qr?" + new Date().getTime();
+
+      // redirect after 2.5 seconds
+      setTimeout(() => {
+        window.location.href = "admindashboard.html";
+      }, 2500);
+
+    } else {
+      msgBox.style.display = "block";
+      msgBox.style.borderColor = "#ff4d4d";
+      msgBox.style.color = "#ff4d4d";
+      msgBox.style.boxShadow = "0 0 12px #ff4d4d70";
+      msgBox.innerHTML = "❌ QR upload failed. Please try again.";
+    }
+
+  } catch (err) {
+    msgBox.style.display = "block";
+    msgBox.style.borderColor = "#ff4d4d";
+    msgBox.style.color = "#ff4d4d";
+    msgBox.style.boxShadow = "0 0 12px #ff4d4d70";
+    msgBox.innerHTML = "⚠️ Network error. Please try again.";
+  }
+}
+
+</script>
+
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Car – Goridezz Admin</title>
+<link rel="icon" href="logo.png" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <header class="header-premium">
+
+    <div class="logo">🏎️ Add Car</div>
+
+    <!-- Desktop Buttons -->
+    <div class="desktop-only">
+      <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+      <a href="adminlogin.html" onclick="logout()" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Mobile Menu (3 dots) -->
+    <div class="menu-dots mobile-only" onclick="toggleMenu()">⋮</div>
+
+    <!-- Mobile Popup Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+      <a href="admindashboard.html" class="back-btn" style="display:block;margin-bottom:8px;">⬅ Back</a>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+  </header>
+
+
+  <h1 class="dash-title" style="margin-top:25px;">Add New Car</h1>
+  <p class="dash-sub">Fill all details to add a car</p>
+
+  <div class="section" style="display:block; width:95%; margin:auto;">
+
+  <select id="brand" onchange="loadModels()">
+  <option disabled selected>Select Brand</option>
+
+  <!-- Mass Market -->
+  <option value="Maruti Suzuki">Maruti Suzuki</option>
+  <option value="Hyundai">Hyundai</option>
+  <option value="Tata">Tata</option>
+  <option value="Mahindra">Mahindra</option>
+  <option value="Toyota">Toyota</option>
+  <option value="Honda">Honda</option>
+  <option value="Kia">Kia</option>
+  <option value="Renault">Renault</option>
+  <option value="Nissan">Nissan</option>
+  <option value="Skoda">Skoda</option>
+  <option value="Volkswagen">Volkswagen</option>
+  <option value="MG">MG</option>
+
+  <!-- Premium -->
+  <option value="BMW">BMW</option>
+  <option value="Mercedes">Mercedes-Benz</option>
+  <option value="Audi">Audi</option>
+  <option value="Jaguar">Jaguar</option>
+  <option value="Land Rover">Land Rover</option>
+  <option value="Volvo">Volvo</option>
+  <option value="Lexus">Lexus</option>
+
+  <!-- Luxury / Sports -->
+  <option value="Porsche">Porsche</option>
+  <option value="Ferrari">Ferrari</option>
+  <option value="Lamborghini">Lamborghini</option>
+  <option value="Maserati">Maserati</option>
+
+  <!-- Custom -->
+  <option value="Other">Other</option>
+</select>
+
+
+<select id="model" onchange="checkCustomModel()">
+  <option disabled selected>Select Model</option>
+</select>
+
+<!-- 👇 Manual model input (hidden by default) -->
+<input
+  id="customModel"
+  type="text"
+  placeholder="Enter model manually"
+  style="display:none; margin-top:8px;"
+>
+
+
+<select id="category">
+  <option disabled selected>Select Category</option>
+  <option>Hatchback</option>
+  <option>Sedan</option>
+  <option>SUV</option>
+  <option>Premium Sedan</option>
+  <option>Luxury Car</option>
+  <option>Sports Car</option>
+</select>
+
+<select id="fuel">
+  <option disabled selected>Select Fuel Type</option>
+  <option>Petrol</option>
+  <option>Diesel</option>
+  <option>Electric</option>
+  <option>CNG</option>
+  <option>Hybrid</option>
+</select>
+
+<select id="seats">
+  <option disabled selected>Select Seats</option>
+  <option>2</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+  <option>7</option>
+</select>
+
+<select id="transmission">
+  <option disabled selected>Select Transmission</option>
+  <option>Automatic</option>
+  <option>Manual</option>
+</select>
+
+<select id="tag">
+  <option disabled selected>Select Service Type</option>
+  <option value="rent">Rent</option>
+  <option value="subscribe">Subscribe</option>
+  <option value="both">Both</option>
+</select>
+
+<!-- 🚗 Extra Information Fields -->
+<input id="color" type="text" placeholder="Car Color (e.g., White)">
+<input id="modelYear" type="number" placeholder="Model Year (e.g., 2023)">
+<input id="mileage" type="number" placeholder="Mileage (km/l)">
+<input id="bootSpace" type="number" placeholder="Boot Space (Litre)">
+<input id="tankCapacity" type="number" placeholder="Fuel Tank Capacity (Litre)">
+
+
+<div id="rentBox">
+  <input id="price" type="number" placeholder="Rent Price Per Day">
+</div>
+
+<div id="subscribeBox" style="display:none;">
+  <input id="subscribePrice" type="number" placeholder="Subscribe Price Per Month">
+</div>
+
+
+<input
+  id="images"
+  type="file"
+  accept="image/*"
+  multiple
+  onchange="checkImages(); previewImages();"
+>
+
+
+<p id="imageLimitMsg"
+   style="color:#ff3b3b; font-size:14px; margin:5px 0 15px 3px; display:none;">
+  ⚠ You can upload maximum 5 images only.
+</p>
+
+<div id="imagePreview" style="margin-top:12px;"></div>
+
+<div id="statusMsg" class="status hidden">
+  <div class="status-text" id="statusText"></div>
+</div>
+
+
+<button class="btn" onclick="addCar()">Add Car</button>
+
+  <script src="admin.js"></script>
+</body>
+
+</html>

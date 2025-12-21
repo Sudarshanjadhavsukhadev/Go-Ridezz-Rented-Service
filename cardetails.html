@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Goridezz – Car Details</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="logo.png" type="image/jpeg">
+  <style>
+   /* ================================
+   GLOBAL PREMIUM GOLD THEME
+================================ */
+/* 🍎 SAFARI / iOS FIX */
+@supports (-webkit-touch-callout: none) {
+  body {
+    background: #0b0b0b !important; /* fallback dark */
+  }
+
+  body::before,
+  body::after {
+    display: none !important; /* disable buggy glow */
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+ 
+  background: linear-gradient(180deg, #0b0b0b, #141414, #000);
+
+
+  min-height: 100vh;
+
+  /* 🔥 Center the ENTIRE PAGE horizontally */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* GOLD BACKGROUND LIGHTS */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 480px;
+  height: 480px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(95px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+body::before {
+  top: -160px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 70%);
+}
+
+body::after {
+  bottom: -160px;
+  background: radial-gradient(circle, rgba(255, 185, 0, 0.25), transparent 70%);
+}
+
+/* ================================
+   HEADER
+================================ */
+
+.premium-header {
+  width: 100%;
+ 
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+   background: rgba(5, 5, 5, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,215,0,0.35);
+  position: relative;     /* 🔥 IMPORTANT */
+  z-index: 1000;
+}
+
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffd700, #ffb300);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.menu-dots {
+  color: #ffd700;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* DROPDOWN MENU */
+.dots-menu {
+  position: absolute;
+  top: 60px;             /* 🔥 aligned */
+  right: 10px;
+  width: 150px;
+  background: rgba(20,20,20,0.85);
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,215,0,0.35);
+  backdrop-filter: blur(10px);
+
+  display: none;
+  flex-direction: column;
+
+  z-index: 9999;         /* 🔥 always on top */
+}
+
+
+.dots-menu a {
+  
+  color: #ffd700;
+  text-decoration: none;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+/* ================================
+   CONTENT WRAPPER (CENTER FIX)
+================================ */
+
+.container {
+  width: 100%;
+  max-width: 480px;
+
+  display: flex;
+  justify-content: center; /* 🔥 CENTER CHILD */
+  padding: 20px;
+}
+
+#carDetails {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* 🔥 CENTER CARD */
+}
+
+/* ================================
+   CAR DETAILS CARD
+================================ */
+
+.car-box {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+
+  background-color: #141414;
+background-image: linear-gradient(
+  rgba(20, 20, 20, 0.96),
+  rgba(20, 20, 20, 0.96)
+);
+
+  
+backdrop-filter: none;
+-webkit-backdrop-filter: none;
+
+  border: 1.5px solid rgba(255, 215, 0, 0.25);
+  border-radius: 22px;
+
+  padding: 0;              /* 🔥 REMOVE padding */
+  
+  margin-top: 10px;
+
+  
+  box-shadow:
+    0 0 3px rgba(255, 215, 0, 0.12),
+    inset 0 0 3px rgba(255, 215, 0, 0.10);
+
+  overflow: hidden;        /* 🔥 IMPORTANT */
+}
+.car-box,
+.car-box * {
+  color: #ccc;
+  -webkit-text-fill-color: currentColor;
+}
+
+
+
+/* CAR IMAGE */
+.car-box img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+
+  border-radius: 14px;
+  margin-bottom: 15px;
+
+  box-shadow: 0 3px 3px rgba(255, 200, 0, 0.3);
+}
+
+/* TITLE */
+.car-box h2 {
+  color: #ffd700;
+  font-size: 22px;
+font-weight: 500;
+
+  padding-left: 26px;
+  margin-top: 20px;     /* ⬅️ gap from top */
+  margin-bottom: 14px;
+
+  text-shadow: 0 0 3px rgba(255, 215, 0, 0.35);
+}
+
+/* SPECS */
+.specs p {
+  color: #ccc;
+  font-size: 14px;
+  margin: 5px 0;
+  padding-left: 26px;
+  font-weight: 500;
+
+}
+
+
+
+/* PRICE TAG */
+.price {
+  margin: 6px auto 20px;
+  margin-left: 14px;   /* ⬅️ gap from left */
+
+  font-size: 10px;
+  font-weight: 700;
+
+  color: #222;
+  padding: 10px 20px 10px 26px;
+
+  background: linear-gradient(45deg, #ffd700, #ffb300);
+  border-radius: 12px;
+
+  display: inline-block;
+  box-shadow: 0 6px 18px rgba(255, 215, 0, 0.35);
+}
+
+/* BOOK NOW BUTTON */
+.btn {
+  margin: 6px auto 20px;    /* ⬅️ centers horizontally */
+  display: block;        /* ⬅️ important */
+
+  width: 80%;
+  padding: 15px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  color: #222;
+  text-decoration: none;
+
+  background: linear-gradient(45deg, #ffd700, #ffb300);
+  border-radius: 12px;
+
+  box-shadow: 0 3px 3px rgba(255, 215, 0, 0.35);
+  transition: 0.3s;
+  text-align: center;    /* ⬅️ centers text inside button */
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+
+/* ================================
+   IMAGE SLIDER GALLERY (Gold Theme)
+================================ */
+
+.slider-container {
+  width: 100%;
+  position: relative;   /* 🔥 VERY IMPORTANT */
+  overflow: hidden;
+  border-radius: 0;
+}
+
+
+.slider {
+  display: flex;
+  transition: transform 0.35s ease;
+}
+
+.slide {
+  min-width: 100%;
+  height: clamp(200px, 35vw, 280px);
+}
+
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* 🔥 fills full width */
+  border-radius: 0;        /* 🔥 edge-to-edge */
+}
+
+
+
+
+/* ARROWS */
+.arrow {
+  position: absolute;
+  top: 40%;                       /* center vertically */
+  transform: translateY(-50%);    /* perfect centering */
+
+  font-size: 30px;
+  color: #ffd700;
+  padding: 10px 14px;
+  cursor: pointer;
+
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+
+  z-index: 10;                    /* stay above image */
+}
+
+
+.arrow:hover {
+  background: rgba(255, 215, 0, 0.3);
+}
+
+.arrow.prev { left: 8px; }
+.arrow.next { right: 8px; }
+
+/* DOTS */
+.dots {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  margin: 0 4px;
+
+  background: #999;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.dot.active {
+  background: #ffd700;
+  transform: scale(1.3);
+}
+
+/* ================= POPUP GALLERY ================= */
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 999999;
+}
+
+.popup-slider {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+  height: 80%;
+}
+
+.popup-slide {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-slide img {
+  max-width: 95vw;
+  max-height: 85vh;
+  border-radius: 14px;
+  border: 2px solid rgba(255,215,0,0.35);
+}
+
+.popup-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 32px;
+  color: #ffd700;
+  cursor: pointer;
+}
+
+.popup-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 40px;
+  color: #ffd700;
+  background: rgba(0,0,0,0.4);
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.popup-arrow.left { left: 10px; }
+.popup-arrow.right { right: 10px; }
+
+.popup-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.popup-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #777;
+}
+
+.popup-dot.active {
+  background: #ffd700;
+  transform: scale(1.3);
+}
+
+/* ================================
+   RESPONSIVE BREAKPOINTS
+================================ */
+
+/* 📱 Mobile (default already good, just fine-tune) */
+@media (max-width: 480px) {
+  .premium-header {
+    padding: 14px 16px;
+  }
+
+  .logo {
+    font-size: 24px;
+  }
+
+  .car-box img {
+    height: 190px;
+  }
+
+  .car-box h2 {
+    font-size: 20px;
+    margin-top: 16px;
+  }
+
+  .specs p {
+    font-size: 13px;
+  }
+
+  .btn {
+    width: 90%;
+    font-size: 16px;
+  }
+}
+
+/* 📱📲 Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+  .container {
+    padding: 24px;
+  }
+
+  .car-box {
+    max-width: 520px;
+  }
+
+  .car-box img {
+    height: 230px;
+  }
+
+  .btn {
+    width: 75%;
+  }
+}
+
+/* 💻 Laptop & Desktop */
+@media (min-width: 769px) {
+  body {
+    justify-content: flex-start;
+  }
+
+  .container {
+    padding: 30px;
+  }
+
+  .car-box {
+    max-width: 600px;
+  }
+
+  .car-box img {
+    height: 260px;
+  }
+
+  .btn {
+    width: 65%;
+  }
+}
+
+  </style>
+
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="premium-header">
+    <div class="logo">Go Ridezz</div>
+    <div class="menu-dots" onclick="toggleDotsMenu()">⋮</div>
+
+    <div class="dots-menu" id="dotsMenu">
+      <a href="cars.html">Home</a>
+      <a href="mybookings.html">My Bookings</a>
+      
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="container">
+    <div id="carDetails">Loading...</div>
+  </div>
+  
+ <!-- FULLSCREEN IMAGE POPUP -->
+<div id="imgPopup" class="popup-overlay">
+  
+  <span class="popup-close" onclick="closePopup()">✕</span>
+
+  <div class="popup-slider" id="popupSlider"></div>
+
+  <div class="popup-arrow left" onclick="popupPrev()">❮</div>
+  <div class="popup-arrow right" onclick="popupNext()">❯</div>
+
+  <div class="popup-dots" id="popupDots"></div>
+
+</div>
+
+
+  <script>
+    const API = "https://goridezz-backend.onrender.com/api/cars";
+    const params = new URLSearchParams(window.location.search);
+    const carId = params.get("id");
+
+    if (!carId) {
+      document.getElementById("carDetails").innerHTML =
+        "<p style='color:#ccc;'>Invalid car request</p>";
+    }
+
+    loadCarDetails();
+
+    async function loadCarDetails() {
+  const res = await fetch(API);
+  const data = await res.json();
+
+  const car = data.cars.find(c => c._id === carId);
+
+  if (!car) {
+    document.getElementById("carDetails").innerHTML =
+      "<p style='color:#ccc;'>Car not found</p>";
+    return;
+  }
+
+  // BUILD PAGE HTML
+  document.getElementById("carDetails").innerHTML = `
+    <div class="car-box">
+
+      <div class="slider-container">
+        <div class="slider" id="imageSlider"></div>
+        <div class="arrow prev" onclick="prevSlide()">❮</div>
+        <div class="arrow next" onclick="nextSlide()">❯</div>
+        <div class="dots" id="sliderDots"></div>
+      </div>
+
+      <h2>${car.brand} ${car.name}</h2>
+
+      <div class="specs">
+        <p><b>Fuel:</b> ${car.fuel}</p>
+        <p><b>Transmission:</b> ${car.transmission}</p>
+        <p><b>Seats:</b> ${car.seats}</p>
+        <p><b>Color:</b> ${car.color || "-"}</p>
+        <p><b>Model Year:</b> ${car.modelYear || "-"}</p>
+        <p><b>Mileage:</b> ${car.mileage ? car.mileage + " km/l" : "-"}</p>
+        <p><b>Boot Space:</b> ${car.bootSpace ? car.bootSpace + " L" : "-"}</p>
+        <p><b>Fuel Tank:</b> ${car.tankCapacity ? car.tankCapacity + " L" : "-"}</p>
+
+        
+        <ul style="color:#ccc; font-size:13px; text-align:left; margin-top:5px;">
+          ${(car.features || []).map(f => `<li>• ${f}</li>`).join("")}
+        </ul>
+      </div>
+
+      <div class="price">₹${car.rentPrice}/day</div>
+
+      <a class="btn"
+        onclick="saveCarPrice(${car.rentPrice});"
+        href="booking.html?id=${car._id}">
+        Book Now
+      </a>
+
+    </div>
+  `;
+
+  // ⭐⭐⭐ IMPORTANT – CALL SLIDER HERE ⭐⭐⭐
+  initSlider(car.imageUrls || []);
+}
+
+    function initSlider(images) {
+  const slider = document.getElementById("imageSlider");
+  const dotsBox = document.getElementById("sliderDots");
+
+  let slidesHtml = "";
+  let dotsHtml = "";
+
+  images.forEach((url, index) => {
+   slidesHtml += `
+  <div class="slide">
+  <img src="${url}" onclick='showPopup("${url}", ${JSON.stringify(images)})'>
+ 
+  </div>`;
+
+    dotsHtml += `<div class="dot ${index === 0 ? "active" : ""}"></div>`;
+  });
+
+  slider.innerHTML = slidesHtml;
+  dotsBox.innerHTML = dotsHtml;
+
+  let currentIndex = 0;
+
+  function updateSlider() {
+    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+    document.querySelectorAll(".dot").forEach((dot, i) => {
+      dot.classList.toggle("active", i === currentIndex);
+    });
+  }
+
+  // NEXT & PREV
+  window.nextSlide = () => {
+    if (currentIndex < images.length - 1) currentIndex++;
+    else currentIndex = 0;
+    updateSlider();
+  };
+
+  window.prevSlide = () => {
+    if (currentIndex > 0) currentIndex--;
+    else currentIndex = images.length - 1;
+    updateSlider();
+  };
+
+  // AUTO SWIPE
+  slider.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX));
+  slider.addEventListener("touchend", (e) => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) nextSlide();
+    if (endX - startX > 50) prevSlide();
+  });
+
+  updateSlider();
+}
+
+    function logout() { localStorage.clear(); }
+    function saveCarPrice(price) { localStorage.setItem("selectedCarPrice", price); }
+
+    function toggleDotsMenu() {
+      const menu = document.getElementById("dotsMenu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    document.addEventListener("click", function (event) {
+      const menu = document.getElementById("dotsMenu");
+      const button = document.querySelector(".menu-dots");
+      if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = "none";
+      }
+    });
+
+   let popupImages = [];
+let popupIndex = 0;
+
+function showPopup(imgUrl, allImages) {
+  popupImages = allImages;   // store all images for popup slider
+  popupIndex = allImages.indexOf(imgUrl);
+
+  buildPopupSlider();
+  document.getElementById("imgPopup").style.display = "flex";
+}
+
+function buildPopupSlider() {
+  let slider = document.getElementById("popupSlider");
+  let dots = document.getElementById("popupDots");
+
+  slider.innerHTML = "";
+  dots.innerHTML = "";
+
+  popupImages.forEach((url, i) => {
+    slider.innerHTML += `
+      <div class="popup-slide"><img src="${url}"></div>
+    `;
+    dots.innerHTML += `
+      <div class="popup-dot ${i === popupIndex ? "active" : ""}"></div>
+    `;
+  });
+
+  updatePopupSlider();
+}
+
+function updatePopupSlider() {
+  let slider = document.getElementById("popupSlider");
+  slider.style.transform = `translateX(-${popupIndex * 100}%)`;
+
+  document.querySelectorAll(".popup-dot").forEach((dot, i) =>
+    dot.classList.toggle("active", i === popupIndex)
+  );
+}
+
+function popupNext() {
+  popupIndex = (popupIndex + 1) % popupImages.length;
+  updatePopupSlider();
+}
+
+function popupPrev() {
+  popupIndex = (popupIndex - 1 + popupImages.length) % popupImages.length;
+  updatePopupSlider();
+}
+
+function closePopup() {
+  document.getElementById("imgPopup").style.display = "none";
+}
+
+/* TOUCH SWIPE */
+let touchStartX = 0;
+let touchEndX = 0;
+
+const popupSlider = document.getElementById("popupSlider");
+
+popupSlider.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches[0].clientX;
+});
+
+popupSlider.addEventListener("touchmove", (e) => {
+  touchEndX = e.touches[0].clientX;
+});
+
+popupSlider.addEventListener("touchend", () => {
+  let diff = touchEndX - touchStartX;
+
+  if (diff > 50) {
+    popupPrev();   // swipe right → previous image
+  } else if (diff < -50) {
+    popupNext();   // swipe left → next image
+  }
+});
+
+
+
+  </script>
+
+</body>
+
+</html>

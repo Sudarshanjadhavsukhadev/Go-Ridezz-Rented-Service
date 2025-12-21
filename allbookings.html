@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Bookings – Goridezz Admin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="logo.png" type="image/jpeg">
+
+</head>
+
+<body>
+
+<header class="header-premium">
+
+  <div class="logo">🏎️ Add Car</div>
+
+  <!-- Desktop Buttons -->
+  <div class="desktop-only">
+    <a href="admindashboard.html" class="back-btn">⬅ Back</a>
+    <a href="adminlogin.html" onclick="logout()" class="logout-btn">Logout</a>
+  </div>
+
+  <!-- Mobile Menu (3 dots) -->
+  <div class="menu-dots mobile-only" onclick="toggleMenu()">⋮</div>
+
+  <!-- Mobile Popup Menu -->
+  <div id="mobileMenu" class="mobile-menu">
+    <a href="admindashboard.html" class="back-btn" style="display:block;margin-bottom:8px;">⬅ Back</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+</header>
+
+<h1 class="dash-title" style="margin-top:25px;">All Bookings</h1>
+<p class="dash-sub">Track all customer bookings</p>
+
+  <div class="excel-table-wrapper" style="width:95%; margin:auto;">
+  <table class="excel-table">
+
+   <thead>
+  <tr>
+    <th>User</th>
+    <th>Email</th>
+    <th>Contact</th>
+    <th>Car</th>
+    <th>Pickup</th>
+    <th>Return</th>
+    <th>Visit</th>
+    <th>Total</th>
+    <th>Advance</th>
+    <th>Remaining</th>
+    <th>Deposit</th>
+    <th>User Status</th>
+    <th>Admin Status</th>
+    <th>Created</th>
+    <th>PDF</th>
+  </tr>
+</thead>
+
+    <tbody id="bookingList"></tbody>
+  </table>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

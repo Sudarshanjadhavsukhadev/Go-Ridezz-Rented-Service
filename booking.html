@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goridezz – Booking</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="logo.png" type="image/jpeg">
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    /* BACKGROUND THEME */
+    body {
+      background: radial-gradient(circle at top, #1b1b1b 0%, #020202 55%, #000 100%);
+      min-height: 100vh;
+      padding-bottom: 60px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* GOLD STRIPES */
+    .shape-left,
+    .shape-right {
+      position: fixed;
+      top: -40px;
+      width: 330px;
+      height: 150%;
+      opacity: 0.55;
+      z-index: 1;
+      filter: blur(1px);
+    }
+
+    .shape-left {
+      left: -100px;
+      background: linear-gradient(160deg, rgba(255, 215, 0, 0.18), transparent);
+      border-right: 2px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .shape-right {
+      right: -100px;
+      background: linear-gradient(200deg, rgba(255, 165, 0, 0.25), transparent);
+      border-left: 2px solid rgba(255, 185, 0, 0.4);
+    }
+
+    /* GOLD GLOW BEHIND CONTENT */
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 480px;
+      height: 480px;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: blur(95px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      top: -160px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.25), transparent 70%);
+    }
+
+    body::after {
+      bottom: -160px;
+      background: radial-gradient(circle, rgba(255, 165, 0, 0.22), transparent 70%);
+    }
+
+    /* FIX HEADER HEIGHT LIKE LOGIN PAGE */
+    .premium-header {
+      height: 65px !important;
+      /* reduced height */
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      background: #0c0c0c;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.25);
+    }
+
+    /* LOGO SIZE FIX */
+    .premium-header .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffd700;
+    }
+
+    /* DOTS BUTTON FIX */
+    .menu-dots {
+      font-size: 26px;
+      color: #ffd700;
+      cursor: pointer;
+      user-select: none;
+    }
+
+
+    .dots-menu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      backdrop-filter: blur(14px);
+      flex-direction: column;
+      display: none;
+      padding: 12px 0;
+      z-index: 200;
+    }
+
+    .dots-menu a {
+      padding: 10px 18px;
+      color: #ffd700;
+      text-decoration: none;
+      display: block;
+      font-weight: 500;
+    }
+
+    .dots-menu a:hover {
+      background: rgba(255, 215, 0, 0.08);
+    }
+
+    /* FIX BOOKING CONTAINER THEME */
+    .booking-container {
+      width: 92%;
+      max-width: 420px;
+      margin: 30px auto;
+      padding: 35px 25px;
+
+      background: rgba(255, 215, 0, 0.06);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 20px;
+      backdrop-filter: blur(18px);
+
+      box-shadow:
+        0 0 3px rgba(255, 215, 0, 0.35),
+        0 0 3px rgba(255, 165, 0, 0.20),
+        inset 0 0 3px rgba(255, 215, 0, 0.12);
+
+      animation: fadeIn .8s ease-out;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* HEADING GOLDEN GLOW */
+    .booking-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: 500;
+
+      background: linear-gradient(90deg, #ffd700, #ffb300);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      text-shadow: 0 0 1px rgba(255, 215, 0, 0.6);
+    }
+
+    /* LABELS */
+    .booking-container label {
+      color: #ffd700;
+      font-weight: 500;
+      margin: 10px 0 5px;
+      display: block;
+    }
+
+    /* INPUT + TEXTAREA + SELECT */
+    .booking-container input,
+    .booking-container textarea,
+    .booking-container select {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      border-radius: 12px;
+
+      color: white;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .booking-container input:focus,
+    .booking-container textarea:focus,
+    .booking-container select:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 3px rgba(255, 215, 0, 0.10);
+      outline: none;
+    }
+
+    .booking-container select {
+      padding: 18px 14px;
+      /* ⬅️ increases height */
+      line-height: 1.4;
+      /* better vertical centering */
+      font-size: 15px;
+      /* keep readable */
+
+      height: auto;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Prevent options from stretching width */
+    /* Dropdown option text */
+    .booking-container select option {
+      font-size: 10px;
+      /* ⬅️ smaller font inside dropdown */
+    }
+
+    /* BUTTONS */
+    .booking-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #ffd700, #ffb300);
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #222;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: 0.3s;
+    }
+
+    .booking-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 3px rgba(255, 215, 0, 0.55);
+    }
+
+    /* ANIMATION */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* POPUP BASE */
+    .qr-popup {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .qr-box {
+      background: rgba(255, 215, 0, 0.08);
+      padding: 20px;
+      width: 90%;
+      max-width: 350px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      backdrop-filter: blur(14px);
+      text-align: center;
+    }
+
+    /* POPUP BUTTONS */
+    .qr-confirm-btn {
+      width: 100%;
+      background: linear-gradient(45deg, #ffd700, #ffb300);
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 500;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .qr-close-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 12px;
+      color: #ffd700;
+    }
+
+    /* GOLDEN CARD (same as login theme) */
+    .gold-card {
+      width: 92%;
+      max-width: 420px;
+      padding: 35px 25px;
+      margin: 30px auto;
+      background: rgba(255, 215, 0, 0.06);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 20px;
+      backdrop-filter: blur(18px);
+      box-shadow:
+        0 0 1px rgba(255, 215, 0, 0),
+        inset 0 0 1px rgba(255, 215, 0, 0);
+      z-index: 4;
+      position: relative;
+      animation: fadeIn .8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* CLOCK NUMBERS */
+    .clock-number {
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+
+      color: #ffd700;
+      font-weight: 500;
+      font-size: 16px;
+
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+
+      transition: 0.25s ease;
+    }
+
+    /* When number is selected */
+    .clock-number.clock-selected {
+      background: #ffd700;
+      color: #000;
+      box-shadow: 0 0 1px rgba(255, 215, 0, 0.8);
+      transform: scale(1.15);
+    }
+
+    /* AM/PM buttons */
+    .ampm-btn {
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      color: #ffd700;
+      cursor: pointer;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.4);
+      transition: 0.25s;
+    }
+
+    .ampm-btn.selected {
+      background: #ffd700;
+      color: #000;
+      box-shadow: 0 0 1px rgba(255, 200, 0, 0.7);
+    }
+
+    /* Fix number alignment inside clock */
+    #clockFace {
+      position: relative;
+    }
+
+    /* Summary popup bright golden text */
+    #summaryPopup .qr-box h3 {
+      color: #ffd700;
+      font-weight: 400;
+      font-size: 22px;
+      text-shadow: 0 0 2px rgba(255, 215, 0, 0.8);
+    }
+
+    #summaryPopup .qr-box p {
+      color: #f5d97a;
+      /* brighter gold */
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    #summaryPopup .qr-box b {
+      color: #ffd700 !important;
+      font-weight: 400;
+      text-shadow: 0 0 2px rgba(255, 215, 0, 1);
+    }
+
+    /* Highlight Total Amount line */
+    #sTotal {
+      color: #ffe34d !important;
+      font-size: 22px;
+      font-weight: 400;
+      text-shadow: 0 0 2px rgba(255, 215, 0, 1);
+    }
+
+    /* ===============================
+   QR PAYMENT POPUP – FIXED UI
+================================ */
+
+    .qr-payment-box {
+      padding: 25px 20px;
+      max-width: 340px;
+      border-radius: 20px;
+    }
+
+    .qr-title {
+      color: #ffd700;
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      text-shadow: 0 0 3px rgba(255, 215, 0, 0.7);
+    }
+
+    /* QR IMAGE */
+    .qr-image-wrapper {
+      background: #fff;
+      padding: 12px;
+      border-radius: 16px;
+      margin: 10px auto 15px;
+      width: fit-content;
+      box-shadow: 0 0 3px rgba(255, 215, 0, 0.4);
+    }
+
+    .qr-image-wrapper img {
+      width: 200px;
+      height: 200px;
+      display: block;
+    }
+
+    /* Instruction text */
+    .qr-instruction {
+      color: #ffd700;
+      font-size: 14px;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    /* Transaction input */
+    .txn-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+      background: rgba(0, 0, 0, 0.6);
+      color: #ffd700;
+      font-size: 15px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Confirm button */
+    .qr-confirm-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 14px;
+    }
+
+    /* Close button */
+    .qr-close-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 14px;
+    }
+
+
+    /* Deposit container */
+    .deposit-options {
+      display: flex;
+      gap: 14px;
+    }
+
+    /* Card */
+    .deposit-card {
+      flex: 1;
+      position: relative;
+      padding: 20px 15px 18px;
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    /* Hide default radio */
+    .deposit-card input {
+      display: none;
+    }
+
+    /* Small white radio circle (THIS is what you want) */
+    .radio-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #ffd700;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: transparent;
+    }
+
+    /* When selected */
+    .deposit-card input:checked+.radio-dot {
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0, 0.8);
+    }
+
+    /* Card glow when selected */
+    .deposit-card input:checked~.deposit-text {
+      color: #ffd700;
+    }
+
+    .deposit-card input:checked {
+      display: none;
+    }
+
+    .deposit-card:has(input:checked) {
+      border-color: #ffd700;
+      box-shadow: 0 0 14px rgba(255, 215, 0, 0, 0.4);
+    }
+
+    /* Text */
+    .deposit-text {
+      margin-top: 18px;
+      color: #ffd700;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="premium-header">
+    <div class="logo">Go Ridezz</div>
+
+    <div class="menu-dots" onclick="toggleDotsMenu()">⋮</div>
+
+    <div class="dots-menu" id="dotsMenu">
+      <a href="cars.html">Home</a>
+      <a href="mybookings.html">My Bookings</a>
+
+    </div>
+  </header>
+
+
+  <div class="booking-container">
+    <h2>Book This Car</h2>
+    <div id="formError" style="
+    display:none;
+    background:rgba(255,0,0,0.12);
+    border:1px solid rgba(255,0,0,0.4);
+    color:#ff6b6b;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:14px;
+    font-weight:500;
+  ">
+    </div>
+    <form id="bookingForm">
+
+      <input type="hidden" id="carId">
+
+      <!-- NEW FIELDS -->
+      <label>Full Name</label>
+      <input type="text" id="fullname" placeholder="Enter your full name" required>
+
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="Enter your email address" required>
+
+      <label>Contact Number</label>
+      <input type="text" id="contact" placeholder="Enter your contact number" required>
+
+      <label>Permanent Address</label>
+      <textarea id="address" placeholder="Enter your full permanent address" required></textarea>
+
+      <label>Where do you want to visit?</label>
+      <input type="text" id="visitPlace" placeholder="Enter your travel destination" required>
+
+      <label>Pickup Method</label>
+      <select id="pickupMethod" onchange="toggleDeliveryInput()" required>
+        <option value="">Select an option</option>
+        <option value="self">Take car from our location (Free)</option>
+        <option value="delivery">Deliver car to my location (₹500 extra)</option>
+      </select>
+
+      <!-- This will show only if user selects delivery -->
+      <div id="deliveryAddressBox" style="display:none;">
+        <label>Delivery Address</label>
+        <input type="text" id="deliveryAddress" placeholder="Enter delivery address">
+      </div>
+
+
+      <label>Pickup Date</label>
+      <input type="text" id="pickupDate" placeholder="Select Pickup Date" onclick="openCalendar('pickupDate')" readonly>
+
+      <label>Pickup Time</label>
+      <input type="text" id="pickupTime" placeholder="Select Pickup Time" onclick="openTimePopup('pickupTime')"
+        readonly>
+
+      <label>Return Date</label>
+      <input type="text" id="returnDate" placeholder="Select Return Date" onclick="openCalendar('returnDate')" readonly>
+
+      <label>Return Time</label>
+      <input type="text" id="returnTime" placeholder="Select Return Time" onclick="openTimePopup('returnTime')"
+        readonly>
+
+
+
+      <label>Upload Aadhaar (Front/Back or PDF)</label>
+      <input type="file" id="aadharFiles" name="aadharPhoto" accept="image/*,application/pdf"
+        onchange="processAadhaarOCR()" multiple required>
+
+      <div id="aadhaarStatus" style="color:#ffd700; margin-top:8px; font-weight:600;">
+      </div>
+
+
+      <label>License Number</label>
+      <input type="text" id="license" placeholder="Enter License number" required>
+
+      <label>Upload License Photo</label>
+      <input type="file" id="licensePhoto" name="licensePhoto" accept="image/*" required onchange="processLicenseOCR()">
+
+
+      <div id="licenseStatus" style="color:#ffd700; margin-top:8px; font-weight:600;"></div>
+
+      <!-- ===============================
+   SECURITY DEPOSIT SECTION
+================================ -->
+      <label>Security Deposit</label>
+      <div class="deposit-options">
+
+        <label class="deposit-card">
+          <input type="radio" name="depositType" value="bike" onclick="toggleDeposit()">
+          <span class="radio-dot"></span>
+
+          <div class="deposit-text">
+            Deposit<br><b>Bike</b>
+          </div>
+        </label>
+
+        <label class="deposit-card">
+          <input type="radio" name="depositType" value="cash" onclick="toggleDeposit()">
+          <span class="radio-dot"></span>
+
+          <div class="deposit-text">
+            Deposit<br><b>₹10000</b>
+          </div>
+        </label>
+
+      </div>
+
+
+      <!-- BIKE RC UPLOAD (HIDDEN INITIALLY) -->
+      <div id="bikeRCBox" style="display:none;">
+        <label>Upload Bike RC Photo</label>
+        <input type="file" id="bikeRCPhoto" accept="image/*">
+      </div>
+
+      <button type="button" class="booking-btn" onclick="openSummary()">Proceed to Payment</button>
+
+
+    </form>
+  </div>
+
+  <!-- CALENDAR POPUP -->
+  <div id="calendarPopup" class="qr-popup">
+    <div class="qr-box" style="width:300px; padding:20px;">
+
+      <h3 style="margin-bottom:10px;">Select a Date</h3>
+
+      <input type="date" id="calendarInput" style="
+      width:100%; padding:10px; 
+      background:#111; color:#ffd700; 
+      border:1px solid rgba(255,215,0,0.4); 
+      border-radius:8px; font-size:16px;">
+
+      <button onclick="saveCalendarDate()" class="qr-confirm-btn" style="margin-top:15px;">Confirm</button>
+      <button onclick="closeCalendar()" class="qr-close-btn">Close</button>
+
+    </div>
+  </div>
+
+  <!-- ROUND CLOCK TIME PICKER -->
+  <div id="timePopup" class="qr-popup">
+    <div class="qr-box" style="width:320px; padding:20px; text-align:center;">
+
+      <h3 style="margin-bottom:10px;">Select Time</h3>
+
+      <p id="clockMode" style="color:#ffd700; margin-bottom:15px; font-size:16px;">Select Hour</p>
+      <div id="ampmToggle" style="
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+">
+        <div class="ampm-btn" id="AM">AM</div>
+        <div class="ampm-btn" id="PM">PM</div>
+      </div>
+
+      <!-- CLOCK FACE -->
+      <div id="clockFace" style="
+      width:220px; 
+      height:220px; 
+      margin:0 auto; 
+      border-radius:50%;
+      border:2px solid #ffd700;
+      position:relative;
+      box-sizing:content-box;
+      overflow:visible;
+    ">
+      </div>
+
+      <button onclick="confirmClockTime()" class="qr-confirm-btn" style="margin-top:20px;">Confirm</button>
+      <button onclick="closeTimePopup()" class="qr-close-btn">Close</button>
+
+    </div>
+  </div>
+
+
+
+
+
+
+  <!-- SUMMARY POPUP -->
+  <div id="summaryPopup" class="qr-popup">
+    <div class="qr-box" style="width:300px;">
+      <h3>Booking Summary</h3>
+
+      <p>Price per Day: <b id="sPrice"></b></p>
+      <p>Total Duration: <b id="sDays"></b></p>
+
+      <p>Delivery Charge: <b id="sDelivery"></b></p>
+      <p id="sDeposit" style="display:none;">
+        Security Deposit: <b id="sDepositAmount"></b>
+      </p>
+      <hr style="border-color:rgba(255,215,0,0.3); margin:10px 0;">
+      <!-- OFFER SECTION -->
+      <div id="summaryOfferBox" style="
+          margin-top:15px;
+          padding:12px;
+          border:1px dashed rgba(255,215,0,0.5);
+          border-radius:12px;
+          display:none;
+          ">
+        <p style="color:#ffd700;font-weight:600;">🎉 Available Offer</p>
+
+        <p id="summaryOfferText" style="color:#eee;font-size:14px;"></p>
+
+        <button onclick="applyAdminOffer()" class="qr-confirm-btn" style="margin-top:8px;font-size:14px;">
+          Apply Offer
+        </button>
+
+        <p id="couponMsg" style="margin-top:6px;font-size:13px;"></p>
+      </div>
+
+
+      <p style="font-size:18px;">Total Amount: <b id="sTotal" style="color:#ffd700;"></b></p>
+
+      <button onclick="showQRfromSummary()" class="qr-confirm-btn">Proceed to Pay</button>
+      <button onclick="closeSummary()" class="qr-close-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- QR POPUP -->
+  <div id="qrPopup" class="qr-popup">
+    <div class="qr-box qr-payment-box">
+
+      <h3 class="qr-title">Scan & Pay ₹500 & Upload Screenshot</h3>
+
+
+      <div class="qr-image-wrapper">
+        <img src="http://localhost:5000/api/qr/qr" id="paymentQR">
+      </div>
+
+      <p class="qr-instruction">
+        After payment
+        
+      </p>
+
+      <label style="color:#ffd700;font-weight:600;display:block;margin-bottom:8px;">
+        Upload Payment Screenshot
+      </label>
+
+      <input type="file" id="paymentProof" accept="image/*" required style="
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,215,0,0.4);
+    background:rgba(0,0,0,0.6);
+    color:#ffd700;
+    margin-bottom:15px;
+  ">
+
+
+      <button id="confirmBookingBtn" onclick="confirmBooking()" class="qr-confirm-btn">
+        Confirm Booking
+      </button>
+
+      <button onclick="closeQR()" class="qr-close-btn">
+        Close
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- TOAST MESSAGE -->
+  <div id="toast" style="
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 280px;
+  max-width: 90%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  font-weight: 600;
+  text-align: center;
+  display: none;
+  z-index: 9999;
+  backdrop-filter: blur(12px);
+"></div>
+
+  <script>
+
+    function showError(message, elementId = null) {
+      const box = document.getElementById("formError");
+      box.innerText = message;
+      box.style.display = "block";
+
+      if (elementId) {
+        const el = document.getElementById(elementId);
+        if (el) {
+          el.style.border = "2px solid red";
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.focus();
+        }
+      }
+    }
+
+    function clearErrors() {
+      document.getElementById("formError").style.display = "none";
+      document.querySelectorAll("input, textarea, select").forEach(el => {
+        el.style.border = "";
+      });
+    }
+
+    // FULL NAME – Only alphabets + spaces
+    document.getElementById("fullname").addEventListener("input", function () {
+      this.value = this.value.replace(/[^A-Za-z ]/g, "");
+    });
+
+    document.getElementById("email").addEventListener("input", function () {
+      this.value = this.value.trim();
+    });
+
+    // CONTACT NUMBER – Only digits (0-9)
+    document.getElementById("contact").addEventListener("input", function () {
+      this.value = this.value.replace(/[^0-9]/g, "");
+
+      // Optional: Limit to 10 digits
+      if (this.value.length > 10) {
+        this.value = this.value.slice(0, 10);
+      }
+    });
+
+
+
+
+
+    window.aadhaarVerified = false;
+    window.licenseVerified = false;
+    console.log("AADHAAR VERIFIED:", window.aadhaarVerified);
+
+    async function processAadhaarOCR() {
+      const files = document.getElementById("aadharFiles").files;
+      const statusBox = document.getElementById("aadhaarStatus");
+
+      if (!files.length) return;
+
+      const nameInput = document.getElementById("fullname").value.trim();
+      const addressInput = document.getElementById("address").value.trim();
+
+      if (!nameInput || !addressInput) {
+        statusBox.innerHTML = "⚠ Please enter Name and Address before Aadhaar upload.";
+        statusBox.style.color = "orange";
+        return;
+      }
+
+      statusBox.innerHTML = "Reading Aadhaar… ⏳";
+
+      let extractedText = "";
+
+      for (let file of files) {
+        const text = await extractTextFromFile(file);
+        extractedText += " " + text;
+      }
+
+      extractedText = extractedText.replace(/\s+/g, " ").toLowerCase();
+
+      const firstName = nameInput.toLowerCase().split(" ")[0];
+      const nameMatch = extractedText.includes(firstName);
+
+      const cleanAddress = addressInput
+        .toLowerCase()
+        .replace(/[^a-z0-9 ]/g, "");
+
+      const addressWords = cleanAddress.split(" ").filter(w => w.length > 4);
+
+      let addressMatch = false;
+      for (let word of addressWords) {
+        if (extractedText.includes(word)) {
+          addressMatch = true;
+          break;
+        }
+      }
+
+      if (nameMatch && addressMatch) {
+        window.aadhaarVerified = true;   // ✅ IMPORTANT
+        statusBox.innerHTML = "✅ Aadhaar Verified Successfully";
+        statusBox.style.color = "#00ff7f";
+      } else {
+        window.aadhaarVerified = false;  // ✅ IMPORTANT
+        statusBox.innerHTML =
+          "⚠ Aadhaar verification failed. Name or Address not matching.";
+        statusBox.style.color = "red";
+      }
+
+    }
+
+
+    async function processLicenseOCR() {
+      const fileInput = document.getElementById("licensePhoto");
+      const statusBox = document.getElementById("licenseStatus");
+      const enteredLicense = document.getElementById("license").value
+        .replace(/\s+/g, "")
+        .toUpperCase();
+
+      if (!enteredLicense) {
+        statusBox.innerHTML = "⚠ Enter license number first";
+        statusBox.style.color = "orange";
+        return;
+      }
+
+      if (!fileInput.files.length) return;
+
+      statusBox.innerHTML = "Reading License… ⏳";
+      window.licenseVerified = false;
+
+      const file = fileInput.files[0];
+
+      // compress image (reuse your function)
+      const compressed = await compressImage(file);
+
+      Tesseract.recognize(compressed, "eng", {
+        logger: m => {
+          statusBox.innerHTML = "Processing… " + Math.round(m.progress * 100) + "%";
+        }
+      }).then(({ data }) => {
+        const extractedText = data.text
+          .replace(/\s+/g, "")
+          .toUpperCase();
+
+        if (extractedText.includes(enteredLicense)) {
+          window.licenseVerified = true;
+          statusBox.innerHTML = "✅ License Verified Successfully";
+          statusBox.style.color = "#00ff7f";
+        } else {
+          window.licenseVerified = false;
+          statusBox.innerHTML =
+            "❌ License verification failed. Number not matching.";
+          statusBox.style.color = "red";
+        }
+      });
+    }
+
+    async function compressImage(file) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          const MAX = 1200; // reduce big images for faster OCR
+          let w = img.width;
+          let h = img.height;
+
+          if (w > MAX || h > MAX) {
+            if (w > h) {
+              h = h * (MAX / w);
+              w = MAX;
+            } else {
+              w = w * (MAX / h);
+              h = MAX;
+            }
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          ctx.drawImage(img, 0, 0, w, h);
+
+          canvas.toBlob(blob => resolve(blob), "image/jpeg", 0.7);
+        };
+
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    async function extractTextFromFile(file) {
+      return new Promise(async (resolve) => {
+        if (file.type === "application/pdf") {
+          const reader = new FileReader();
+          reader.onload = async function () {
+            const typedarray = new Uint8Array(this.result);
+            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+            let text = "";
+
+            const page = await pdf.getPage(1);
+            const content = await page.getTextContent();
+            content.items.forEach((item) => {
+              text += item.str + " ";
+            });
+
+            resolve(text);
+          };
+          reader.readAsArrayBuffer(file);
+        } else {
+          // 1) Compress the image before OCR
+          const smallFile = await compressImage(file);
+
+          // 2) Faster OCR
+          Tesseract.recognize(smallFile, "eng", {
+            logger: m => {
+              document.getElementById("aadhaarStatus").innerHTML =
+                "Processing… " + Math.round(m.progress * 100) + "%";
+            }
+          }).then(({ data }) => {
+            resolve(data.text);
+          });
+
+        }
+      });
+    }
+
+    function showQR() {
+      document.getElementById("qrPopup").style.display = "flex";
+    }
+
+    function closeQR() {
+      document.getElementById("qrPopup").style.display = "none";
+    }
+
+
+    async function confirmBooking() {
+      const btn = document.getElementById("confirmBookingBtn");
+      btn.innerText = "Confirming...";
+      btn.style.background = "#00ff7f";   // green
+      btn.style.color = "#000";
+      btn.disabled = true;
+      btn.style.cursor = "not-allowed";
+      const paymentImage = document.getElementById("paymentProof").files[0];
+
+      if (!paymentImage) {
+        showToast("Please upload payment screenshot to continue", "info");
+
+        // 🔁 revert button if error
+        btn.innerText = "Confirm Booking";
+        btn.style.background = "";
+        btn.disabled = false;
+        btn.style.cursor = "pointer";
+        return;
+      }
+
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        showToast("Please login to continue", "error");
+
+        return;
+      }
+
+      const form = new FormData();
+
+      // Car ID
+      form.append("carId", localStorage.getItem("selectedCar"));
+
+      form.append("fullname", document.getElementById("fullname").value);
+      form.append("email", document.getElementById("email").value);
+
+      form.append("contact", document.getElementById("contact").value);
+      form.append("address", document.getElementById("address").value);
+      form.append("visitPlace", document.getElementById("visitPlace").value);
+
+      form.append("pickupMethod", document.getElementById("pickupMethod").value);
+      form.append("pickupDate", document.getElementById("pickupDate").value);
+      form.append("pickupTime", document.getElementById("pickupTime").value);
+
+      form.append("returnDate", document.getElementById("returnDate").value);
+      form.append("returnTime", document.getElementById("returnTime").value);
+
+      form.append("paymentProof", paymentImage);
+
+      form.append("license", document.getElementById("license").value);
+
+      form.append("totalAmount", Number(localStorage.getItem("bookingTotalAmount")) || 0);
+      form.append("advancePaid", 500);
+
+      form.append("couponCode", window.appliedCoupon || "");
+      form.append("bookingType", window.selectedTag || "rent");
+
+
+      form.append("aadharPhoto", document.getElementById("aadharFiles").files[0]);
+      form.append("licensePhoto", document.getElementById("licensePhoto").files[0]);
+      form.append("offerId", window.appliedOfferId || "");
+      form.append("discountAmount", Number(window.discountAmount) || 0);
+
+
+      const depositType =
+        document.querySelector('input[name="depositType"]:checked')?.value;
+
+      if (!depositType) {
+        showToast("Please select a security deposit option, info");
+        return;
+      }
+
+      form.append("depositType", depositType);
+
+      // 🔐 If Bike is selected as deposit, RC is mandatory
+      if (depositType === "bike") {
+        const rcFile = document.getElementById("bikeRCPhoto").files[0];
+
+        if (!rcFile) {
+          showToast("Please upload Bike RC photo, info");
+          return;
+        }
+
+        form.append("bikeRCPhoto", rcFile);
+      }
+
+
+
+
+      const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: form
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        // ✅ SAVE bookingId for review page
+        localStorage.setItem("lastBookingId", data.booking._id);
+
+        showToast("Booking saved successfully!", "success");
+
+
+        // ✅ THEN redirect
+        window.location.href = "review.html";
+      }
+
+      else {
+        showToast("Failed to save booking: " + data.message, "error");
+
+      }
+    }
+
+    function toggleDeliveryInput() {
+      const method = document.getElementById("pickupMethod").value;
+      const box = document.getElementById("deliveryAddressBox");
+
+      if (method === "delivery") {
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+    }
+
+    let activeDateInput = null;
+
+    function openCalendar(inputID) {
+      activeDateInput = inputID;
+      document.getElementById("calendarPopup").style.display = "flex";
+    }
+
+    function closeCalendar() {
+      document.getElementById("calendarPopup").style.display = "none";
+    }
+
+    function saveCalendarDate() {
+      const selected = document.getElementById("calendarInput").value;
+      if (!selected) {
+        showToast("Please select a date., info");
+        return;
+      }
+
+      document.getElementById(activeDateInput).value = selected;
+      closeCalendar();
+    }
+
+    /* ===============================
+   TIME FORMAT HELPER (AM/PM → 24H)
+=============================== */
+    function convertTo24Hour(time12h) {
+      const [time, modifier] = time12h.split(" ");
+      let [hours, minutes] = time.split(":");
+
+      hours = parseInt(hours, 10);
+
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+
+      return `${hours.toString().padStart(2, "0")}:${minutes}`;
+    }
+
+    function openSummary() {
+      clearErrors();
+
+      // PRICE
+      const rawPrice = localStorage.getItem("selectedCarPrice");
+      const pricePerDay = Number(rawPrice);
+      if (!rawPrice || isNaN(pricePerDay) || pricePerDay <= 0) {
+        showError("Car price missing. Please reselect the car.");
+        return;
+      }
+
+      // NAME
+      if (!fullname.value.trim()) {
+        showError("Full name is required", "fullname");
+        return;
+      }
+
+      // EMAIL
+      const email = document.getElementById("email").value.trim();
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email) {
+        showError("Email address is required", "email");
+        return;
+      }
+
+      if (!emailPattern.test(email)) {
+        showError("Please enter a valid email address", "email");
+        return;
+      }
+
+      // CONTACT
+      if (contact.value.length !== 10) {
+        showError("Contact number must be 10 digits", "contact");
+        return;
+      }
+
+      // ADDRESS
+      if (!address.value.trim()) {
+        showError("Permanent address is required", "address");
+        return;
+      }
+
+      // VISIT PLACE
+      if (!visitPlace.value.trim()) {
+        showError("Please enter your travel destination", "visitPlace");
+        return;
+      }
+
+      // AADHAAR
+      if (!window.aadhaarVerified) {
+        showError("Aadhaar verification failed. Please upload valid Aadhaar.");
+        return;
+      }
+
+      // LICENSE VERIFICATION
+      if (!window.licenseVerified) {
+        showError("Driving License verification failed. Please upload a valid license.");
+        return;
+      }
+
+      // PICKUP METHOD
+      const pickupMethod = pickupMethodEl = document.getElementById("pickupMethod").value;
+      if (!pickupMethod) {
+        showError("Please select pickup method", "pickupMethod");
+        return;
+      }
+
+      if (pickupMethod === "delivery" && !deliveryAddress.value.trim()) {
+        showError("Delivery address is required", "deliveryAddress");
+        return;
+      }
+
+      // DATES
+      if (!pickupDate.value) {
+        showError("Pickup date is required", "pickupDate");
+        return;
+      }
+
+      if (!pickupTime.value) {
+        showError("Pickup time is required", "pickupTime");
+        return;
+      }
+
+      if (!returnDate.value) {
+        showError("Return date is required", "returnDate");
+        return;
+      }
+
+      if (!returnTime.value) {
+        showError("Return time is required", "returnTime");
+        return;
+      }
+
+      // DEPOSIT
+      const depositCheck = document.querySelector('input[name="depositType"]:checked');
+      if (!depositCheck) {
+        showError("Please select a security deposit option");
+        return;
+      }
+
+      if (depositCheck.value === "bike" && !bikeRCPhoto.files.length) {
+        showError("Bike RC photo is required for bike deposit", "bikeRCPhoto");
+        return;
+      }
+
+      // ✅ ALL VALID → CONTINUE EXISTING LOGIC
+      calculateAndShowSummary(pricePerDay);
+    }
+
+    function calculateAndShowSummary(pricePerDay) {
+
+      const pickupTime24 = convertTo24Hour(pickupTime.value);
+      const returnTime24 = convertTo24Hour(returnTime.value);
+
+      const start = new Date(`${pickupDate.value}T${pickupTime24}:00`);
+      const end = new Date(`${returnDate.value}T${returnTime24}:00`);
+
+      if (isNaN(start) || isNaN(end) || end <= start) {
+        showError("Return time must be after pickup time");
+        return;
+      }
+
+      // ⏱ TOTAL HOURS
+      const totalHours = Math.ceil((end - start) / (1000 * 60 * 60));
+
+      // 📅 BASE DAYS
+      let fullDays = Math.floor(totalHours / 24);
+
+      // ⏳ EXTRA HOURS
+      let extraHours = totalHours % 24;
+
+      // 💰 PRICING LOGIC
+      let extraHourAmount = 0;
+
+      // 🔥 RULE: If extra hours >= 9 → count as 1 full day
+      if (extraHours >= 10) {
+        fullDays += 1;
+        extraHours = 0;
+      }
+      // 🔥 ELSE: charge per hour
+      else {
+        extraHourAmount = extraHours * 200;
+      }
+
+      // 💰 FINAL RENT
+      const dayAmount = fullDays * pricePerDay;
+      const rentAmount = dayAmount + extraHourAmount;
+
+
+      const deliveryCharge = pickupMethod.value === "delivery" ? 500 : 0;
+
+      let depositAmount = 0;
+      if (document.querySelector('input[name="depositType"]:checked').value === "cash") {
+        depositAmount = 10000;
+        sDeposit.style.display = "block";
+        sDepositAmount.innerText = "₹10000";
+      } else {
+        sDeposit.style.display = "none";
+      }
+
+      const total = rentAmount + deliveryCharge + depositAmount;
+
+      // 🔐 STORE VALUES
+      window.rentAmount = rentAmount;
+      window.deliveryCharge = deliveryCharge;
+      window.depositAmount = depositAmount;
+      window.originalTotal = total;
+      window.bookingDays = fullDays;
+
+      localStorage.setItem("bookingTotalAmount", total);
+
+      // 🖥 UI UPDATE
+      sPrice.innerText = `₹${pricePerDay} / day`;
+    sDays.innerText =
+  `${fullDays} day(s)` +
+  (extraHours > 0 ? ` + ${extraHours} hour(s) (₹${extraHours * 200})` : "");
+
+
+      sDelivery.innerText = "₹" + deliveryCharge;
+      sTotal.innerText = "₹" + total;
+
+      summaryPopup.style.display = "flex";
+    }
+
+    function closeSummary() {
+      document.getElementById("summaryPopup").style.display = "none";
+    }
+
+    // Move to QR popup after summary
+    function showQRfromSummary() {
+      closeSummary();
+      showQR();
+    }
+
+    const licenseInput = document.getElementById("license");
+
+    licenseInput.addEventListener("input", function () {
+      let v = this.value.toUpperCase();
+
+      // Remove invalid characters
+      v = v.replace(/[^A-Z0-9]/g, "");
+
+      // Auto formatting
+      let formatted = "";
+
+      if (v.length <= 2) {
+        formatted = v;                           // MH
+      }
+      else if (v.length <= 4) {
+        formatted = v.slice(0, 2) + " " + v.slice(2); // MH 12
+      }
+      else if (v.length <= 8) {
+        formatted = v.slice(0, 2) + " " + v.slice(2, 4) + " " + v.slice(4); // MH 12 2024
+      }
+      else {
+        formatted =
+          v.slice(0, 2) + " " +
+          v.slice(2, 4) + " " +
+          v.slice(4, 8) + " " +
+          v.slice(8); // MH 12 2024 0037233
+      }
+
+      this.value = formatted;
+
+      // Remove spaces for pattern checking
+      let clean = v;
+
+      // Validation pattern
+      const dlPattern = /^[A-Z]{2}[0-9]{2}(19|20)[0-9]{2}[0-9]{6,7}$/;
+
+      if (dlPattern.test(clean)) {
+        this.style.border = "2px solid #00ff7f";  // VALID
+      } else {
+        this.style.border = "2px solid red";      // INVALID
+      }
+    });
+
+
+
+    let activeTimeInput = null;
+    let selectedHour = null;
+    let selectedMinute = null;
+    let selectingHour = true;
+
+    function openTimePopup(inputId) {
+      activeTimeInput = inputId;
+      selectingHour = true;
+      selectedHour = null;
+      selectedMinute = null;
+
+      document.getElementById("clockMode").innerText = "Select Hour";
+
+      drawClockHours();
+      console.log("Drawing hours...");
+
+
+      document.getElementById("timePopup").style.display = "flex";
+    }
+
+    function closeTimePopup() {
+      document.getElementById("timePopup").style.display = "none";
+    }
+
+    /* Draw hours around center of circle */
+    function drawClockHours() {
+      const face = document.getElementById("clockFace");
+      face.innerHTML = "";
+
+      const numbers = [...Array(12).keys()].map(n => n + 1);
+
+      // Use actual clockFace size
+      const size = 220;            // your clockFace width/height
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const radius = 90;           // perfect radius for 12 circles
+
+      numbers.forEach((num, index) => {
+        const angle = ((index * 30) - 60) * (Math.PI / 180);
+
+        const x = centerX + radius * Math.cos(angle) - 18;
+        const y = centerY + radius * Math.sin(angle) - 18;
+
+        const div = document.createElement("div");
+        div.className = "clock-number";
+        div.style.left = `${x}px`;
+        div.style.top = `${y}px`;
+        div.innerText = num.toString().padStart(2, "0");
+
+        div.onclick = () => {
+          selectedHour = num.toString().padStart(2, "0");
+          document.querySelectorAll(".clock-number")
+            .forEach(e => e.classList.remove("clock-selected"));
+          div.classList.add("clock-selected");
+
+          setTimeout(() => {
+            document.getElementById("clockMode").innerText = "Select Minutes";
+            drawClockMinutes();
+          }, 200);
+        };
+
+        face.appendChild(div);
+      });
+    }
+
+
+
+    /* Draw minute values */
+    function drawClockMinutes() {
+      const face = document.getElementById("clockFace");
+      face.innerHTML = "";
+
+      const minutes = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"];
+
+      const centerX = 110;
+      const centerY = 110;
+      const radius = 80;
+
+      minutes.forEach((min, index) => {
+        const angle = (index * 30 - 90) * (Math.PI / 180);
+        const x = centerX + radius * Math.cos(angle) - 18;
+        const y = centerY + radius * Math.sin(angle) - 18;
+
+        const div = document.createElement("div");
+        div.className = "clock-number";
+        div.style.left = `${x}px`;
+        div.style.top = `${y}px`;
+        div.innerText = min;
+
+        div.onclick = () => {
+          selectedMinute = min;
+
+          document.querySelectorAll(".clock-number").forEach(e =>
+            e.classList.remove("clock-selected")
+          );
+          div.classList.add("clock-selected");
+
+          // After minute selection → show AM/PM
+          document.getElementById("clockMode").innerText = "Select AM or PM";
+          document.getElementById("ampmToggle").style.display = "flex";
+        };
+
+
+        face.appendChild(div);
+      });
+    }
+
+
+    let selectedPeriod = "AM"; // default
+
+    document.getElementById("AM").onclick = () => {
+      selectedPeriod = "AM";
+      setAMPM();
+    };
+
+    document.getElementById("PM").onclick = () => {
+      selectedPeriod = "PM";
+      setAMPM();
+    };
+
+    function setAMPM() {
+      document.getElementById("AM").classList.remove("selected");
+      document.getElementById("PM").classList.remove("selected");
+
+      document.getElementById(selectedPeriod).classList.add("selected");
+    }
+
+    function confirmClockTime() {
+      if (!selectedHour || !selectedMinute) {
+        showToast("Please select hour and minutes., info");
+        return;
+      }
+
+      document.getElementById(activeTimeInput).value =
+        `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
+
+      closeTimePopup();
+    }
+
+
+    function toggleDotsMenu() {
+      const menu = document.getElementById("dotsMenu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    document.addEventListener("click", function (event) {
+      const menu = document.getElementById("dotsMenu");
+      const button = document.querySelector(".menu-dots");
+
+      if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = "none";
+      }
+    });
+
+
+    // ===== PREFILL DATES COMING FROM CARS PAGE =====
+    window.addEventListener("load", function () {
+      const p = localStorage.getItem("pickupDate");
+      const r = localStorage.getItem("returnDate");
+      const carId = localStorage.getItem("selectedCar");
+
+      if (p) document.getElementById("pickupDate").value = p;
+      if (r) document.getElementById("returnDate").value = r;
+      if (carId && document.getElementById("carId")) {
+        document.getElementById("carId").value = carId;
+      }
+    });
+
+    function applyAdminOffer() {
+      if (!window.activeOffer) return;
+
+      const couponMsg = document.getElementById("couponMsg");
+
+      if (window.bookingDays < activeOffer.minDays) {
+        couponMsg.innerText =
+          `❌ Offer valid only for ${activeOffer.minDays}+ days`;
+        couponMsg.style.color = "red";
+        return;
+      }
+
+      let discount = 0;
+
+      if (activeOffer.discountType === "PERCENT") {
+        discount = Math.round(
+          window.rentAmount * activeOffer.discountValue / 100
+        );
+      } else {
+        discount = activeOffer.discountValue;
+      }
+
+      if (discount > window.rentAmount) {
+        discount = window.rentAmount;
+      }
+
+      const finalTotal =
+        (window.rentAmount - discount) +
+        window.deliveryCharge +
+        window.depositAmount;
+
+      window.discountAmount = discount;
+      window.appliedOfferId = activeOffer._id;
+
+      document.getElementById("sTotal").innerText = "₹" + finalTotal;
+
+      couponMsg.innerText = `✅ Offer Applied (−₹${discount} on rent)`;
+      couponMsg.style.color = "#00ff7f";
+
+      localStorage.setItem("bookingTotalAmount", finalTotal);
+    }
+
+    async function loadActiveOffer() {
+      const res = await fetch("https://goridezz-backend.onrender.com/api/offers/active");
+      const data = await res.json();
+
+      if (data.offer) {
+        activeOffer = data.offer;
+        showOfferUI(data.offer);
+      }
+    }
+
+    window.addEventListener("load", loadActiveOffer);
+
+    function showOfferUI(offer) {
+      const box = document.getElementById("summaryOfferBox");
+      const text = document.getElementById("summaryOfferText");
+
+      if (!box || !text) return;
+
+      box.style.display = "block";
+
+      text.innerHTML = `
+    <b>${offer.title}</b><br>
+    ${offer.discountType === "PERCENT"
+          ? offer.discountValue + "% OFF"
+          : "₹" + offer.discountValue + " OFF"}
+    <br>
+    <span style="font-size:12px;color:#ccc">
+      Min ${offer.minDays} days booking
+    </span>
+  `;
+    }
+
+
+    function toggleDeposit() {
+      const selected = document.querySelector('input[name="depositType"]:checked');
+      const rcBox = document.getElementById("bikeRCBox");
+
+      if (!selected) return;
+
+      if (selected.value === "bike") {
+        rcBox.style.display = "block";
+      } else {
+        rcBox.style.display = "none";
+      }
+    }
+
+    function showToast(message, type = "error") {
+      const toast = document.getElementById("toast");
+
+      let bg = "rgba(255,0,0,0.15)";
+      let border = "rgba(255,0,0,0.5)";
+      let color = "#ff6b6b";
+
+      if (type === "success") {
+        bg = "rgba(0,255,127,0.15)";
+        border = "rgba(0,255,127,0.5)";
+        color = "#00ff7f";
+      }
+
+      if (type === "info") {
+        bg = "rgba(255,215,0,0.15)";
+        border = "rgba(255,215,0,0.5)";
+        color = "#ffd700";
+      }
+
+      toast.innerText = message;
+      toast.style.background = bg;
+      toast.style.border = `1px solid ${border}`;
+      toast.style.color = color;
+      toast.style.display = "block";
+
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+
+
+  </script>
+
+
+
+
+</body>
+
+</html>
