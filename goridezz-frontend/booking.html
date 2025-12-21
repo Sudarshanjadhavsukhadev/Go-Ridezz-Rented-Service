@@ -7,7 +7,7 @@
   <title>Goridezz – Booking</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="logo.png" type="image/jpeg">
+  <link rel="icon" href="logo.png" type="image/jpeg">
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
@@ -840,7 +840,7 @@
 
 
   <!-- TOAST MESSAGE -->
-<div id="toast" style="
+  <div id="toast" style="
   position: fixed;
   bottom: 25px;
   left: 50%;
@@ -1109,7 +1109,7 @@
 
       const token = localStorage.getItem("token");
       if (!token) {
-       showToast("Please login to continue", "error");
+        showToast("Please login to continue", "error");
 
         return;
       }
@@ -1186,7 +1186,7 @@
         // ✅ SAVE bookingId for review page
         localStorage.setItem("lastBookingId", data.booking._id);
 
-       showToast("Booking saved successfully!", "success");
+        showToast("Booking saved successfully!", "success");
 
 
         // ✅ THEN redirect
@@ -1194,7 +1194,7 @@
       }
 
       else {
-       showToast("Failed to save booking: " + data.message, "error");
+        showToast("Failed to save booking: " + data.message, "error");
 
       }
     }
@@ -1373,18 +1373,29 @@
       // ⏱ TOTAL HOURS
       const totalHours = Math.ceil((end - start) / (1000 * 60 * 60));
 
-      // 📅 FULL DAYS
-      const fullDays = Math.floor(totalHours / 24);
+      // 📅 BASE DAYS
+      let fullDays = Math.floor(totalHours / 24);
 
       // ⏳ EXTRA HOURS
-      const extraHours = totalHours % 24;
+      let extraHours = totalHours % 24;
 
-      // 💰 PRICING
+      // 💰 PRICING LOGIC
+      let extraHourAmount = 0;
+
+      // 🔥 RULE: If extra hours >= 9 → count as 1 full day
+      if (extraHours >= 9) {
+        fullDays += 1;
+        extraHours = 0;
+      }
+      // 🔥 ELSE: charge per hour
+      else {
+        extraHourAmount = extraHours * 200;
+      }
+
+      // 💰 FINAL RENT
       const dayAmount = fullDays * pricePerDay;
-      const extraHourRate = 200;
-      const extraHourAmount = extraHours * extraHourRate;
-
       const rentAmount = dayAmount + extraHourAmount;
+
 
       const deliveryCharge = pickupMethod.value === "delivery" ? 500 : 0;
 
@@ -1410,9 +1421,10 @@
 
       // 🖥 UI UPDATE
       sPrice.innerText = `₹${pricePerDay} / day`;
-      sDays.innerText =
-        `${fullDays} day(s)` +
-        (extraHours > 0 ? ` + ${extraHours} hour(s)` : "");
+    sDays.innerText =
+  `${fullDays} day(s)` +
+  (extraHours > 0 ? ` + ${extraHours} hour(s) (₹${extraHours * 200})` : "");
+
 
       sDelivery.innerText = "₹" + deliveryCharge;
       sTotal.innerText = "₹" + total;
@@ -1731,36 +1743,36 @@
       }
     }
 
- function showToast(message, type = "error") {
-  const toast = document.getElementById("toast");
+    function showToast(message, type = "error") {
+      const toast = document.getElementById("toast");
 
-  let bg = "rgba(255,0,0,0.15)";
-  let border = "rgba(255,0,0,0.5)";
-  let color = "#ff6b6b";
+      let bg = "rgba(255,0,0,0.15)";
+      let border = "rgba(255,0,0,0.5)";
+      let color = "#ff6b6b";
 
-  if (type === "success") {
-    bg = "rgba(0,255,127,0.15)";
-    border = "rgba(0,255,127,0.5)";
-    color = "#00ff7f";
-  }
+      if (type === "success") {
+        bg = "rgba(0,255,127,0.15)";
+        border = "rgba(0,255,127,0.5)";
+        color = "#00ff7f";
+      }
 
-  if (type === "info") {
-    bg = "rgba(255,215,0,0.15)";
-    border = "rgba(255,215,0,0.5)";
-    color = "#ffd700";
-  }
+      if (type === "info") {
+        bg = "rgba(255,215,0,0.15)";
+        border = "rgba(255,215,0,0.5)";
+        color = "#ffd700";
+      }
 
-  toast.innerText = message;
-  toast.style.background = bg;
-  toast.style.border = `1px solid ${border}`;
-  toast.style.color = color;
-  toast.style.display = "block";
+      toast.innerText = message;
+      toast.style.background = bg;
+      toast.style.border = `1px solid ${border}`;
+      toast.style.color = color;
+      toast.style.display = "block";
 
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => {
-    toast.style.display = "none";
-  }, 3000);
-}
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
 
 
 
