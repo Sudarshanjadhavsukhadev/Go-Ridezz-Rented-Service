@@ -9,6 +9,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
+/* 🍎 iOS INPUT FIX */
+input[type="email"] {
+  -webkit-text-size-adjust: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
 
 /* === GLOBAL THEME === */
 body {
@@ -233,18 +239,28 @@ h2 {
   <h3 style="color:#ffd700;margin-bottom:10px;">Find Your Booking</h3>
 
   <input
-    id="lookupEmail"
-    type="email"
-    placeholder="Enter your booking email"
-    style="
-      width:100%;
-      padding:12px;
-      border-radius:12px;
-      border:none;
-      outline:none;
-      margin-bottom:12px;
-    "
-  >
+  id="lookupEmail"
+  type="email"
+  placeholder="Enter your booking email"
+  style="
+    width:100%;
+    height:48px;                 /* 🔥 fixed height */
+    padding:0 14px;              /* 🔥 horizontal only */
+    border-radius:14px;
+    border:none;
+    outline:none;
+
+    font-size:16px;              /* 🔥 prevents iOS zoom */
+    line-height:48px;            /* 🔥 vertical centering */
+    box-sizing:border-box;
+
+    margin-bottom:14px;
+    -webkit-appearance:none;     /* 🔥 Safari reset */
+    appearance:none;
+  "
+>
+
+
 
   <button onclick="loadBookingsByEmail()" style="
     width:100%;
