@@ -346,18 +346,23 @@ header {
   margin-top: 6px;
 }
 
-/* ================= DOWN ARROW ================= */
 .down-arrow {
   margin-top: 35px;
-  font-size: 36px;
-  color: #ffd700;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  margin-right: auto;
   cursor: pointer;
   animation: bounce 1.5s infinite;
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(10px); }
+.down-arrow span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-right: 4px solid #ffd700;
+  border-bottom: 4px solid #ffd700;
+  transform: rotate(45deg);
 }
 
 /* ================= BROWSE CARS SECTION ================= */
@@ -724,7 +729,10 @@ header {
 
   <h1>Rent Your Dream Car</h1>
   <p>Premium cars, flexible rental plans & subscriptions — drive your way.</p>
-  <div class="down-arrow" onclick="scrollToBrowse()">⬇</div>
+ <div class="down-arrow" onclick="scrollToBrowse()">
+  <span></span>
+</div>
+
 
 </section>
 

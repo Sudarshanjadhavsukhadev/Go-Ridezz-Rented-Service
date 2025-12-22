@@ -804,7 +804,8 @@
 
 
       <div class="qr-image-wrapper">
-        <img src="http://localhost:5000/api/qr/qr" id="paymentQR">
+       <img src="https://goridezz-backend.onrender.com/api/qr/qr" id="paymentQR">
+
       </div>
 
       <p class="qr-instruction">
@@ -1107,12 +1108,7 @@
       }
 
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        showToast("Please login to continue", "error");
-
-        return;
-      }
+     
 
       const form = new FormData();
 
@@ -1175,11 +1171,11 @@
 
 
 
-      const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: form
-      });
+    const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
+  method: "POST",
+  body: form
+});
+
 
       const data = await res.json();
       if (data.success) {
@@ -1436,11 +1432,15 @@
       document.getElementById("summaryPopup").style.display = "none";
     }
 
-    // Move to QR popup after summary
-    function showQRfromSummary() {
-      closeSummary();
-      showQR();
-    }
+    function showQR() {
+  const qrImg = document.getElementById("paymentQR");
+
+  // 🔄 Force-load latest QR uploaded by admin (avoid cache)
+  qrImg.src = "https://goridezz-backend.onrender.com/api/qr/qr?t=" + Date.now();
+
+  document.getElementById("qrPopup").style.display = "flex";
+}
+
 
     const licenseInput = document.getElementById("license");
 
