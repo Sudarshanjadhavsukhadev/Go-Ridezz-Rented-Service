@@ -222,7 +222,7 @@ document.querySelectorAll("#starRating span").forEach((star, index) => {
 async function submitReview() {
   const comment = document.getElementById("comment").value.trim();
   const bookingId = localStorage.getItem("lastBookingId");
-  const token = localStorage.getItem("token");
+  
 
   if (!rating) return alert("Please select a rating");
   if (!comment) return alert("Please write your review");
@@ -230,7 +230,7 @@ async function submitReview() {
   const res = await fetch("https://goridezz-backend.onrender.com/api/reviews", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${token}`,
+     
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ rating, comment, bookingId })
