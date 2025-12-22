@@ -1100,7 +1100,15 @@ const sDepositAmount = document.getElementById("sDepositAmount");
       });
     }
 
-   
+   function resetConfirmButton() {
+  const btn = document.getElementById("confirmBookingBtn");
+  btn.innerText = "Confirm Booking";
+  btn.style.background = "";
+  btn.style.color = "";
+  btn.disabled = false;
+  btn.style.cursor = "pointer";
+}
+
 
    
 
@@ -1187,29 +1195,36 @@ const sDepositAmount = document.getElementById("sDepositAmount");
 
 
 
+    const res = await fetch(
+  "https://goridezz-backend.onrender.com/api/bookings",
+  {
+    method: "POST",
+    body: form
+  }
+);
 
-    const res = await fetch("https://goridezz-backend.onrender.com/api/bookings", {
-  method: "POST",
-  body: form
-});
+let data;
+try {
+  data = await res.json();
+} catch (e) {
+  showToast("Server error. Please try again.", "error");
+  resetConfirmButton();
+  return;
+}
+
+if (res.ok && data.success) {
+  localStorage.setItem("lastBookingId", data.booking._id);
+  showToast("Booking saved successfully!", "success");
+  window.location.href = "review.html";
+} else {
+  showToast("Failed to save booking: " + (data.message || "Unknown error"), "error");
+  resetConfirmButton();   // 🔥 THIS WAS MISSING
+}
+
+   
 
 
-      const data = await res.json();
-      if (data.success) {
-        // ✅ SAVE bookingId for review page
-        localStorage.setItem("lastBookingId", data.booking._id);
-
-        showToast("Booking saved successfully!", "success");
-
-
-        // ✅ THEN redirect
-        window.location.href = "review.html";
-      }
-
-      else {
-        showToast("Failed to save booking: " + data.message, "error");
-
-      }
+      
     }
 
     function toggleDeliveryInput() {
