@@ -49,12 +49,14 @@
       left: -100px;
       background: linear-gradient(160deg, rgba(255, 215, 0, 0.18), transparent);
       border-right: 2px solid rgba(255, 215, 0, 0.4);
+       pointer-events: none;
     }
 
     .shape-right {
       right: -100px;
       background: linear-gradient(200deg, rgba(255, 165, 0, 0.25), transparent);
       border-left: 2px solid rgba(255, 185, 0, 0.4);
+       pointer-events: none;
     }
 
     /* GOLD GLOW BEHIND CONTENT */
@@ -691,7 +693,15 @@
         <input type="file" id="bikeRCPhoto" accept="image/*">
       </div>
 
-      <button type="button" class="booking-btn" onclick="openSummary()">Proceed to Payment</button>
+     <button
+  type="button"
+  class="booking-btn"
+  onclick="openSummary()"
+  style="position:relative; z-index:10;"
+>
+  Proceed to Payment
+</button>
+
 
 
     </form>
@@ -1099,6 +1109,11 @@ const sDepositAmount = document.getElementById("sDepositAmount");
         }
       });
     }
+
+    function openSummary() {
+  alert("BUTTON CLICKED");
+}
+
 
    function resetConfirmButton() {
   const btn = document.getElementById("confirmBookingBtn");
