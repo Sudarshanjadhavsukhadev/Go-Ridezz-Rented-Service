@@ -1117,6 +1117,18 @@
     }
 
 
+    if (!window.aadhaarVerified) {
+      showToast("Aadhaar not verified", "error");
+      resetConfirmButton();
+      return;
+    }
+
+    if (!window.licenseVerified) {
+      showToast("License not verified", "error");
+      resetConfirmButton();
+      return;
+    }
+
 
 
     async function confirmBooking() {
@@ -1154,7 +1166,7 @@
 
       // BASIC DETAILS
       form.append("carId", localStorage.getItem("selectedCar"));
-      form.append("fullname", fullname.value);
+      form.append("email", emailEl.value.trim()); // ✅ FIX HERE
       form.append("email", emailEl.value);
       form.append("contact", contact.value);
       form.append("address", address.value);
@@ -1438,7 +1450,8 @@
       const rentAmount = dayAmount + extraHourAmount;
 
 
-      const deliveryCharge = pickupMethod.value === "delivery" ? 500 : 0;
+      const pickupMethodValue = document.getElementById("pickupMethod").value;
+      const deliveryCharge = pickupMethodValue === "delivery" ? 500 : 0;
 
       let depositAmount = 0;
       if (document.querySelector('input[name="depositType"]:checked').value === "cash") {
