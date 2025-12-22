@@ -859,6 +859,28 @@
 
   <script>
 
+    const fullname = document.getElementById("fullname");
+const emailEl = document.getElementById("email");
+const contact = document.getElementById("contact");
+const address = document.getElementById("address");
+const visitPlace = document.getElementById("visitPlace");
+
+const pickupDate = document.getElementById("pickupDate");
+const pickupTime = document.getElementById("pickupTime");
+const returnDate = document.getElementById("returnDate");
+const returnTime = document.getElementById("returnTime");
+
+const deliveryAddress = document.getElementById("deliveryAddress");
+
+const summaryPopup = document.getElementById("summaryPopup");
+const sPrice = document.getElementById("sPrice");
+const sDays = document.getElementById("sDays");
+const sDelivery = document.getElementById("sDelivery");
+const sTotal = document.getElementById("sTotal");
+const sDeposit = document.getElementById("sDeposit");
+const sDepositAmount = document.getElementById("sDepositAmount");
+
+
     function showError(message, elementId = null) {
       const box = document.getElementById("formError");
       box.innerText = message;
@@ -1078,14 +1100,9 @@
       });
     }
 
-    function showQR() {
-      document.getElementById("qrPopup").style.display = "flex";
-    }
+   
 
-    function closeQR() {
-      document.getElementById("qrPopup").style.display = "none";
-    }
-
+   
 
     async function confirmBooking() {
       const btn = document.getElementById("confirmBookingBtn");
@@ -1305,7 +1322,8 @@
       }
 
       // PICKUP METHOD
-      const pickupMethod = pickupMethodEl = document.getElementById("pickupMethod").value;
+      const pickupMethod = document.getElementById("pickupMethod").value;
+
       if (!pickupMethod) {
         showError("Please select pickup method", "pickupMethod");
         return;
@@ -1447,6 +1465,9 @@
   document.getElementById("qrPopup").style.display = "flex";
 }
 
+ function closeQR() {
+      document.getElementById("qrPopup").style.display = "none";
+    }
 
 
     const licenseInput = document.getElementById("license");
