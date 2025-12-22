@@ -1117,7 +1117,13 @@
     }
 
 
-    if (!window.aadhaarVerified) {
+    
+
+
+
+    async function confirmBooking() {
+
+      if (!window.aadhaarVerified) {
       showToast("Aadhaar not verified", "error");
       resetConfirmButton();
       return;
@@ -1128,10 +1134,6 @@
       resetConfirmButton();
       return;
     }
-
-
-
-    async function confirmBooking() {
 
       const btn = document.getElementById("confirmBookingBtn");
       btn.innerText = "Confirming...";
