@@ -822,7 +822,7 @@
         Upload Payment Screenshot
       </label>
 
-      <input type="file" id="paymentProof" accept="image/*" required style="
+      <input type="file" id="paymentProof" name="paymentProof" accept="image/*" required style="
     width:100%;
     padding:12px;
     border-radius:12px;
@@ -1120,101 +1120,102 @@
 
 
     async function confirmBooking() {
+
       const btn = document.getElementById("confirmBookingBtn");
       btn.innerText = "Confirming...";
-      btn.style.background = "#00ff7f";   // green
-      btn.style.color = "#000";
       btn.disabled = true;
-      btn.style.cursor = "not-allowed";
+
       const paymentImage = document.getElementById("paymentProof").files[0];
-
       if (!paymentImage) {
-        showToast("Please upload payment screenshot to continue", "info");
-
-        // 🔁 revert button if error
-        btn.innerText = "Confirm Booking";
-        btn.style.background = "";
-        btn.disabled = false;
-        btn.style.cursor = "pointer";
+        showToast("Upload payment screenshot", "info");
+        resetConfirmButton();
         return;
       }
 
+      const depositType =
+        document.querySelector('input[name="depositType"]:checked')?.value;
 
+      if (!depositType) {
+        showToast("Select security deposit option", "error");
+        resetConfirmButton();
+        return;
+      }
 
+      if (depositType === "bike") {
+        const rcFile = document.getElementById("bikeRCPhoto").files[0];
+        if (!rcFile) {
+          showToast("Bike RC is required", "error");
+          resetConfirmButton();
+          return;
+        }
+      }
 
       const form = new FormData();
 
-      // Car ID
+      // BASIC DETAILS
       form.append("carId", localStorage.getItem("selectedCar"));
+      form.append("fullname", fullname.value);
+      form.append("email", emailEl.value);
+      form.append("contact", contact.value);
+      form.append("address", address.value);
+      form.append("visitPlace", visitPlace.value);
 
-      form.append("fullname", document.getElementById("fullname").value);
-      form.append("email", document.getElementById("email").value);
-
-      form.append("contact", document.getElementById("contact").value);
-      form.append("address", document.getElementById("address").value);
-      form.append("visitPlace", document.getElementById("visitPlace").value);
-
+      // PICKUP
       const pickupMethod = document.getElementById("pickupMethod").value;
       form.append("pickupMethod", pickupMethod);
-
       if (pickupMethod === "delivery") {
-        form.append(
-          "deliveryAddress",
-          document.getElementById("deliveryAddress").value
-        );
+        form.append("deliveryAddress", deliveryAddress.value);
       }
 
-      form.append("pickupDate", document.getElementById("pickupDate").value);
-      form.append("pickupTime", document.getElementById("pickupTime").value);
+      form.append("pickupDate", pickupDate.value);
+      form.append("pickupTime", pickupTime.value);
+      form.append("returnDate", returnDate.value);
+      form.append("returnTime", returnTime.value);
 
-      form.append("returnDate", document.getElementById("returnDate").value);
-      form.append("returnTime", document.getElementById("returnTime").value);
-
+      // FILES
       form.append("paymentProof", paymentImage);
-
       form.append("license", document.getElementById("license").value);
-
-      form.append("totalAmount", Number(localStorage.getItem("bookingTotalAmount")) || 0);
-      form.append("advancePaid", 500);
-
-      form.append("couponCode", window.appliedCoupon || "");
-      form.append("bookingType", window.selectedTag || "rent");
-
 
       const aadhaarFiles = document.getElementById("aadharFiles").files;
       for (let file of aadhaarFiles) {
         form.append("aadharPhoto", file);
       }
 
-      form.append("licensePhoto", document.getElementById("licensePhoto").files[0]);
+      form.append(
+        "licensePhoto",
+        document.getElementById("licensePhoto").files[0]
+      );
+
+      // 🔐 DEPOSIT
+      form.append("depositType", depositType);
+
+      let depositAmount = 0;
+      if (depositType === "cash") {
+        depositAmount = 10000;
+      } else {
+        form.append(
+          "bikeRCPhoto",
+          document.getElementById("bikeRCPhoto").files[0]
+        );
+      }
+
+      // 💰 AMOUNTS (🔥 THIS WAS MISSING BEFORE)
+      const totalAmount =
+        Number(localStorage.getItem("bookingTotalAmount")) || 0;
+
+      const advancePaid = 500;
+      const remainingAmount = totalAmount - advancePaid;
+
+      form.append("totalAmount", totalAmount);
+      form.append("advancePaid", advancePaid);
+      form.append("remainingAmount", remainingAmount);
+      form.append("depositAmount", depositAmount);
+
+      // OFFER
       form.append("offerId", window.appliedOfferId || "");
       form.append("discountAmount", Number(window.discountAmount) || 0);
 
-
-      const depositType =
-        document.querySelector('input[name="depositType"]:checked')?.value;
-
-      if (!depositType) {
-        showToast("Please select a security deposit option, info");
-        return;
-      }
-
-      form.append("depositType", depositType);
-
-      // 🔐 If Bike is selected as deposit, RC is mandatory
-      if (depositType === "bike") {
-        const rcFile = document.getElementById("bikeRCPhoto").files[0];
-
-        if (!rcFile) {
-          showToast("Please upload Bike RC photo, info");
-          return;
-        }
-
-        form.append("bikeRCPhoto", rcFile);
-      }
-
-
-
+      // SEND
       const res = await fetch(
         "https://goridezz-backend.onrender.com/api/bookings",
         {
@@ -1223,29 +1224,20 @@
         }
       );
 
-      let data;
-      try {
-        data = await res.json();
-      } catch (e) {
-        showToast("Server error. Please try again.", "error");
-        resetConfirmButton();
-        return;
-      }
+      const data = await res.json();
 
       if (res.ok && data.success) {
         localStorage.setItem("lastBookingId", data.booking._id);
-        showToast("Booking saved successfully!", "success");
+        showToast("Booking successful!", "success");
         window.location.href = "review.html";
       } else {
-        showToast("Failed to save booking: " + (data.message || "Unknown error"), "error");
-        resetConfirmButton();   // 🔥 THIS WAS MISSING
+        showToast(data.message || "Booking failed", "error");
+        resetConfirmButton();
       }
-
-
-
-
-
     }
+
+
+
 
     function toggleDeliveryInput() {
       const method = document.getElementById("pickupMethod").value;
