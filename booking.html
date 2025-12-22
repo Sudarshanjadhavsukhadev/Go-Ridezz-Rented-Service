@@ -49,14 +49,14 @@
       left: -100px;
       background: linear-gradient(160deg, rgba(255, 215, 0, 0.18), transparent);
       border-right: 2px solid rgba(255, 215, 0, 0.4);
-       pointer-events: none;
+      pointer-events: none;
     }
 
     .shape-right {
       right: -100px;
       background: linear-gradient(200deg, rgba(255, 165, 0, 0.25), transparent);
       border-left: 2px solid rgba(255, 185, 0, 0.4);
-       pointer-events: none;
+      pointer-events: none;
     }
 
     /* GOLD GLOW BEHIND CONTENT */
@@ -693,14 +693,9 @@
         <input type="file" id="bikeRCPhoto" accept="image/*">
       </div>
 
-     <button
-  type="button"
-  class="booking-btn"
-  onclick="openSummary()"
-  style="position:relative; z-index:10;"
->
-  Proceed to Payment
-</button>
+      <button type="button" class="booking-btn" onclick="openSummary()" style="position:relative; z-index:10;">
+        Proceed to Payment
+      </button>
 
 
 
@@ -814,13 +809,13 @@
 
 
       <div class="qr-image-wrapper">
-      <img id="paymentQR" alt="Payment QR">
+        <img id="paymentQR" alt="Payment QR">
 
       </div>
 
       <p class="qr-instruction">
         After payment
-        
+
       </p>
 
       <label style="color:#ffd700;font-weight:600;display:block;margin-bottom:8px;">
@@ -870,25 +865,25 @@
   <script>
 
     const fullname = document.getElementById("fullname");
-const emailEl = document.getElementById("email");
-const contact = document.getElementById("contact");
-const address = document.getElementById("address");
-const visitPlace = document.getElementById("visitPlace");
+    const emailEl = document.getElementById("email");
+    const contact = document.getElementById("contact");
+    const address = document.getElementById("address");
+    const visitPlace = document.getElementById("visitPlace");
 
-const pickupDate = document.getElementById("pickupDate");
-const pickupTime = document.getElementById("pickupTime");
-const returnDate = document.getElementById("returnDate");
-const returnTime = document.getElementById("returnTime");
+    const pickupDate = document.getElementById("pickupDate");
+    const pickupTime = document.getElementById("pickupTime");
+    const returnDate = document.getElementById("returnDate");
+    const returnTime = document.getElementById("returnTime");
 
-const deliveryAddress = document.getElementById("deliveryAddress");
+    const deliveryAddress = document.getElementById("deliveryAddress");
 
-const summaryPopup = document.getElementById("summaryPopup");
-const sPrice = document.getElementById("sPrice");
-const sDays = document.getElementById("sDays");
-const sDelivery = document.getElementById("sDelivery");
-const sTotal = document.getElementById("sTotal");
-const sDeposit = document.getElementById("sDeposit");
-const sDepositAmount = document.getElementById("sDepositAmount");
+    const summaryPopup = document.getElementById("summaryPopup");
+    const sPrice = document.getElementById("sPrice");
+    const sDays = document.getElementById("sDays");
+    const sDelivery = document.getElementById("sDelivery");
+    const sTotal = document.getElementById("sTotal");
+    const sDeposit = document.getElementById("sDeposit");
+    const sDepositAmount = document.getElementById("sDepositAmount");
 
 
     function showError(message, elementId = null) {
@@ -1110,22 +1105,19 @@ const sDepositAmount = document.getElementById("sDepositAmount");
       });
     }
 
-    function openSummary() {
-  alert("BUTTON CLICKED");
-}
 
 
-   function resetConfirmButton() {
-  const btn = document.getElementById("confirmBookingBtn");
-  btn.innerText = "Confirm Booking";
-  btn.style.background = "";
-  btn.style.color = "";
-  btn.disabled = false;
-  btn.style.cursor = "pointer";
-}
+    function resetConfirmButton() {
+      const btn = document.getElementById("confirmBookingBtn");
+      btn.innerText = "Confirm Booking";
+      btn.style.background = "";
+      btn.style.color = "";
+      btn.disabled = false;
+      btn.style.cursor = "pointer";
+    }
 
 
-   
+
 
     async function confirmBooking() {
       const btn = document.getElementById("confirmBookingBtn");
@@ -1148,7 +1140,7 @@ const sDepositAmount = document.getElementById("sDepositAmount");
       }
 
 
-     
+
 
       const form = new FormData();
 
@@ -1162,7 +1154,16 @@ const sDepositAmount = document.getElementById("sDepositAmount");
       form.append("address", document.getElementById("address").value);
       form.append("visitPlace", document.getElementById("visitPlace").value);
 
-      form.append("pickupMethod", document.getElementById("pickupMethod").value);
+      const pickupMethod = document.getElementById("pickupMethod").value;
+      form.append("pickupMethod", pickupMethod);
+
+      if (pickupMethod === "delivery") {
+        form.append(
+          "deliveryAddress",
+          document.getElementById("deliveryAddress").value
+        );
+      }
+
       form.append("pickupDate", document.getElementById("pickupDate").value);
       form.append("pickupTime", document.getElementById("pickupTime").value);
 
@@ -1180,7 +1181,11 @@ const sDepositAmount = document.getElementById("sDepositAmount");
       form.append("bookingType", window.selectedTag || "rent");
 
 
-      form.append("aadharPhoto", document.getElementById("aadharFiles").files[0]);
+      const aadhaarFiles = document.getElementById("aadharFiles").files;
+      for (let file of aadhaarFiles) {
+        form.append("aadharPhoto", file);
+      }
+
       form.append("licensePhoto", document.getElementById("licensePhoto").files[0]);
       form.append("offerId", window.appliedOfferId || "");
       form.append("discountAmount", Number(window.discountAmount) || 0);
@@ -1210,36 +1215,36 @@ const sDepositAmount = document.getElementById("sDepositAmount");
 
 
 
-    const res = await fetch(
-  "https://goridezz-backend.onrender.com/api/bookings",
-  {
-    method: "POST",
-    body: form
-  }
-);
+      const res = await fetch(
+        "https://goridezz-backend.onrender.com/api/bookings",
+        {
+          method: "POST",
+          body: form
+        }
+      );
 
-let data;
-try {
-  data = await res.json();
-} catch (e) {
-  showToast("Server error. Please try again.", "error");
-  resetConfirmButton();
-  return;
-}
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        showToast("Server error. Please try again.", "error");
+        resetConfirmButton();
+        return;
+      }
 
-if (res.ok && data.success) {
-  localStorage.setItem("lastBookingId", data.booking._id);
-  showToast("Booking saved successfully!", "success");
-  window.location.href = "review.html";
-} else {
-  showToast("Failed to save booking: " + (data.message || "Unknown error"), "error");
-  resetConfirmButton();   // 🔥 THIS WAS MISSING
-}
-
-   
+      if (res.ok && data.success) {
+        localStorage.setItem("lastBookingId", data.booking._id);
+        showToast("Booking saved successfully!", "success");
+        window.location.href = "review.html";
+      } else {
+        showToast("Failed to save booking: " + (data.message || "Unknown error"), "error");
+        resetConfirmButton();   // 🔥 THIS WAS MISSING
+      }
 
 
-      
+
+
+
     }
 
     function toggleDeliveryInput() {
@@ -1465,9 +1470,9 @@ if (res.ok && data.success) {
 
       // 🖥 UI UPDATE
       sPrice.innerText = `₹${pricePerDay} / day`;
-    sDays.innerText =
-  `${fullDays} day(s)` +
-  (extraHours > 0 ? ` + ${extraHours} hour(s) (₹${extraHours * 200})` : "");
+      sDays.innerText =
+        `${fullDays} day(s)` +
+        (extraHours > 0 ? ` + ${extraHours} hour(s) (₹${extraHours * 200})` : "");
 
 
       sDelivery.innerText = "₹" + deliveryCharge;
@@ -1480,22 +1485,22 @@ if (res.ok && data.success) {
       document.getElementById("summaryPopup").style.display = "none";
     }
     function showQRfromSummary() {
-  console.log("Proceed to Pay clicked");
-  document.getElementById("summaryPopup").style.display = "none";
-  showQR();
-}
+      console.log("Proceed to Pay clicked");
+      document.getElementById("summaryPopup").style.display = "none";
+      showQR();
+    }
 
-   function showQR() {
-  const qrImg = document.getElementById("paymentQR");
+    function showQR() {
+      const qrImg = document.getElementById("paymentQR");
 
-  // 🔥 wake Render + bypass cache
-  qrImg.src =
-    "https://goridezz-backend.onrender.com/api/qr/qr?t=" + Date.now();
+      // 🔥 wake Render + bypass cache
+      qrImg.src =
+        "https://goridezz-backend.onrender.com/api/qr/qr?t=" + Date.now();
 
-  document.getElementById("qrPopup").style.display = "flex";
-}
+      document.getElementById("qrPopup").style.display = "flex";
+    }
 
- function closeQR() {
+    function closeQR() {
       document.getElementById("qrPopup").style.display = "none";
     }
 
