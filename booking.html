@@ -804,7 +804,7 @@
 
 
       <div class="qr-image-wrapper">
-       <img src="https://goridezz-backend.onrender.com/api/qr/qr" id="paymentQR">
+      <img id="paymentQR" alt="Payment QR">
 
       </div>
 
@@ -1432,14 +1432,16 @@
       document.getElementById("summaryPopup").style.display = "none";
     }
 
-    function showQR() {
+   function showQR() {
   const qrImg = document.getElementById("paymentQR");
 
-  // 🔄 Force-load latest QR uploaded by admin (avoid cache)
-  qrImg.src = "https://goridezz-backend.onrender.com/api/qr/qr?t=" + Date.now();
+  // 🔥 wake Render + bypass cache
+  qrImg.src =
+    "https://goridezz-backend.onrender.com/api/qr/qr?t=" + Date.now();
 
   document.getElementById("qrPopup").style.display = "flex";
 }
+
 
 
     const licenseInput = document.getElementById("license");
