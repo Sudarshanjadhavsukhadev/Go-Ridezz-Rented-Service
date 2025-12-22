@@ -1431,6 +1431,11 @@
     function closeSummary() {
       document.getElementById("summaryPopup").style.display = "none";
     }
+    function showQRfromSummary() {
+  console.log("Proceed to Pay clicked");
+  document.getElementById("summaryPopup").style.display = "none";
+  showQR();
+}
 
    function showQR() {
   const qrImg = document.getElementById("paymentQR");
