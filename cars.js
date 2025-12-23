@@ -340,21 +340,3 @@ function updateTimeSummary() {
   .forEach(id => document.getElementById(id).addEventListener("change", updateTimeSummary));
 
 
-document.querySelectorAll(".input-wrap input").forEach(input => {
-  const placeholder = input.previousElementSibling;
-
-  function update() {
-    if (input.value) {
-      input.classList.add("has-value");
-      placeholder.style.opacity = "0";
-    } else {
-      input.classList.remove("has-value");
-      placeholder.style.opacity = "0.85";
-    }
-  }
-
-  input.addEventListener("change", update);
-  input.addEventListener("blur", update);
-
-  update(); // initial check
-});
