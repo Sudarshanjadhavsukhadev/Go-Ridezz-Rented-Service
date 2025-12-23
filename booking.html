@@ -1377,7 +1377,7 @@
 
       // NAME
       if (!fullname.value.trim()) {
-       showFieldError("fullname", "Full name is required");
+        showFieldError("fullname", "Full name is required");
 
         return;
       }
@@ -1779,16 +1779,23 @@
 
     // ===== PREFILL DATES COMING FROM CARS PAGE =====
     window.addEventListener("load", function () {
-      const p = localStorage.getItem("pickupDate");
-      const r = localStorage.getItem("returnDate");
+      const pickupDateLS = localStorage.getItem("pickupDate");
+      const pickupTimeLS = localStorage.getItem("pickupTime");
+      const returnDateLS = localStorage.getItem("returnDate");
+      const returnTimeLS = localStorage.getItem("returnTime");
       const carId = localStorage.getItem("selectedCar");
 
-      if (p) document.getElementById("pickupDate").value = p;
-      if (r) document.getElementById("returnDate").value = r;
+      if (pickupDateLS) document.getElementById("pickupDate").value = pickupDateLS;
+      if (pickupTimeLS) document.getElementById("pickupTime").value = pickupTimeLS;
+
+      if (returnDateLS) document.getElementById("returnDate").value = returnDateLS;
+      if (returnTimeLS) document.getElementById("returnTime").value = returnTimeLS;
+
       if (carId && document.getElementById("carId")) {
         document.getElementById("carId").value = carId;
       }
     });
+
 
     function applyAdminOffer() {
       if (!window.activeOffer) return;

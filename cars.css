@@ -766,3 +766,39 @@ input[type="date"] {
   margin-top: 4px;
   display: block;
 }
+.input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+/* Fake placeholder text */
+.fake-placeholder {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffd700;
+  font-size: 14px;
+  pointer-events: none;
+  opacity: 0.8;
+  transition: 0.2s ease;
+}
+
+/* Input styling */
+.input-wrap input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffd700;
+  font-size: 15px;
+
+  -webkit-text-fill-color: #ffd700; /* iOS FIX */
+}
+
+/* Hide fake placeholder when value selected */
+.input-wrap input:not(:placeholder-shown) + .fake-placeholder,
+.input-wrap input:focus + .fake-placeholder {
+  opacity: 0;
+}
