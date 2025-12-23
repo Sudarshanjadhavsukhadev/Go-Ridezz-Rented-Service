@@ -336,7 +336,4 @@ function updateTimeSummary() {
     `🕒 Duration: ${hours} hours (${days} day${days > 1 ? "s" : ""})`;
 }
 
-["pickupDate", "pickupTime", "returnDate", "returnTime"]
-  .forEach(id => document.getElementById(id).addEventListener("change", updateTimeSummary));
-
 
