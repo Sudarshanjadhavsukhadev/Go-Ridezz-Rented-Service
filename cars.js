@@ -337,13 +337,3 @@ function updateTimeSummary() {
 }
 
 
-document.querySelectorAll(".input-wrap input").forEach(input => {
-  input.addEventListener("change", () => {
-    const placeholder = input.previousElementSibling;
-    if (input.value) {
-      placeholder.style.opacity = "0";
-    } else {
-      placeholder.style.opacity = "0.8";
-    }
-  });
-});
