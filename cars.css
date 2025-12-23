@@ -752,3 +752,17 @@ input[type="date"] {
   margin: 12px 0;
   text-align: center;
 }
+.availability-bar label {
+  color: #ffd700;            /* GOLD */
+  font-weight: 600;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.availability-bar small {
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+}
