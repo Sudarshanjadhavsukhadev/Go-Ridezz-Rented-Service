@@ -5,15 +5,73 @@ let allCars = [];
 let lastLoadedCars = [];
 let categoryFilter = "all";
 
+function toDateTime(date, time) {
+  return new Date(`${date}T${time}:00`);
+}
 
 
 async function initPage() {
-  await loadBookings();   // 🔴 must finish first
-  await loadCars();       // 🟢 then render cars
+  await loadBookings();
+  await loadCars();
+
+  // ⛔ do NOT show cars yet
+  document.getElementById("carList").innerHTML =
+    "<p style='color:#ffd700;text-align:center;'>Select pickup & return date/time to see available cars</p>";
 }
+
 
 initPage();
 
+
+function isCarAvailable(carId, userStart, userEnd) {
+  return !allBookings.some(b => {
+    if (!b.carId || b.carId._id !== carId) return false;
+    if (b.userStatus === "cancelled") return false;
+
+    const bookedStart = toDateTime(b.pickupDate, b.pickupTime);
+    const bookedEnd = toDateTime(b.returnDate, b.returnTime);
+
+    return bookedStart < userEnd && bookedEnd > userStart;
+  });
+}
+
+function searchAvailableCars() {
+  const pDate = document.getElementById("pickupDate").value;
+  const pTime = document.getElementById("pickupTime").value;
+  const rDate = document.getElementById("returnDate").value;
+  const rTime = document.getElementById("returnTime").value;
+
+  if (!pDate || !pTime || !rDate || !rTime) {
+    alert("Please select pickup & return date and time");
+    return;
+  }
+
+  const userStart = toDateTime(pDate, pTime);
+  const userEnd = toDateTime(rDate, rTime);
+
+  if (userEnd <= userStart) {
+    alert("Return time must be after pickup time");
+    return;
+  }
+
+  // save for booking page
+  localStorage.setItem("pickupDate", pDate);
+  localStorage.setItem("pickupTime", pTime);
+  localStorage.setItem("returnDate", rDate);
+  localStorage.setItem("returnTime", rTime);
+
+  const availableCars = allCars.filter(car =>
+    isCarAvailable(car._id, userStart, userEnd)
+  );
+
+  if (!availableCars.length) {
+    document.getElementById("carList").innerHTML =
+      "<p style='color:#ffd700;text-align:center;'>No cars available for selected time</p>";
+    return;
+  }
+
+  renderCars(availableCars);
+}
 
 async function loadBookings() {
   try {
@@ -32,43 +90,15 @@ async function loadBookings() {
   }
 }
 
-function isDateBooked(carId, dateStr) {
-  const date = new Date(dateStr);
-
-  return allBookings.some(b => {
-    if (!b.carId || b.carId._id !== carId) return false;
-
-    // ✅ IGNORE CANCELLED BOOKINGS
-    if (b.status === "cancelled") return false;
-
-    const start = new Date(b.pickupDate);
-    const end = new Date(b.returnDate);
-
-    return date >= start && date <= end;
-  });
-}
 
 
-function isCarBooked(carId) {
-  const today = new Date();
 
-  return allBookings.some(b => {
-    if (!b.carId || b.carId._id !== carId) return false;
 
-    // ✅ IGNORE CANCELLED BOOKINGS
-    if (b.status === "cancelled") return false;
 
-    const start = new Date(b.pickupDate);
-    const end = new Date(b.returnDate);
-
-    return today >= start && today <= end;
-  });
-}
 
 
 
 // ================= LOAD CARS =================
-
 
 async function loadCars() {
   try {
@@ -82,95 +112,66 @@ async function loadCars() {
 
     allCars = data.cars;
     lastLoadedCars = data.cars;
-
-    renderCars(allCars);
+    // 🚫 DO NOT render here
   } catch (err) {
     console.error("Car load error:", err);
   }
 }
+
 
 // ================= RENDER CARS =================
 function renderCars(cars) {
   const carList = document.getElementById("carList");
   carList.innerHTML = "";
 
-  if (!cars.length) {
-    carList.innerHTML = `
-      <p style="color:#ccc;text-align:center;width:100%;">
-        No cars found
-      </p>`;
-    return;
-  }
-
-  // 🔥 SORT: Available cars first, Booked cars last
-const sortedCars = [...cars].sort((a, b) => {
-  const aBooked = isCarBooked(a._id);
-  const bBooked = isCarBooked(b._id);
-
-  // available first (false), booked last (true)
-  return aBooked - bBooked;
-});
-
   const tag = localStorage.getItem("carTag") || "rent";
 
- for (const car of sortedCars) {
-
-
-  const booked = isCarBooked(car._id);
-
+  for (const car of cars) {
     let finalPrice = car.rentPrice;
     let unit = "/day";
 
     if (tag === "subscribe") {
-      if (!car.subscribePrice || car.subscribePrice <= 0) {
-        finalPrice = null; // mark as not available
-      } else {
-        finalPrice = car.subscribePrice;
-        unit = "/month";
-      }
+      if (!car.subscribePrice) continue;
+      finalPrice = car.subscribePrice;
+      unit = "/month";
     }
 
-
     carList.innerHTML += `
-  <div class="card ${booked ? "booked-card" : ""}"
-       ${!booked ? `onclick="openCar('${car._id}', ${finalPrice}, '${tag}')"` : ""}>
+      <div class="card" onclick="openCar('${car._id}', ${finalPrice}, '${tag}')">
+        <img src="${car.imageUrls?.[0] || ''}" />
 
-    ${booked ? `<div class="booked-badge">BOOKED</div>` : ""}
-
-    <img src="${car.imageUrls?.[0] || ''}" />
-
-    <div class="card-body">
-      <h3>${car.brand} ${car.name}</h3>
-
-      <div class="details">
-        ${car.transmission} • ${car.seats} Seats • ${car.fuel}
+        <div class="card-body">
+          <h3>${car.brand} ${car.name}</h3>
+          <div class="details">
+            ${car.transmission} • ${car.seats} Seats • ${car.fuel}
+          </div>
+          <div class="price">₹${finalPrice}${unit}</div>
+        </div>
       </div>
-
-      ${
-        booked
-          ? `<div class="booked-text">Currently Unavailable</div>`
-          : finalPrice
-            ? `<div class="price"
-                onclick="event.stopPropagation(); openAvailability('${car._id}', ${finalPrice});">
-                ₹${finalPrice}${unit}
-              </div>`
-            : `<div class="availability-small">Not Available</div>`
-      }
-    </div>
-  </div>
-`;
-
+    `;
   }
 }
 
+
 // ================= OPEN CAR =================
 function openCar(id, price, tag) {
+  const pDate = localStorage.getItem("pickupDate");
+  const pTime = localStorage.getItem("pickupTime");
+  const rDate = localStorage.getItem("returnDate");
+  const rTime = localStorage.getItem("returnTime");
+
+  if (!pDate || !pTime || !rDate || !rTime) {
+    alert("Please select pickup & return date/time first");
+    return;
+  }
+
   localStorage.setItem("selectedCar", id);
   localStorage.setItem("selectedCarPrice", price);
   localStorage.setItem("pricingType", tag);
 
   window.location.href = `cardetails.html?id=${id}`;
 }
+
 
 // ================= FILTER =================
 function filterCars() {
@@ -189,7 +190,22 @@ function filterCars() {
     return textMatch && categoryMatch;
   });
 
-  renderCars(filtered);
+  renderCars(
+  filtered.filter(car => {
+    const pDate = localStorage.getItem("pickupDate");
+    const pTime = localStorage.getItem("pickupTime");
+    const rDate = localStorage.getItem("returnDate");
+    const rTime = localStorage.getItem("returnTime");
+
+    if (!pDate || !pTime || !rDate || !rTime) return false;
+
+    const start = toDateTime(pDate, pTime);
+    const end = toDateTime(rDate, rTime);
+
+    return isCarAvailable(car._id, start, end);
+  })
+);
+
 }
 
 function setFilter(cat) {
@@ -197,86 +213,14 @@ function setFilter(cat) {
   filterCars();
 }
 
-// ================= AVAILABILITY POPUP =================
-let selectedCarId = "";
-let selectedCarPrice = 0;
-
-function openAvailability(carId, price) {
-  selectedCarId = carId;
-  selectedCarPrice = price;
-
-  const pDate = document.getElementById("pDate");
-  const rDate = document.getElementById("rDate");
-
-  pDate.value = "";
-  rDate.value = "";
-
-  document.getElementById("datePopup").style.display = "flex";
-
-  // ✅ pickup date check
-  pDate.onchange = () => {
-    if (isDateBooked(carId, pDate.value)) {
-      alert("This pickup date is already booked");
-      pDate.value = "";
-    }
-  };
-
-  // ✅ return date check
-  rDate.onchange = () => {
-    if (isDateBooked(carId, rDate.value)) {
-      alert("This return date is already booked");
-      rDate.value = "";
-    }
-  };
-}
-
-
-function closeDatePopup() {
-  document.getElementById("datePopup").style.display = "none";
-}
 
 
 
-async function checkCarDates() {
-  const start = document.getElementById("pDate").value;
-  const end = document.getElementById("rDate").value;
 
-  if (!start || !end) {
-    alert("Please select both pickup and return dates");
-    return;
-  }
 
-  if (end < start) {
-    alert("Return date must be after pickup date");
-    return;
-  }
 
-  try {
-    const res = await fetch(
-      `https://goridezz-backend.onrender.com/api/cars/${selectedCarId}/availability?start=${start}&end=${end}`
-    );
-    const data = await res.json();
 
-    if (!data.available) {
-      document.getElementById("availabilityMsg").innerText =
-        "❌ Car not available for selected dates";
-      document.getElementById("availabilityMsg").style.color = "red";
-      return;
-    }
 
-    // ✅ Available → continue
-    localStorage.setItem("pickupDate", start);
-    localStorage.setItem("returnDate", end);
-    localStorage.setItem("selectedCar", selectedCarId);
-    localStorage.setItem("selectedCarPrice", selectedCarPrice);
-
-    window.location.href = `cardetails.html?id=${selectedCarId}`;
-
-  } catch (err) {
-    alert("Availability check failed");
-  }
-
-}
 
 // ================= OFFERS =================
 async function loadOffer() {
@@ -327,10 +271,24 @@ document.addEventListener("click", function (event) {
 
 function applyTagFilter() {
   const selectedTag = document.getElementById("carTagFilter").value;
-
-  // save selection
   localStorage.setItem("carTag", selectedTag);
 
-  // re-render cars with new pricing
-  renderCars(allCars);
+  const pDate = localStorage.getItem("pickupDate");
+  const pTime = localStorage.getItem("pickupTime");
+  const rDate = localStorage.getItem("returnDate");
+  const rTime = localStorage.getItem("returnTime");
+
+  if (!pDate || !pTime || !rDate || !rTime) {
+    alert("Please select pickup & return date/time first");
+    return;
+  }
+
+  const start = toDateTime(pDate, pTime);
+  const end = toDateTime(rDate, rTime);
+
+  const availableCars = allCars.filter(car =>
+    isCarAvailable(car._id, start, end)
+  );
+
+  renderCars(availableCars);
 }

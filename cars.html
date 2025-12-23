@@ -19,10 +19,10 @@
     <div class="menu-dots" onclick="toggleDotsMenu()">⋮</div>
 
     <div class="dots-menu" id="dotsMenu">
-      
+
       <a href="mybookings.html">My Bookings</a>
-      
-      
+
+
     </div>
 
 
@@ -35,206 +35,162 @@
     <h1 class="hero-title">Experience The Rides Which Offers Privacy, Independances, To Feel Like Your Car</h1>
     <p class="hero-sub">Choose from our cars which fleet — crafted for comfort & class.</p>
   </section>
+  <!-- 🔍 AVAILABILITY SEARCH BAR -->
+  <section class="availability-bar">
+    <input type="date" id="pickupDate">
+    <input type="time" id="pickupTime">
+
+    <input type="date" id="returnDate">
+    <input type="time" id="returnTime">
+
+    <button onclick="searchAvailableCars()">Search Cars</button>
+  </section>
 
   <!-- ✅ FESTIVAL OFFER (MUST BE HERE) -->
   <div class="festival-offer" id="festivalOffer" style="display:none;">
     🎉 <span id="offerText"></span>
   </div>
 
-  
-  
 
 
 
 
-    <div class="tag-filter">
-      <select id="carTagFilter" onchange="applyTagFilter()">
-        <option value="rent">Rent</option>
-        <option value="subscribe">Subscribe</option>
 
-      </select>
+
+  <div class="tag-filter">
+    <select id="carTagFilter" onchange="applyTagFilter()">
+      <option value="rent">Rent</option>
+      <option value="subscribe">Subscribe</option>
+
+    </select>
+  </div>
+
+
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search SUV, Sedan, Family..." oninput="filterCars()">
+
+    <div class="filters">
+      <button onclick="setFilter('all')">All</button>
+      <button onclick="setFilter('SUV')">SUV</button>
+      <button onclick="setFilter('Sedan')">Sedan</button>
+      <button onclick="setFilter('Hatchback')">Hatchback</button>
+
     </div>
+  </div>
+
+
+  <div class="horizontal-container">
+    <div class="horizontal-list" id="carList"></div>
+  </div>
 
 
 
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search SUV, Sedan, Family..." oninput="filterCars()">
+  <!-- DATE AVAILABILITY POPUP -->
+ 
 
-      <div class="filters">
-        <button onclick="setFilter('all')">All</button>
-        <button onclick="setFilter('SUV')">SUV</button>
-        <button onclick="setFilter('Sedan')">Sedan</button>
-        <button onclick="setFilter('Hatchback')">Hatchback</button>
+  <section class="reviews-section">
+    <h2>⭐ Customer Reviews</h2>
 
+    <div id="reviewsList" class="reviews-scroll">
+
+      <div class="review-card">
+        <h3>⭐⭐⭐⭐⭐</h3>
+        <p>"Amazing service and smooth ride experience!"</p>
+        <span>- Rahul Sharma</span>
       </div>
+
+      <div class="review-card">
+        <h3>⭐⭐⭐⭐⭐</h3>
+        <p>"Very professional team. Cars were in excellent condition."</p>
+        <span>- Sneha Patil</span>
+      </div>
+
+      <div class="review-card">
+        <h3>⭐⭐⭐⭐</h3>
+        <p>"Good pricing and hassle-free pickup. Recommended!"</p>
+        <span>- Aman Verma</span>
+      </div>
+
     </div>
+  </section>
+
+  <section class="experience-section">
+    <h2>🚗 Our Experience</h2>
+
+    <p class="exp-sub">
+      Delivering car rental services with trust, quality, and unmatched customer satisfaction.
+    </p>
+
+    <div class="exp-cards">
+
+      <div class="exp-card">
+        <h3>7+ Years</h3>
+        <p>Industry Expertise</p>
+      </div>
+
+      <div class="exp-card">
+        <h3>5000+</h3>
+        <p>Satisfied Customers</p>
+      </div>
 
 
-    <div class="horizontal-container">
-      <div class="horizontal-list" id="carList"></div>
+      <div class="exp-card">
+        <h3>24/7</h3>
+        <p>Customer Support</p>
+      </div>
+
     </div>
+  </section>
 
 
 
-    <!-- DATE AVAILABILITY POPUP -->
-    <div id="datePopup" style="display:none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 999;
-    justify-content: center;
-    align-items: center;">
+  <!-- GOOGLE MAP SECTION -->
+  <!-- GOOGLE MAP SECTION -->
+  <section class="map-section">
+    <h2>📍 Our Location</h2>
+    <p>Visit our office for bookings, support or car inspection.</p>
 
-      <div class="popup-box" style="
-      width: 90%;
-      max-width: 360px;
-      background: rgba(15,15,15,0.9);
-      border-radius: 18px;
-      border: 1px solid rgba(255,215,0,0.3);
-      padding: 20px;
-      text-align: left;
-      color: #fff;">
-
-        <h3 style="margin-bottom:10px; color:#ffd700;">Check Availability</h3>
-
-        <label style="font-size:14px;">Pickup Date</label>
-        <input type="date" id="pDate" style="
-        width:100%; padding:10px; margin:6px 0 12px;
-        border-radius:10px;
-        border:1px solid rgb(245, 244, 239);
-        background:#111; color:#ffd700;">
-
-        <label style="font-size:14px;">Return Date</label>
-        <input type="date" id="rDate" style="
-        width:100%; padding:10px; margin:6px 0 12px;
-        border-radius:10px;
-        border:1px solid rgb(252, 252, 250);
-        background:#111; color:#ffd700;">
-
-        <button onclick="checkCarDates()" style="
-        width:100%; padding:10px; margin-top:5px;
-        border:none; border-radius:10px;
-        background:linear-gradient(45deg,#ffd700,#ffb300);
-        font-weight:700; cursor:pointer;">
-          Check Availability
-        </button>
-
-        <button onclick="closeDatePopup()" style="
-        width:100%; padding:10px; margin-top:8px;
-        border-radius:10px;
-        background:rgba(255,215,0,0.12);
-        border:1px solid rgba(255,215,0,0.3);
-        color:#ffd700; cursor:pointer;">
-          Close
-        </button>
-
-        <p id="availabilityMsg" style="margin-top:10px; font-size:14px;"></p>
-      </div>
+    <div class="map-container">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d15134.635384855455!2d73.90070865!3d18.499105999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x3bc2eb4e8f894b6b%3A0xbf30ac6a7da10179!2snear%20Fortune%20Plaza%2C%20Vardhaman%20Twp%2C%20Sasane%20Nagar%2C%20Hadapsar%2C%20Pune%2C%20Maharashtra%20411028!3m2!1d18.488520899999997!2d73.9333185!5e0!3m2!1sen!2sin!4v1765256559621!5m2!1sen!2sin"
+        allowfullscreen="" loading="lazy">
+      </iframe>
     </div>
+  </section>
 
 
-    <section class="reviews-section">
-      <h2>⭐ Customer Reviews</h2>
-
-      <div id="reviewsList" class="reviews-scroll">
-
-        <div class="review-card">
-          <h3>⭐⭐⭐⭐⭐</h3>
-          <p>"Amazing service and smooth ride experience!"</p>
-          <span>- Rahul Sharma</span>
-        </div>
-
-        <div class="review-card">
-          <h3>⭐⭐⭐⭐⭐</h3>
-          <p>"Very professional team. Cars were in excellent condition."</p>
-          <span>- Sneha Patil</span>
-        </div>
-
-        <div class="review-card">
-          <h3>⭐⭐⭐⭐</h3>
-          <p>"Good pricing and hassle-free pickup. Recommended!"</p>
-          <span>- Aman Verma</span>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="experience-section">
-      <h2>🚗 Our Experience</h2>
-
-      <p class="exp-sub">
-        Delivering car rental services with trust, quality, and unmatched customer satisfaction.
-      </p>
-
-      <div class="exp-cards">
-
-        <div class="exp-card">
-          <h3>7+ Years</h3>
-          <p>Industry Expertise</p>
-        </div>
-
-        <div class="exp-card">
-          <h3>5000+</h3>
-          <p>Satisfied Customers</p>
-        </div>
+  <!-- FOOTER STARTS HERE -->
+  <footer class="goridezz-footer">
 
 
-        <div class="exp-card">
-          <h3>24/7</h3>
-          <p>Customer Support</p>
-        </div>
-
-      </div>
-    </section>
-
-
-
-    <!-- GOOGLE MAP SECTION -->
-    <!-- GOOGLE MAP SECTION -->
-    <section class="map-section">
-      <h2>📍 Our Location</h2>
-      <p>Visit our office for bookings, support or car inspection.</p>
-
-      <div class="map-container">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d15134.635384855455!2d73.90070865!3d18.499105999999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x3bc2eb4e8f894b6b%3A0xbf30ac6a7da10179!2snear%20Fortune%20Plaza%2C%20Vardhaman%20Twp%2C%20Sasane%20Nagar%2C%20Hadapsar%2C%20Pune%2C%20Maharashtra%20411028!3m2!1d18.488520899999997!2d73.9333185!5e0!3m2!1sen!2sin!4v1765256559621!5m2!1sen!2sin"
-          allowfullscreen="" loading="lazy">
-        </iframe>
-      </div>
-    </section>
-
-
-    <!-- FOOTER STARTS HERE -->
     <footer class="goridezz-footer">
 
+      <div class="footer-section">
+        <h3>📍 Office Address</h3>
+        <p>Goridezz Headquarter<br>
+          Near Fortune Plaza, Vardhaman Twp,
+          Sasane Nagar, Hadapsar,
+          Pune, Maharashtra, India</p>
+      </div>
 
-      <footer class="goridezz-footer">
+      <div class="footer-section">
+        <h3>📞 Contact Us</h3>
+        <p>+91 8421033844 / 7020860650</p>
+      </div>
 
-        <div class="footer-section">
-          <h3>📍 Office Address</h3>
-          <p>Goridezz Headquarter<br>
-            Near Fortune Plaza, Vardhaman Twp,
-            Sasane Nagar, Hadapsar,
-            Pune, Maharashtra, India</p>
-        </div>
+      <div class="footer-section">
+        <h3>✉ Email</h3>
+        <p>Kunalmahekar8383@gmail.com</p>
+      </div>
 
-        <div class="footer-section">
-          <h3>📞 Contact Us</h3>
-          <p>+91 8421033844 / 7020860650</p>
-        </div>
+      <hr>
 
-        <div class="footer-section">
-          <h3>✉ Email</h3>
-          <p>Kunalmahekar8383@gmail.com</p>
-        </div>
+      <p class="copyright">© 2025 Goridezz. All rights reserved By WebNova Technology.</p>
 
-        <hr>
+    </footer>
 
-        <p class="copyright">© 2025 Goridezz. All rights reserved By WebNova Technology.</p>
-
-      </footer>
-
-      <script src="cars.js"></script>
+    <script src="cars.js"></script>
 </body>
 
 </html>
