@@ -1211,9 +1211,15 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
+          // 🔥 SAVE BOOKING ID FOR REVIEW
+          localStorage.setItem("lastBookingId", data.booking._id);
+
           showToast("Booking successful!", "success");
+
+          // redirect to review page
           window.location.href = "review.html";
-        } else {
+        }
+        else {
           showToast(data.message || "Booking failed", "error");
           resetConfirmButton();
         }
