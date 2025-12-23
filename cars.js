@@ -54,6 +54,15 @@ function searchAvailableCars() {
     return;
   }
 
+  const diffMs = userEnd - userStart;
+  const minDuration = 24 * 60 * 60 * 1000;
+
+  if (diffMs < minDuration) {
+    alert("Minimum booking duration is 24 hours");
+    return;
+  }
+
+
   // save for booking page
   localStorage.setItem("pickupDate", pDate);
   localStorage.setItem("pickupTime", pTime);
@@ -191,20 +200,20 @@ function filterCars() {
   });
 
   renderCars(
-  filtered.filter(car => {
-    const pDate = localStorage.getItem("pickupDate");
-    const pTime = localStorage.getItem("pickupTime");
-    const rDate = localStorage.getItem("returnDate");
-    const rTime = localStorage.getItem("returnTime");
+    filtered.filter(car => {
+      const pDate = localStorage.getItem("pickupDate");
+      const pTime = localStorage.getItem("pickupTime");
+      const rDate = localStorage.getItem("returnDate");
+      const rTime = localStorage.getItem("returnTime");
 
-    if (!pDate || !pTime || !rDate || !rTime) return false;
+      if (!pDate || !pTime || !rDate || !rTime) return false;
 
-    const start = toDateTime(pDate, pTime);
-    const end = toDateTime(rDate, rTime);
+      const start = toDateTime(pDate, pTime);
+      const end = toDateTime(rDate, rTime);
 
-    return isCarAvailable(car._id, start, end);
-  })
-);
+      return isCarAvailable(car._id, start, end);
+    })
+  );
 
 }
 
@@ -292,3 +301,33 @@ function applyTagFilter() {
 
   renderCars(availableCars);
 }
+function updateTimeSummary() {
+  const pDate = pickupDate.value;
+  const pTime = pickupTime.value;
+  const rDate = returnDate.value;
+  const rTime = returnTime.value;
+
+  if (!pDate || !pTime || !rDate || !rTime) {
+    timeSummary.innerText = "";
+    return;
+  }
+
+  const start = toDateTime(pDate, pTime);
+  const end = toDateTime(rDate, rTime);
+
+  if (end <= start) {
+    timeSummary.innerText = "❌ Return time must be after pickup time";
+    return;
+  }
+
+  const hours = Math.ceil((end - start) / (1000 * 60 * 60));
+  const days = Math.ceil(hours / 24);
+
+  timeSummary.innerText =
+    `🕒 Duration: ${hours} hours (${days} day${days > 1 ? "s" : ""})`;
+}
+
+["pickupDate", "pickupTime", "returnDate", "returnTime"]
+  .forEach(id => document.getElementById(id).addEventListener("change", updateTimeSummary));
+
+

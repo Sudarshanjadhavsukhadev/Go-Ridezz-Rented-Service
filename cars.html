@@ -37,14 +37,45 @@
   </section>
   <!-- 🔍 AVAILABILITY SEARCH BAR -->
   <section class="availability-bar">
-    <input type="date" id="pickupDate">
-    <input type="time" id="pickupTime">
+    <div class="field">
+      <label>Pickup Date</label>
+      <input type="date" id="pickupDate">
 
-    <input type="date" id="returnDate">
-    <input type="time" id="returnTime">
+      <small>Car will be handed over at this date</small>
+    </div>
+
+    <div class="field">
+      <label>Pickup Time</label>
+      <input type="time" id="pickupTime">
+
+      <small>Exact pickup time</small>
+    </div>
+
+    <div class="field">
+      <label>Return Date</label>
+      <input type="date" id="returnDate">
+
+      <small>Car must be returned on this date</small>
+    </div>
+
+    <div class="field">
+      <label>Return Time</label>
+      <input type="time" id="returnTime">
+
+      <small>Exact return time</small>
+    </div>
+    <p id="timeSummary" style="
+     color:#ffd700;
+     font-size:14px;
+     margin:10px 0;
+     text-align:center;
+     line-height:1.4;
+   ">
+    </p>
 
     <button onclick="searchAvailableCars()">Search Cars</button>
   </section>
+
 
   <!-- ✅ FESTIVAL OFFER (MUST BE HERE) -->
   <div class="festival-offer" id="festivalOffer" style="display:none;">
@@ -87,7 +118,7 @@
 
 
   <!-- DATE AVAILABILITY POPUP -->
- 
+
 
   <section class="reviews-section">
     <h2>⭐ Customer Reviews</h2>
