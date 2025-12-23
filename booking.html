@@ -637,14 +637,14 @@
         <option value="self">Take car from our location (Free)</option>
         <option value="delivery">Deliver car to my location (₹500 extra)</option>
       </select>
-      <div class="field-error" id="erro-pickupMethod"></div>
+      <div class="field-error" id="error-pickupMethod"></div>
 
       <!-- This will show only if user selects delivery -->
       <div id="deliveryAddressBox" style="display:none;">
         <label>Delivery Address</label>
         <input type="text" id="deliveryAddress" placeholder="Enter delivery address">
       </div>
-      <div class="field-error" id="error-address"></div>
+      <div class="field-error" id="error-deliveryAddress"></div>
 
       <label>Pickup Date</label>
       <input type="text" id="pickupDate" placeholder="Select Pickup Date" onclick="openCalendar('pickupDate')" readonly>
@@ -911,6 +911,7 @@
     const sTotal = document.getElementById("sTotal");
     const sDeposit = document.getElementById("sDeposit");
     const sDepositAmount = document.getElementById("sDepositAmount");
+    const bikeRCPhoto = document.getElementById("bikeRCPhoto");
 
 
     function showFieldError(inputId, message) {
@@ -949,15 +950,15 @@
 
 
     function clearErrors() {
-  document.querySelectorAll(".input-error").forEach(el => {
-    el.classList.remove("input-error");
-  });
+      document.querySelectorAll(".input-error").forEach(el => {
+        el.classList.remove("input-error");
+      });
 
-  document.querySelectorAll(".field-error").forEach(err => {
-    err.innerText = "";
-    err.style.display = "none";
-  });
-}
+      document.querySelectorAll(".field-error").forEach(err => {
+        err.innerText = "";
+        err.style.display = "none";
+      });
+    }
 
 
     // FULL NAME – Only alphabets + spaces
@@ -1176,13 +1177,14 @@
     async function confirmBooking() {
 
       if (!window.aadhaarVerified) {
-        showFieldError("Aadhaar not verified", "error");
+        showToast("Aadhaar not verified", "error");
+
         resetConfirmButton();
         return;
       }
 
       if (!window.licenseVerified) {
-        showFieldError("License not verified", "error");
+        showToast("License not verified", "error");
         resetConfirmButton();
         return;
       }
@@ -1193,16 +1195,17 @@
 
       const paymentImage = document.getElementById("paymentProof").files[0];
       if (!paymentImage) {
-        showFiledError("Upload payment screenshot", "info");
+        showToast("Please upload payment screenshot", "info");
         resetConfirmButton();
         return;
+
       }
 
       const depositType =
         document.querySelector('input[name="depositType"]:checked')?.value;
 
       if (!depositType) {
-        showFiledError("Select security deposit option", "error");
+        showToast("Select security deposit option", "error");
         resetConfirmButton();
         return;
       }
@@ -1210,7 +1213,7 @@
       if (depositType === "bike") {
         const rcFile = document.getElementById("bikeRCPhoto").files[0];
         if (!rcFile) {
-          showFieldError("Bike RC is required", "error");
+          showToast("Bike RC is required", "error");
           resetConfirmButton();
           return;
         }
@@ -1219,9 +1222,11 @@
       const form = new FormData();
 
       // BASIC DETAILS
+      form.append("fullname", fullname.value.trim());
+
       form.append("carId", localStorage.getItem("selectedCar"));
       form.append("email", emailEl.value.trim()); // ✅ FIX HERE
-      form.append("email", emailEl.value);
+
       form.append("contact", contact.value);
       form.append("address", address.value);
       form.append("visitPlace", visitPlace.value);
@@ -1281,25 +1286,30 @@
       form.append("offerId", window.appliedOfferId || "");
       form.append("discountAmount", Number(window.discountAmount) || 0);
 
-      // SEND
-      const res = await fetch(
-        "https://goridezz-backend.onrender.com/api/bookings",
-        {
-          method: "POST",
-          body: form
+      try {
+        const res = await fetch(
+          "https://goridezz-backend.onrender.com/api/bookings",
+          {
+            method: "POST",
+            body: form
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showToast("Booking successful!", "success");
+          window.location.href = "review.html";
+        } else {
+          showToast(data.message || "Booking failed", "error");
+          resetConfirmButton();
         }
-      );
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        localStorage.setItem("lastBookingId", data.booking._id);
-        showFieldError("Booking successful!", "success");
-        window.location.href = "review.html";
-      } else {
-        showFieldError(data.message || "Booking failed", "error");
+      } catch (err) {
+        console.error(err);
+        showToast("Server not reachable. Try again.", "error");
         resetConfirmButton();
       }
+
     }
 
 
@@ -1330,7 +1340,8 @@
     function saveCalendarDate() {
       const selected = document.getElementById("calendarInput").value;
       if (!selected) {
-        showFieldError("Please select a date., info");
+        showToast("Please select a date", "info");
+
         return;
       }
 
@@ -1360,13 +1371,14 @@
       const rawPrice = localStorage.getItem("selectedCarPrice");
       const pricePerDay = Number(rawPrice);
       if (!rawPrice || isNaN(pricePerDay) || pricePerDay <= 0) {
-        showError("Car price missing. Please reselect the car.");
+        showToast("Car price missing. Please reselect the car.");
         return;
       }
 
       // NAME
       if (!fullname.value.trim()) {
-        showError("Full name is required", "fullname");
+       showFieldError("fullname", "Full name is required");
+
         return;
       }
 
@@ -1375,43 +1387,43 @@
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!email) {
-       showFieldError("email", "Email address is required");
+        showFieldError("email", "Email address is required");
 
         return;
       }
 
       if (!emailPattern.test(email)) {
-        showFieldError( "email","Please enter a valid email address");
+        showFieldError("email", "Please enter a valid email address");
         return;
       }
 
       // CONTACT
       if (contact.value.length !== 10) {
-        showFieldError("contact","Contact number must be 10 digits", );
+        showFieldError("contact", "Contact number must be 10 digits",);
         return;
       }
 
       // ADDRESS
       if (!address.value.trim()) {
-        showFieldError( "address","Permanent address is required");
+        showFieldError("address", "Permanent address is required");
         return;
       }
 
       // VISIT PLACE
       if (!visitPlace.value.trim()) {
-        showFieldError("visitPlace","Please enter your travel destination");
+        showFieldError("visitPlace", "Please enter your travel destination");
         return;
       }
 
       // AADHAAR
       if (!window.aadhaarVerified) {
-        showFieldError("adharfiles","Aadhaar verification failed. Please upload valid Aadhaar.");
+        showFieldError("aadharFiles", "Aadhaar verification failed. Please upload valid Aadhaar.");
         return;
       }
 
       // LICENSE VERIFICATION
       if (!window.licenseVerified) {
-        showFieldError(  "license", "Driving License verification failed. Please upload a valid license.");
+        showFieldError("license", "Driving License verification failed. Please upload a valid license.");
         return;
       }
 
@@ -1419,33 +1431,33 @@
       const pickupMethod = document.getElementById("pickupMethod").value;
 
       if (!pickupMethod) {
-        showFiledError("pickupMethod","Please select pickup method");
+        showFieldError("pickupMethod", "Please select pickup method");
         return;
       }
 
       if (pickupMethod === "delivery" && !deliveryAddress.value.trim()) {
-        showFieldError("deliveryAddress","Delivery address is required");
+        showFieldError("deliveryAddress", "Delivery address is required");
         return;
       }
 
       // DATES
       if (!pickupDate.value) {
-        showFieldError("pickupDate","Pickup date is required");
+        showFieldError("pickupDate", "Pickup date is required");
         return;
       }
 
       if (!pickupTime.value) {
-        showFieldError("pickupTime","Pickup time is required");
+        showFieldError("pickupTime", "Pickup time is required");
         return;
       }
 
       if (!returnDate.value) {
-        showFieldError("returnDate","Return date is required");
+        showFieldError("returnDate", "Return date is required");
         return;
       }
 
       if (!returnTime.value) {
-        showFieldError("returnTime","Return time is required");
+        showFieldError("returnTime", "Return time is required");
         return;
       }
 
@@ -1457,7 +1469,7 @@
       }
 
       if (depositCheck.value === "bike" && !bikeRCPhoto.files.length) {
-        showFieldError("bikeRCPhoto","Bike RC photo is required for bike deposit");
+        showFieldError("bikeRCPhoto", "Bike RC photo is required for bike deposit");
         return;
       }
 
@@ -1474,7 +1486,7 @@
       const end = new Date(`${returnDate.value}T${returnTime24}:00`);
 
       if (isNaN(start) || isNaN(end) || end <= start) {
-        showError("Return time must be after pickup time");
+        showToast("Return time must be after pickup time");
         return;
       }
 
@@ -1739,7 +1751,7 @@
 
     function confirmClockTime() {
       if (!selectedHour || !selectedMinute) {
-        showToast("Please select hour and minutes., info");
+        showToast("Please select hour and minutes", "info");
         return;
       }
 
