@@ -357,55 +357,7 @@
       }
     }
 
-    /* CLOCK NUMBERS */
-    .clock-number {
-      position: absolute;
-      width: 36px;
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
 
-      color: #ffd700;
-      font-weight: 500;
-      font-size: 16px;
-
-      border-radius: 50%;
-      cursor: pointer;
-      user-select: none;
-
-      transition: 0.25s ease;
-    }
-
-    /* When number is selected */
-    .clock-number.clock-selected {
-      background: #ffd700;
-      color: #000;
-      box-shadow: 0 0 1px rgba(255, 215, 0, 0.8);
-      transform: scale(1.15);
-    }
-
-    /* AM/PM buttons */
-    .ampm-btn {
-      padding: 8px 18px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 215, 0, 0.5);
-      color: #ffd700;
-      cursor: pointer;
-      font-weight: 500;
-      background: rgba(0, 0, 0, 0.4);
-      transition: 0.25s;
-    }
-
-    .ampm-btn.selected {
-      background: #ffd700;
-      color: #000;
-      box-shadow: 0 0 1px rgba(255, 200, 0, 0.7);
-    }
-
-    /* Fix number alignment inside clock */
-    #clockFace {
-      position: relative;
-    }
 
     /* Summary popup bright golden text */
     #summaryPopup .qr-box h3 {
@@ -651,8 +603,7 @@
       <div class="field-error" id="error-pickupDate"></div>
 
       <label>Pickup Time</label>
-      <input type="text" id="pickupTime" placeholder="Select Pickup Time" onclick="openTimePopup('pickupTime')"
-        readonly>
+      <input type="time" id="pickupTime" required>
       <div class="field-error" id="error-pickupTime"></div>
 
       <label>Return Date</label>
@@ -660,8 +611,7 @@
       <div class="field-error" id="error-returnDate"></div>
 
       <label>Return Time</label>
-      <input type="text" id="returnTime" placeholder="Select Return Time" onclick="openTimePopup('returnTime')"
-        readonly>
+      <input type="time" id="returnTime" required>
       <div class="field-error" id="error-returnTime"></div>
 
 
@@ -746,43 +696,6 @@
 
     </div>
   </div>
-
-  <!-- ROUND CLOCK TIME PICKER -->
-  <div id="timePopup" class="qr-popup">
-    <div class="qr-box" style="width:320px; padding:20px; text-align:center;">
-
-      <h3 style="margin-bottom:10px;">Select Time</h3>
-
-      <p id="clockMode" style="color:#ffd700; margin-bottom:15px; font-size:16px;">Select Hour</p>
-      <div id="ampmToggle" style="
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-">
-        <div class="ampm-btn" id="AM">AM</div>
-        <div class="ampm-btn" id="PM">PM</div>
-      </div>
-
-      <!-- CLOCK FACE -->
-      <div id="clockFace" style="
-      width:220px; 
-      height:220px; 
-      margin:0 auto; 
-      border-radius:50%;
-      border:2px solid #ffd700;
-      position:relative;
-      box-sizing:content-box;
-      overflow:visible;
-    ">
-      </div>
-
-      <button onclick="confirmClockTime()" class="qr-confirm-btn" style="margin-top:20px;">Confirm</button>
-      <button onclick="closeTimePopup()" class="qr-close-btn">Close</button>
-
-    </div>
-  </div>
-
 
 
 
@@ -1349,21 +1262,6 @@
       closeCalendar();
     }
 
-    /* ===============================
-   TIME FORMAT HELPER (AM/PM → 24H)
-=============================== */
-    function convertTo24Hour(time12h) {
-      const [time, modifier] = time12h.split(" ");
-      let [hours, minutes] = time.split(":");
-
-      hours = parseInt(hours, 10);
-
-      if (modifier === "PM" && hours !== 12) hours += 12;
-      if (modifier === "AM" && hours === 12) hours = 0;
-
-      return `${hours.toString().padStart(2, "0")}:${minutes}`;
-    }
-
     function openSummary() {
       clearErrors();
 
@@ -1479,11 +1377,12 @@
 
     function calculateAndShowSummary(pricePerDay) {
 
-      const pickupTime24 = convertTo24Hour(pickupTime.value);
-      const returnTime24 = convertTo24Hour(returnTime.value);
+      const pickupTime24 = pickupTime.value;   // "14:30"
+      const returnTime24 = returnTime.value;   // "18:00"
 
       const start = new Date(`${pickupDate.value}T${pickupTime24}:00`);
       const end = new Date(`${returnDate.value}T${returnTime24}:00`);
+
 
       if (isNaN(start) || isNaN(end) || end <= start) {
         showToast("Return time must be after pickup time");
@@ -1622,144 +1521,14 @@
 
 
 
-    let activeTimeInput = null;
-    let selectedHour = null;
-    let selectedMinute = null;
-    let selectingHour = true;
-
-    function openTimePopup(inputId) {
-      activeTimeInput = inputId;
-      selectingHour = true;
-      selectedHour = null;
-      selectedMinute = null;
-
-      document.getElementById("clockMode").innerText = "Select Hour";
-
-      drawClockHours();
-      console.log("Drawing hours...");
 
 
-      document.getElementById("timePopup").style.display = "flex";
-    }
-
-    function closeTimePopup() {
-      document.getElementById("timePopup").style.display = "none";
-    }
 
     /* Draw hours around center of circle */
-    function drawClockHours() {
-      const face = document.getElementById("clockFace");
-      face.innerHTML = "";
-
-      const numbers = [...Array(12).keys()].map(n => n + 1);
-
-      // Use actual clockFace size
-      const size = 220;            // your clockFace width/height
-      const centerX = size / 2;
-      const centerY = size / 2;
-      const radius = 90;           // perfect radius for 12 circles
-
-      numbers.forEach((num, index) => {
-        const angle = ((index * 30) - 60) * (Math.PI / 180);
-
-        const x = centerX + radius * Math.cos(angle) - 18;
-        const y = centerY + radius * Math.sin(angle) - 18;
-
-        const div = document.createElement("div");
-        div.className = "clock-number";
-        div.style.left = `${x}px`;
-        div.style.top = `${y}px`;
-        div.innerText = num.toString().padStart(2, "0");
-
-        div.onclick = () => {
-          selectedHour = num.toString().padStart(2, "0");
-          document.querySelectorAll(".clock-number")
-            .forEach(e => e.classList.remove("clock-selected"));
-          div.classList.add("clock-selected");
-
-          setTimeout(() => {
-            document.getElementById("clockMode").innerText = "Select Minutes";
-            drawClockMinutes();
-          }, 200);
-        };
-
-        face.appendChild(div);
-      });
-    }
 
 
 
-    /* Draw minute values */
-    function drawClockMinutes() {
-      const face = document.getElementById("clockFace");
-      face.innerHTML = "";
 
-      const minutes = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"];
-
-      const centerX = 110;
-      const centerY = 110;
-      const radius = 80;
-
-      minutes.forEach((min, index) => {
-        const angle = (index * 30 - 90) * (Math.PI / 180);
-        const x = centerX + radius * Math.cos(angle) - 18;
-        const y = centerY + radius * Math.sin(angle) - 18;
-
-        const div = document.createElement("div");
-        div.className = "clock-number";
-        div.style.left = `${x}px`;
-        div.style.top = `${y}px`;
-        div.innerText = min;
-
-        div.onclick = () => {
-          selectedMinute = min;
-
-          document.querySelectorAll(".clock-number").forEach(e =>
-            e.classList.remove("clock-selected")
-          );
-          div.classList.add("clock-selected");
-
-          // After minute selection → show AM/PM
-          document.getElementById("clockMode").innerText = "Select AM or PM";
-          document.getElementById("ampmToggle").style.display = "flex";
-        };
-
-
-        face.appendChild(div);
-      });
-    }
-
-
-    let selectedPeriod = "AM"; // default
-
-    document.getElementById("AM").onclick = () => {
-      selectedPeriod = "AM";
-      setAMPM();
-    };
-
-    document.getElementById("PM").onclick = () => {
-      selectedPeriod = "PM";
-      setAMPM();
-    };
-
-    function setAMPM() {
-      document.getElementById("AM").classList.remove("selected");
-      document.getElementById("PM").classList.remove("selected");
-
-      document.getElementById(selectedPeriod).classList.add("selected");
-    }
-
-    function confirmClockTime() {
-      if (!selectedHour || !selectedMinute) {
-        showToast("Please select hour and minutes", "info");
-        return;
-      }
-
-      document.getElementById(activeTimeInput).value =
-        `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
-
-      closeTimePopup();
-    }
 
 
     function toggleDotsMenu() {
