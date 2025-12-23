@@ -62,13 +62,13 @@ function searchAvailableCars() {
     return;
   }
 
-
-  // save for booking page
+  // ✅ SAVE dates for next pages
   localStorage.setItem("pickupDate", pDate);
   localStorage.setItem("pickupTime", pTime);
   localStorage.setItem("returnDate", rDate);
   localStorage.setItem("returnTime", rTime);
 
+  // ✅ FILTER AVAILABLE CARS
   const availableCars = allCars.filter(car =>
     isCarAvailable(car._id, userStart, userEnd)
   );
@@ -79,8 +79,17 @@ function searchAvailableCars() {
     return;
   }
 
+  // ✅ RENDER FIRST
   renderCars(availableCars);
+
+  // ✅ THEN SCROLL
+  setTimeout(() => {
+    document
+      .getElementById("carsSection")
+      .scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 200);
 }
+
 
 async function loadBookings() {
   try {
