@@ -600,12 +600,13 @@ async function confirmCancelYes() {
 
   try {
     const res = await fetch(
-      `https://goridezz-backend.onrender.com/api/bookings/cancel/${pendingCancelId}`,
-      {
-        method: "PUT",
-        
-      }
-    );
+  `https://goridezz-backend.onrender.com/api/bookings/cancel/${pendingCancelId}`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" }
+  }
+);
+
 
     const data = await res.json();
 
