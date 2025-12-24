@@ -1,6 +1,33 @@
 /* ==========================================
    GLOBAL STYLES — GOLD PREMIUM THEME
 ========================================== */
+.container {
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .container {
+    max-width: 900px;
+  }
+}
+
+/* Laptop */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
 
 * {
     margin: 0;
@@ -106,7 +133,7 @@ body::after {
 
 .hero {
     width: 100%;
-    max-width: 480px;
+   
     text-align: center;
     padding: 25px 10px;
 }
@@ -225,7 +252,7 @@ input[type="date"] {
 ================================ */
 .search-box {
     width: 100%;
-    max-width: 480px;
+    
     margin: 15px auto;
     padding: 0 20px;
 }
@@ -273,7 +300,7 @@ input[type="date"] {
 ================================ */
 .offer-banner {
     width: 92%;
-    max-width: 480px;
+   
     margin: 15px auto;
     padding: 16px 18px;
     
@@ -585,14 +612,7 @@ input[type="date"] {
 /* 📲 Tablets */
 @media (min-width: 600px) {
 
-  .premium-header,
-  .hero,
-  .search-box,
-  .horizontal-container,
-  .offer-banner {
-    max-width: 720px;
-  }
-
+  
   .hero-title {
     font-size: 22px;
   }
