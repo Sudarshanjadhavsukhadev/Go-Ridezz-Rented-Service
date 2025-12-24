@@ -166,7 +166,8 @@ function renderCars(cars) {
     }
 
     carList.innerHTML += `
-      <div class="card" onclick="openCar('${car._id}', ${finalPrice}, '${tag}')">
+       <div class="card" onclick="openCar(this, '${car._id}', ${finalPrice}, '${tag}')">
+
         <img src="${car.imageUrls?.[0] || ''}" />
 
         <div class="card-body">
@@ -181,9 +182,7 @@ function renderCars(cars) {
   }
 }
 
-
-// ================= OPEN CAR =================
-function openCar(id, price, tag) {
+function openCar(cardEl, id, price, tag) {
   const pDate = localStorage.getItem("pickupDate");
   const pTime = localStorage.getItem("pickupTime");
   const rDate = localStorage.getItem("returnDate");
@@ -198,15 +197,22 @@ function openCar(id, price, tag) {
   localStorage.setItem("selectedCarPrice", price);
   localStorage.setItem("pricingType", tag);
 
-  document.body.classList.add("page-fade");
+  // highlight selected card
+  cardEl.classList.add("card-selected");
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        window.location.href = `cardetails.html?id=${id}`;
-      }, 300);
-    });
-  });
+  // add loader
+  const loader = document.createElement("div");
+  loader.className = "card-loader";
+  loader.innerHTML = "<span></span>";
+  cardEl.appendChild(loader);
+
+  // dim background
+  document.body.classList.add("page-dim");
+
+  // smooth delay before navigation
+  setTimeout(() => {
+    window.location.href = `cardetails.html?id=${id}`;
+  }, 450);
 }
 
 
