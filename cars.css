@@ -878,3 +878,19 @@ input[type="date"] {
   margin-bottom: 6px;
   font-weight: 600;
 }
+/* ==========================
+   CARD CLICK TRANSITION
+========================== */
+.card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:active {
+  transform: scale(0.96);
+}
+
+/* Page fade animation */
+.page-fade {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}

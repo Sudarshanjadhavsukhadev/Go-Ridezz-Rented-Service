@@ -23,6 +23,15 @@ async function initPage() {
 initPage();
 
 
+function hasSelectedDateTime() {
+  const pDate = localStorage.getItem("pickupDate");
+  const pTime = localStorage.getItem("pickupTime");
+  const rDate = localStorage.getItem("returnDate");
+  const rTime = localStorage.getItem("returnTime");
+
+  return pDate && pTime && rDate && rTime;
+}
+
 function isCarAvailable(carId, userStart, userEnd) {
   return !allBookings.some(b => {
     if (!b.carId || b.carId._id !== carId) return false;
@@ -81,6 +90,8 @@ function searchAvailableCars() {
 
   // ✅ RENDER FIRST
   renderCars(availableCars);
+
+  document.getElementById("searchInput").value = "";
 
   // ✅ THEN SCROLL
   setTimeout(() => {
@@ -187,12 +198,27 @@ function openCar(id, price, tag) {
   localStorage.setItem("selectedCarPrice", price);
   localStorage.setItem("pricingType", tag);
 
-  window.location.href = `cardetails.html?id=${id}`;
+  // 🔥 FADE OUT PAGE
+  document.body.classList.add("page-fade");
+
+  // ⏳ SMALL DELAY THEN REDIRECT
+  setTimeout(() => {
+    window.location.href = `cardetails.html?id=${id}`;
+  }, 300);
 }
+
 
 
 // ================= FILTER =================
 function filterCars() {
+
+  // 🚫 HARD STOP if date/time not selected
+  if (!hasSelectedDateTime()) {
+    document.getElementById("carList").innerHTML =
+      "<p style='color:#ffd700;text-align:center;'>Select pickup & return date/time to see available cars</p>";
+    return;
+  }
+
   const search = document.getElementById("searchInput").value.toLowerCase();
 
   const filtered = allCars.filter(car => {
@@ -208,31 +234,40 @@ function filterCars() {
     return textMatch && categoryMatch;
   });
 
-  renderCars(
-    filtered.filter(car => {
-      const pDate = localStorage.getItem("pickupDate");
-      const pTime = localStorage.getItem("pickupTime");
-      const rDate = localStorage.getItem("returnDate");
-      const rTime = localStorage.getItem("returnTime");
-
-      if (!pDate || !pTime || !rDate || !rTime) return false;
-
-      const start = toDateTime(pDate, pTime);
-      const end = toDateTime(rDate, rTime);
-
-      return isCarAvailable(car._id, start, end);
-    })
+  const start = toDateTime(
+    localStorage.getItem("pickupDate"),
+    localStorage.getItem("pickupTime")
+  );
+  const end = toDateTime(
+    localStorage.getItem("returnDate"),
+    localStorage.getItem("returnTime")
   );
 
+  renderCars(
+    filtered.filter(car =>
+      isCarAvailable(car._id, start, end)
+    )
+  );
 }
+
+
+
+
+
+
+
 
 function setFilter(cat) {
   categoryFilter = cat;
+
+  if (!hasSelectedDateTime()) {
+    document.getElementById("carList").innerHTML =
+      "<p style='color:#ffd700;text-align:center;'>Select pickup & return date/time to see available cars</p>";
+    return;
+  }
+
   filterCars();
 }
-
-
-
 
 
 
@@ -291,18 +326,20 @@ function applyTagFilter() {
   const selectedTag = document.getElementById("carTagFilter").value;
   localStorage.setItem("carTag", selectedTag);
 
-  const pDate = localStorage.getItem("pickupDate");
-  const pTime = localStorage.getItem("pickupTime");
-  const rDate = localStorage.getItem("returnDate");
-  const rTime = localStorage.getItem("returnTime");
-
-  if (!pDate || !pTime || !rDate || !rTime) {
-    alert("Please select pickup & return date/time first");
+  if (!hasSelectedDateTime()) {
+    document.getElementById("carList").innerHTML =
+      "<p style='color:#ffd700;text-align:center;'>Select pickup & return date/time to see available cars</p>";
     return;
   }
 
-  const start = toDateTime(pDate, pTime);
-  const end = toDateTime(rDate, rTime);
+  const start = toDateTime(
+    localStorage.getItem("pickupDate"),
+    localStorage.getItem("pickupTime")
+  );
+  const end = toDateTime(
+    localStorage.getItem("returnDate"),
+    localStorage.getItem("returnTime")
+  );
 
   const availableCars = allCars.filter(car =>
     isCarAvailable(car._id, start, end)
@@ -310,6 +347,7 @@ function applyTagFilter() {
 
   renderCars(availableCars);
 }
+
 function updateTimeSummary() {
   const pDate = pickupDate.value;
   const pTime = pickupTime.value;
