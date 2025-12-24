@@ -198,15 +198,16 @@ function openCar(id, price, tag) {
   localStorage.setItem("selectedCarPrice", price);
   localStorage.setItem("pricingType", tag);
 
-  // 🔥 FADE OUT PAGE
   document.body.classList.add("page-fade");
 
-  // ⏳ SMALL DELAY THEN REDIRECT
-  setTimeout(() => {
-    window.location.href = `cardetails.html?id=${id}`;
-  }, 300);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        window.location.href = `cardetails.html?id=${id}`;
+      }, 300);
+    });
+  });
 }
-
 
 
 // ================= FILTER =================
