@@ -427,11 +427,11 @@ function renderBookings(bookings) {
 
   // 1️⃣ Separate bookings
   const upcomingBookings = bookings.filter(
-    b => b.status !== "cancelled"
+    b => b.userStatus !== "cancelled"
   );
 
   const cancelledBookings = bookings.filter(
-    b => b.status === "cancelled"
+    b => b.userStatus === "cancelled"
   );
 
   // 2️⃣ Merge: upcoming first, cancelled last
@@ -489,8 +489,8 @@ function renderBookings(bookings) {
           <p><b>Deposit Type:</b> ${b.depositType || "-"}</p>
 
           <p><b>Status:</b>
-            <span style="color:${b.status === "cancelled" ? "#ff6b6b" : "#00ff7f"}">
-              ${b.status || "confirmed"}
+            <span style="color:${b.userStatus === "cancelled" ? "#ff6b6b" : "#00ff7f"}">
+              ${b.userStatus || "confirmed"}
             </span>
           </p>
 
@@ -511,7 +511,7 @@ function renderBookings(bookings) {
             📄 Download Invoice
           </button>
 
-          ${b.status !== "cancelled" ? `
+          ${b.userStatus !== "cancelled" ? `
             <button onclick="cancelBooking('${b._id}')" style="
               width:100%;
               margin-top:10px;
@@ -603,9 +603,7 @@ async function confirmCancelYes() {
       `https://goridezz-backend.onrender.com/api/bookings/cancel/${pendingCancelId}`,
       {
         method: "PUT",
-        headers: {
-          Authorization: "Bearer " + token
-        }
+        
       }
     );
 
@@ -657,18 +655,12 @@ function showToast(message, type = "error") {
 }
 
 function downloadInvoice(bookingId) {
-  const token = localStorage.getItem("token"); // 👈 USER token
-
-  if (!token) {
-    alert("Please login again");
-    return;
-  }
-
   window.open(
-    `https://goridezz-backend.onrender.com/api/bookings/invoice/${bookingId}?token=${token}`,
+    `https://goridezz-backend.onrender.com/api/bookings/invoice/${bookingId}`,
     "_blank"
   );
 }
+
 
 async function loadBookingsByEmail() {
   const email = document.getElementById("lookupEmail").value.trim();
