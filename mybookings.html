@@ -594,32 +594,35 @@ function closeConfirmPopup() {
 }
 
 async function confirmCancelYes() {
-  if (!pendingCancelId) return;
+  if (!pendingCancelId) {
+    showToast("Invalid booking ID", "error");
+    return;
+  }
 
+  const bookingId = pendingCancelId; // 🔥 store locally
   closeConfirmPopup();
 
   try {
     const res = await fetch(
-  `https://goridezz-backend.onrender.com/api/bookings/cancel/${pendingCancelId}`,
-  {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" }
-  }
-);
-
+      `https://goridezz-backend.onrender.com/api/bookings/cancel/${bookingId}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" }
+      }
+    );
 
     const data = await res.json();
 
     if (data.success) {
-      showToast("Booking cancelled successfully. ₹500 is non-refundable.", "success");
+      showToast("Booking cancelled successfully", "success");
       loadBookings();
     } else {
-      showToast(data.message || "Failed to cancel booking", "error");
+      showToast(data.message || "Cancel failed", "error");
     }
 
   } catch (err) {
     console.error(err);
-    showToast("Something went wrong while cancelling booking", "error");
+    showToast("Cancel error", "error");
   }
 }
 
