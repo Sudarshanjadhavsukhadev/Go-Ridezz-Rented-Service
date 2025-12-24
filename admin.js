@@ -485,19 +485,18 @@ document.addEventListener("click", function (e) {
 
 
 function downloadBooking(bookingId) {
-  const token = localStorage.getItem("adminToken");
-
-  if (!token) {
-    alert("Admin not logged in");
+  if (!bookingId) {
+    alert("Booking ID missing");
     return;
   }
 
-  // Open PDF in new tab
+  // ✅ Correct backend route
   window.open(
-    `https://goridezz-backend.onrender.com/api/bookings/pdf/${bookingId}?token=${token}`,
+    `https://goridezz-backend.onrender.com/api/bookings/${bookingId}/pdf`,
     "_blank"
   );
 }
+
 
 function showStatus(message, type = "success") {
   const status = document.getElementById("statusMsg");
