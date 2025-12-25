@@ -616,23 +616,43 @@
 
 
 
-      <label>Upload Aadhaar (Front/Back or PDF)</label>
-      <input type="file" id="aadharFiles" name="aadharPhoto" accept="image/*,application/pdf" capture="environment"
-        multiple required onchange="processAadhaarOCR()">
-      <div id="aadhaarCount" style="color:#ffd700;font-size:13px;margin-top:6px;"></div>
+      <label>Upload Aadhaar (Front & Back)</label>
 
+      <!-- FRONT -->
+      <input type="file" id="aadhaarFront" accept="image/*,application/pdf" capture="environment"
+        onchange="handleAadhaarFront()">
 
-      <div id="aadhaarStatus" style="color:#ffd700; margin-top:8px; font-weight:600;">
-      </div>
-      <div id="aadhaarHint" style="
-  color:#ffd700;
-  font-size:13px;
-  margin-top:6px;
-  display:none;
-">
+      <div id="aadhaarStatus" style="margin-top:8px;font-weight:600;color:#ffd700;font-size:14px;">
       </div>
 
-      <div class="field-error" id="error-aadharFiles"></div>
+      <div id="aadhaarBackMsg"></div>
+
+
+      <div id="aadhaarFrontMsg" style="color:#ffd700;font-size:13px;margin-top:6px;">
+      </div>
+
+      <!-- BUTTON TO ADD BACK -->
+      <button type="button" id="addBackBtn" onclick="openAadhaarBack()" style="
+          display:none;
+          margin-top:8px;
+          background:rgba(255,215,0,0.15);
+          border:1px dashed rgba(255,215,0,0.6);
+          color:#ffd700;
+          padding:10px;
+          border-radius:10px;
+          width:100%;
+          font-weight:600;
+          cursor:pointer;
+        ">
+        ➕ Add Second Aadhaar Photo (Back Side)
+      </button>
+
+      <input type="file" id="aadhaarBack" accept="image/*,application/pdf" capture="environment" style="display:none"
+        onchange="handleAadhaarBack()">
+
+
+      <div id="aadhaarBackMsg" style="color:#00ff7f;font-size:13px;margin-top:6px;">
+      </div>
 
 
       <label>License Number</label>
@@ -922,14 +942,13 @@
       if (aadhaarProcessing) return;
       aadhaarProcessing = true;
 
-      const files = document.getElementById("aadharFiles").files;
       const statusBox = document.getElementById("aadhaarStatus");
 
-      // 🔴 REQUIRE AT LEAST 2 FILES
-      if (!files || files.length < 2) {
+      // 🔴 REQUIRE BOTH FILES
+      if (!aadhaarFrontFile || !aadhaarBackFile) {
         window.aadhaarVerified = false;
         statusBox.innerHTML =
-          "📸 Please upload BOTH Aadhaar front & back photos (minimum 2 images).";
+          "📸 Please upload BOTH Aadhaar front & back photos.";
         statusBox.style.color = "orange";
         aadhaarProcessing = false;
         return;
@@ -951,11 +970,11 @@
 
       let extractedText = "";
 
-      // ✅ OCR BOTH IMAGES
-      for (let file of files) {
-        const text = await extractTextFromFile(file);
-        extractedText += " " + text;
-      }
+      // ✅ OCR FRONT
+      extractedText += " " + await extractTextFromFile(aadhaarFrontFile);
+
+      // ✅ OCR BACK
+      extractedText += " " + await extractTextFromFile(aadhaarBackFile);
 
       extractedText = extractedText.replace(/\s+/g, " ").toLowerCase();
 
@@ -965,9 +984,11 @@
         .split(" ")
         .filter(n => n.length > 2);
 
-      let nameMatch = nameParts.some(part => extractedText.includes(part));
+      const nameMatch = nameParts.some(part =>
+        extractedText.includes(part)
+      );
 
-      // 🔍 AADHAAR NUMBER (XXXX XXXX XXXX)
+      // 🔍 AADHAAR NUMBER
       const aadhaarPattern = /\b\d{4}\s?\d{4}\s?\d{4}\b/;
       const aadhaarMatch = aadhaarPattern.test(extractedText);
 
@@ -975,7 +996,13 @@
         window.aadhaarVerified = true;
         statusBox.innerHTML = "✅ Aadhaar Verified (Front & Back)";
         statusBox.style.color = "#00ff7f";
-      } else {
+
+        // 🔒 LOCK AADHAAR AFTER VERIFICATION
+        document.getElementById("aadhaarFront").disabled = true;
+        document.getElementById("aadhaarBack").disabled = true;
+        document.getElementById("addBackBtn").style.display = "none";
+      }
+      else {
         window.aadhaarVerified = false;
         statusBox.innerHTML =
           "❌ Aadhaar verification failed. Upload clear front & back photos.";
@@ -984,28 +1011,6 @@
 
       aadhaarProcessing = false;
     }
-
-    document.getElementById("aadharFiles").addEventListener("change", function () {
-      const countBox = document.getElementById("aadhaarCount");
-      const hintBox = document.getElementById("aadhaarHint");
-      const count = this.files.length;
-
-      countBox.innerText = `📄 ${count} file(s) selected`;
-
-      if (count === 1) {
-        hintBox.style.display = "block";
-        hintBox.innerText = "➕ Please add second Aadhaar photo (Back side)";
-        hintBox.style.color = "#ffd700";
-      }
-      else if (count >= 2) {
-        hintBox.style.display = "block";
-        hintBox.innerText = "✅ Aadhaar Front & Back selected";
-        hintBox.style.color = "#00ff7f";
-      }
-      else {
-        hintBox.style.display = "none";
-      }
-    });
 
 
 
@@ -1231,10 +1236,9 @@
       form.append("paymentProof", paymentImage);
       form.append("license", document.getElementById("license").value);
 
-      const aadhaarFiles = document.getElementById("aadharFiles").files;
-      for (let file of aadhaarFiles) {
-        form.append("aadharPhoto", file);
-      }
+      form.append("aadharPhoto", aadhaarFrontFile);
+      form.append("aadharPhoto", aadhaarBackFile);
+
 
       form.append(
         "licensePhoto",
@@ -1395,7 +1399,8 @@
 
       // AADHAAR
       if (!window.aadhaarVerified) {
-        showFieldError("aadharFiles", "Aadhaar verification failed. Please upload valid Aadhaar.");
+        showToast("Aadhaar verification failed. Please upload valid Aadhaar.", "error");
+
         return;
       }
 
@@ -1777,6 +1782,47 @@
       window.toastTimer = setTimeout(() => {
         toast.style.display = "none";
       }, 3000);
+    }
+
+    let aadhaarFrontFile = null;
+    let aadhaarBackFile = null;
+
+    function handleAadhaarFront() {
+      window.aadhaarVerified = false;
+      document.getElementById("aadhaarStatus").innerText = "";
+
+      // 🔓 UNLOCK (in case user re-uploads)
+      document.getElementById("aadhaarFront").disabled = false;
+      document.getElementById("aadhaarBack").disabled = false;
+
+      const frontInput = document.getElementById("aadhaarFront");
+      const msg = document.getElementById("aadhaarFrontMsg");
+      const btn = document.getElementById("addBackBtn");
+
+      if (!frontInput.files.length) return;
+
+      aadhaarFrontFile = frontInput.files[0];
+
+      msg.innerText = "✅ Aadhaar Front photo added";
+      btn.style.display = "block";
+    }
+
+    function openAadhaarBack() {
+      document.getElementById("aadhaarBack").click();
+    }
+
+    function handleAadhaarBack() {
+      const backInput = document.getElementById("aadhaarBack");
+      const msg = document.getElementById("aadhaarBackMsg");
+
+      if (!backInput.files.length) return;
+
+      aadhaarBackFile = backInput.files[0];
+
+      msg.innerText = "✅ Aadhaar Back photo added";
+
+      // NOW BOTH ARE READY
+      processAadhaarOCR();
     }
 
 
