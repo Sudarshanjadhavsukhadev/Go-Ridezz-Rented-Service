@@ -80,7 +80,30 @@
 
 <script>
 
+function showMessage(message, success = true) {
+  const box = document.getElementById("msgBox");
+
+  box.style.display = "block";
+  box.innerText = message;
+
+  if (success) {
+    box.style.background = "#0f0a";
+    box.style.color = "#00ff6a";
+    box.style.border = "1px solid #00ff6a";
+    box.style.boxShadow = "0 0 10px #00ff6a70";
+  } else {
+    box.style.background = "#2a0000";
+    box.style.color = "#ff6b6b";
+    box.style.border = "1px solid #ff6b6b";
+    box.style.boxShadow = "0 0 10px #ff6b6b70";
+  }
+}
+
 async function updateAdminDetails() {
+  const btn = document.querySelector(".btn");
+  btn.disabled = true;
+  btn.innerText = "Updating...";
+
   const newEmail = document.getElementById("newEmail").value.trim();
   const oldPassword = document.getElementById("oldPassword").value.trim();
   const newPassword = document.getElementById("newPassword").value.trim();
@@ -88,65 +111,84 @@ async function updateAdminDetails() {
 
   let updateSuccess = false;
 
-  // UPDATE EMAIL
-  if (newEmail) {
-    const res = await fetch("https://goridezz-backend.onrender.com/api/admin/update-email", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
-      body: JSON.stringify({ newEmail })
-    });
+  try {
+    // UPDATE EMAIL
+    if (newEmail) {
+      const res = await fetch(
+        "https://goridezz-backend.onrender.com/api/admin/update-email",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({ newEmail })
+        }
+      );
 
-    const data = await res.json();
-
-    if (data.success) {
+      const data = await res.json();
+      if (!data.success) {
+        showMessage(data.message, false);
+        btn.disabled = false;
+        btn.innerText = "Update Admin Details";
+        return;
+      }
       updateSuccess = true;
-    } else {
-      showMessage(data.message, false);
+    }
+
+    // UPDATE PASSWORD
+    if (oldPassword && newPassword) {
+      const res = await fetch(
+        "https://goridezz-backend.onrender.com/api/admin/update-password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({ oldPassword, newPassword })
+        }
+      );
+
+      const data = await res.json();
+      if (!data.success) {
+        showMessage(data.message, false);
+        btn.disabled = false;
+        btn.innerText = "Update Admin Details";
+        return;
+      }
+      updateSuccess = true;
+    }
+
+    if (!newEmail && !(oldPassword && newPassword)) {
+      showMessage("⚠️ Fill at least one field to update!", false);
+      btn.disabled = false;
+      btn.innerText = "Update Admin Details";
       return;
     }
-  }
 
-  // UPDATE PASSWORD
-  if (oldPassword && newPassword) {
-    const res = await fetch("https://goridezz-backend.onrender.com/api/admin/update-password", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token
-      },
-      body: JSON.stringify({ oldPassword, newPassword })
-    });
+    // SUCCESS
+    if (updateSuccess) {
+      showMessage(
+        "✅ Admin details updated successfully! Redirecting...",
+        true
+      );
 
-    const data = await res.json();
-
-    if (data.success) {
-      updateSuccess = true;
-    } else {
-      showMessage(data.message, false);
-      return;
+      setTimeout(() => {
+        window.location.href = "admindashboard.html";
+      }, 2200);
     }
-  }
 
-  if (!newEmail && !(oldPassword && newPassword)) {
-    showMessage("⚠️ Fill at least one field to update!", false);
-    return;
-  }
-
-  // ✅ FINAL SUCCESS MESSAGE + REDIRECT
-  if (updateSuccess) {
-    showMessage(
-      "✅ Admin details updated successfully! Redirecting to dashboard...",
-      true
-    );
-
-    setTimeout(() => {
-      window.location.href = "admindashboard.html";
-    }, 2200);
+  } catch (err) {
+    console.error(err);
+    showMessage("❌ Server error. Try again later.", false);
+    btn.disabled = false;
+    btn.innerText = "Update Admin Details";
   }
 }
+
+
+
 
 </script>
 
