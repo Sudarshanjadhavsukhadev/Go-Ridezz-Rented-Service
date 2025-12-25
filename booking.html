@@ -1004,14 +1004,55 @@
       }
       else {
         window.aadhaarVerified = false;
+
         statusBox.innerHTML =
-          "❌ Aadhaar verification failed. Upload clear front & back photos.";
+          "❌ Aadhaar verification failed. Please upload NEW front & back photos.";
         statusBox.style.color = "red";
+
+        // ⏳ let user read message, then reset
+        setTimeout(() => {
+          resetAadhaarUpload();
+
+          statusBox.innerHTML =
+            "📸 Please upload Aadhaar front photo again";
+          statusBox.style.color = "orange";
+        }, 1500);
       }
+
+
 
       aadhaarProcessing = false;
     }
 
+    function resetAadhaarUpload() {
+  // reset files
+  aadhaarFrontFile = null;
+  aadhaarBackFile = null;
+
+  const front = document.getElementById("aadhaarFront");
+  const back = document.getElementById("aadhaarBack");
+
+  front.value = "";
+  back.value = "";
+
+  front.disabled = false;
+  back.disabled = false;
+
+  // reset messages
+  document.getElementById("aadhaarFrontMsg").innerText = "";
+  document.getElementById("aadhaarBackMsg").innerText = "";
+
+  // ❗ IMPORTANT UX MESSAGE
+  const statusBox = document.getElementById("aadhaarStatus");
+  statusBox.innerHTML =
+    "📸 Please upload Aadhaar FRONT photo again";
+  statusBox.style.color = "orange";
+
+  // hide add-back button
+  document.getElementById("addBackBtn").style.display = "none";
+
+  window.aadhaarVerified = false;
+}
 
 
     async function processLicenseOCR() {
@@ -1803,7 +1844,8 @@
 
       aadhaarFrontFile = frontInput.files[0];
 
-      msg.innerText = "✅ Aadhaar Front photo added";
+     msg.innerText = "✅ Aadhaar FRONT uploaded. Please add BACK photo.";
+
       btn.style.display = "block";
     }
 
