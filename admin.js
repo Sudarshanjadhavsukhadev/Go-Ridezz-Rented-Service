@@ -467,11 +467,11 @@ function downloadBooking(bookingId) {
     return;
   }
 
-  // ✅ Correct backend route
-  window.open(
-    `https://goridezz-backend.onrender.com/api/bookings/${bookingId}/pdf`,
-    "_blank"
-  );
+ window.open(
+  `https://goridezz-backend.onrender.com/api/bookings/admin-pdf/${bookingId}`,
+  "_blank"
+);
+
 }
 
 
