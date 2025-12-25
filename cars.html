@@ -16,7 +16,7 @@
 
   <header class="premium-header">
     <div class="container">
-    <div class="logo">Go Ridezz</div>
+      <div class="logo">Go Ridezz</div>
     </div>
     <div class="menu-dots" onclick="toggleDotsMenu()">⋮</div>
 
@@ -25,8 +25,8 @@
       <a href="mybookings.html">My Bookings</a>
 
 
-   
-</div>
+
+    </div>
 
 
   </header>
@@ -38,7 +38,7 @@
     <p class="hero-sub">Choose from our cars which fleet — crafted for comfort & class.</p>
   </section>
   <!-- 🔍 AVAILABILITY SEARCH BAR -->
- 
+
 
 
   <!-- ✅ FESTIVAL OFFER (MUST BE HERE) -->
@@ -46,45 +46,50 @@
     🎉 <span id="offerText"></span>
   </div>
 
+  <p class="booking-warning">
+    Select pickup and return date & time to see available cars and continue booking.
+
+  </p>
+
   <section class="availability-bar">
 
-  <h3 class="availability-title">🚗 Pickup Details</h3>
+    <h3 class="availability-title">🚗 Pickup Details</h3>
 
-  <div class="availability-row">
+    <div class="availability-row">
 
-    <div class="field">
-      <label for="pickupDate">Pickup Date</label>
-      <input type="date" id="pickupDate">
+      <div class="field">
+        <label for="pickupDate">Pickup Date</label>
+        <input type="date" id="pickupDate">
+      </div>
+
+      <div class="field">
+        <label for="pickupTime">Pickup Time</label>
+        <input type="time" id="pickupTime">
+      </div>
+
     </div>
 
-    <div class="field">
-      <label for="pickupTime">Pickup Time</label>
-      <input type="time" id="pickupTime">
+    <h3 class="availability-title">🔁 Return Details</h3>
+
+    <div class="availability-row">
+
+      <div class="field">
+        <label for="returnDate">Return Date</label>
+        <input type="date" id="returnDate">
+      </div>
+
+      <div class="field">
+        <label for="returnTime">Return Time</label>
+        <input type="time" id="returnTime">
+      </div>
+
     </div>
 
-  </div>
+    <p id="timeSummary" class="time-summary"></p>
 
-  <h3 class="availability-title">🔁 Return Details</h3>
+    <button onclick="searchAvailableCars()">Search Cars</button>
 
-  <div class="availability-row">
-
-    <div class="field">
-      <label for="returnDate">Return Date</label>
-      <input type="date" id="returnDate">
-    </div>
-
-    <div class="field">
-      <label for="returnTime">Return Time</label>
-      <input type="time" id="returnTime">
-    </div>
-
-  </div>
-
-  <p id="timeSummary" class="time-summary"></p>
-
-  <button onclick="searchAvailableCars()">Search Cars</button>
-
-</section>
+  </section>
 
 
 
@@ -114,8 +119,8 @@
 
 
   <div class="horizontal-container" id="carsSection">
-  <div class="horizontal-list" id="carList"></div>
-</div>
+    <div class="horizontal-list" id="carList"></div>
+  </div>
 
 
 

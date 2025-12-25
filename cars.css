@@ -902,3 +902,14 @@ body {
 body.page-fade {
   opacity: 0;
 }
+.booking-warning {
+  text-align: center;
+  margin: 12px auto 18px;
+  font-size: 14px;
+  color: #ffcc00;
+  background: rgba(255, 204, 0, 0.08);
+  border: 1px solid rgba(255, 204, 0, 0.35);
+  padding: 10px 14px;
+  border-radius: 12px;
+  max-width: 92%;
+}
