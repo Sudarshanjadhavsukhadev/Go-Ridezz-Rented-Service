@@ -1589,20 +1589,7 @@
       document.getElementById("aadhaarBack").click();
     }
 
-    function handleAadhaarBack() {
-      const backInput = document.getElementById("aadhaarBack");
-      const msg = document.getElementById("aadhaarBackMsg");
-
-      if (!backInput.files.length) return;
-
-      aadhaarBackFile = backInput.files[0];
-
-      msg.innerText = "✅ Aadhaar Back photo added";
-
-      // NOW BOTH ARE READY
-      processAadhaarOCR();
-    }
-
+    
 
 
   </script>
