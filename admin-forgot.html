@@ -317,7 +317,8 @@
   </div>
 
   <script>
-    const API = "https://goridezz-backend.onrender.com/api/admin/otp";
+    const API = "https://goridezz-backend.onrender.com/api/otp";
+
 
     const step1 = document.getElementById("step1");
     const step2 = document.getElementById("step2");
@@ -361,7 +362,7 @@
           status.classList.remove("hidden");
           show(step2);
         } else {
-          statusText.innerHTML = "❌ Failed to send OTP. Try again.";
+          statusText.innerHTML = data.message || "❌ Failed to send OTP.";
           status.classList.remove("hidden");
         }
 
