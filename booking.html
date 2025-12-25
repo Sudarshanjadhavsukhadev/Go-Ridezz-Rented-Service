@@ -13,7 +13,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
 
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
 
   <style>
     /* RESET */
@@ -648,7 +647,7 @@
       </button>
 
       <input type="file" id="aadhaarBack" accept="image/*,application/pdf" capture="environment" style="display:none"
-        onchange="handleAadhaarBack()">
+       >
 
 
       <div id="aadhaarBackMsg" style="color:#00ff7f;font-size:13px;margin-top:6px;">
@@ -660,7 +659,7 @@
       <div class="field-error" id="error-license"></div>
 
       <label>Upload License Photo</label>
-      <input type="file" id="licensePhoto" name="licensePhoto" accept="image/*" required onchange="processLicenseOCR()">
+      <input type="file" id="licensePhoto" name="licensePhoto" accept="image/*" ">
 
 
       <div id="licenseStatus" style="color:#ffd700; margin-top:8px; font-weight:600;"></div>
@@ -934,277 +933,12 @@
 
 
 
-    window.aadhaarVerified = false;
-    window.licenseVerified = false;
-    console.log("AADHAAR VERIFIED:", window.aadhaarVerified);
-
-    async function processAadhaarOCR() {
-      if (aadhaarProcessing) return;
-      aadhaarProcessing = true;
-
-      const statusBox = document.getElementById("aadhaarStatus");
-
-      // 🔴 REQUIRE BOTH FILES
-      if (!aadhaarFrontFile || !aadhaarBackFile) {
-        window.aadhaarVerified = false;
-        statusBox.innerHTML =
-          "📸 Please upload BOTH Aadhaar front & back photos.";
-        statusBox.style.color = "orange";
-        aadhaarProcessing = false;
-        return;
-      }
-
-      const nameInput = document.getElementById("fullname").value.trim();
-      const addressInput = document.getElementById("address").value.trim();
-
-      if (!nameInput || !addressInput) {
-        statusBox.innerHTML =
-          "⚠ Please enter Name and Address before Aadhaar upload.";
-        statusBox.style.color = "orange";
-        aadhaarProcessing = false;
-        return;
-      }
-
-      statusBox.innerHTML = "🔍 Verifying Aadhaar… ⏳";
-      window.aadhaarVerified = false;
-
-      let extractedText = "";
-
-      // ✅ OCR FRONT
-      extractedText += " " + await extractTextFromFile(aadhaarFrontFile);
-
-      // ✅ OCR BACK
-      extractedText += " " + await extractTextFromFile(aadhaarBackFile);
-
-      extractedText = extractedText.replace(/\s+/g, " ").toLowerCase();
-
-      // 🔍 NAME MATCH
-      const nameParts = nameInput
-        .toLowerCase()
-        .split(" ")
-        .filter(n => n.length > 2);
-
-      let matchCount = 0;
-
-      nameParts.forEach(part => {
-        if (extractedText.includes(part)) {
-          matchCount++;
-        }
-      });
-
-      // at least 50% name match
-      const nameMatch = matchCount >= Math.ceil(nameParts.length / 2);
-
-
-      // 🔍 AADHAAR NUMBER
-      const aadhaarPattern = /\b\d{12}\b|\b\d{4}\s\d{4}\s\d{4}\b/;
-
-      const aadhaarMatch = aadhaarPattern.test(extractedText);
-
-      if (nameMatch && aadhaarMatch) {
-        window.aadhaarVerified = true;
-
-        statusBox.innerHTML =
-          "✅ Aadhaar Verified Successfully (Front & Back)";
-        statusBox.style.color = "#00ff7f";
-
-        // 🔒 LOCK AADHAAR AFTER VERIFICATION
-        document.getElementById("aadhaarFront").disabled = true;
-        document.getElementById("aadhaarBack").disabled = true;
-        document.getElementById("addBackBtn").style.display = "none";
-      }
-
-      else {
-        window.aadhaarVerified = false;
-
-        statusBox.innerHTML =
-          "❌ Aadhaar verification failed. Please upload NEW front & back photos.";
-        statusBox.style.color = "red";
-
-        // ⏳ let user read message, then reset
-        setTimeout(() => {
-          resetAadhaarUpload();
-
-          statusBox.innerHTML =
-            "📸 Please upload Aadhaar front photo again";
-          statusBox.style.color = "orange";
-        }, 1500);
-      }
-
-
-
-      aadhaarProcessing = false;
-    }
-
-    function resetAadhaarUpload() {
-      // reset files
-      aadhaarFrontFile = null;
-      aadhaarBackFile = null;
-
-      const front = document.getElementById("aadhaarFront");
-      const back = document.getElementById("aadhaarBack");
-
-      front.value = "";
-      back.value = "";
-
-      front.disabled = false;
-      back.disabled = false;
-
-      // reset messages
-      document.getElementById("aadhaarFrontMsg").innerText = "";
-      document.getElementById("aadhaarBackMsg").innerText = "";
-
-      // ❗ IMPORTANT UX MESSAGE
-      const statusBox = document.getElementById("aadhaarStatus");
-      statusBox.innerHTML =
-        "📸 Please upload Aadhaar FRONT photo again";
-      statusBox.style.color = "orange";
-
-      // hide add-back button
-      document.getElementById("addBackBtn").style.display = "none";
-
-      window.aadhaarVerified = false;
-    }
-
-
-    async function processLicenseOCR() {
-      if (licenseProcessing) return;
-      licenseProcessing = true;
-
-      const fileInput = document.getElementById("licensePhoto");
-      const statusBox = document.getElementById("licenseStatus");
-      const enteredLicense = document.getElementById("license").value
-        .replace(/\s+/g, "")
-        .toUpperCase();
-
-      if (!enteredLicense) {
-        statusBox.innerHTML = "⚠ Enter license number first";
-        statusBox.style.color = "orange";
-        licenseProcessing = false;
-        return;
-      }
-
-      if (!fileInput.files.length) {
-        licenseProcessing = false;
-        return;
-      }
-
-
-      statusBox.innerHTML = "Reading License… ⏳";
-      window.licenseVerified = false;
-
-      const file = fileInput.files[0];
-
-      // compress image (reuse your function)
-      const compressed = await compressImage(file);
-
-      Tesseract.recognize(
-        compressed,
-        "eng",
-        {
-          tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-          logger: m => {
-            statusBox.innerHTML =
-              "Verifying… " + Math.round(m.progress * 100) + "%";
-          }
-        }
-      ).then(({ data }) => {
-
-        const extractedText = data.text.replace(/\s+/g, "").toUpperCase();
-
-        if (extractedText.includes(enteredLicense)) {
-          window.licenseVerified = true;
-          statusBox.innerHTML = "✅ License Verified Successfully";
-          statusBox.style.color = "#00ff7f";
-        } else {
-          window.licenseVerified = false;
-          statusBox.innerHTML =
-            "❌ License verification failed. Number not matching.";
-          statusBox.style.color = "red";
-        }
-        licenseProcessing = false;
-      });
-
-
-    }
-
-    async function compressImage(file) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-
-          const MAX = 900; // 🔥 LOWER than before (speed boost)
-          let w = img.width;
-          let h = img.height;
-
-          if (w > MAX || h > MAX) {
-            const ratio = Math.min(MAX / w, MAX / h);
-            w = Math.round(w * ratio);
-            h = Math.round(h * ratio);
-          }
-
-          canvas.width = w;
-          canvas.height = h;
-
-          ctx.drawImage(img, 0, 0, w, h);
-
-          canvas.toBlob(
-            blob => resolve(blob),
-            "image/jpeg",
-            0.55 // 🔥 lower quality = faster OCR
-          );
-        };
-
-        img.src = URL.createObjectURL(file);
-      });
-    }
-
-    async function extractTextFromFile(file) {
-      return new Promise(async (resolve) => {
-
-        // PDF case
-        if (file.type === "application/pdf") {
-          const reader = new FileReader();
-          reader.onload = async function () {
-            const typedarray = new Uint8Array(this.result);
-            const pdf = await pdfjsLib.getDocument(typedarray).promise;
-
-            let text = "";
-            const page = await pdf.getPage(1); // only first page (FAST)
-            const content = await page.getTextContent();
-
-            content.items.forEach(item => {
-              text += item.str + " ";
-            });
-
-            resolve(text);
-          };
-          reader.readAsArrayBuffer(file);
-        }
-
-        // IMAGE case
-        else {
-          const smallFile = await compressImage(file);
-          Tesseract.recognize(
-            smallFile,
-            "eng",
-            {
-              tessedit_pageseg_mode: 6,
-              tessedit_ocr_engine_mode: 0, // 🔥 FAST MODE
-              tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ",
-            }
-          )
-
-            .then(({ data }) => {
-              resolve(data.text);
-            });
-        }
-
-      });
-    }
-
+   
+   
+
+  
+   
+    
     function resetConfirmButton() {
       const btn = document.getElementById("confirmBookingBtn");
       btn.innerText = "Confirm Booking";
@@ -1221,18 +955,7 @@
 
     async function confirmBooking() {
 
-      if (!window.aadhaarVerified) {
-        showToast("Aadhaar not verified", "error");
-
-        resetConfirmButton();
-        return;
-      }
-
-      if (!window.licenseVerified) {
-        showToast("License not verified", "error");
-        resetConfirmButton();
-        return;
-      }
+     
 
       const btn = document.getElementById("confirmBookingBtn");
       btn.innerText = "Confirming...";
@@ -1453,18 +1176,7 @@
         return;
       }
 
-      // AADHAAR
-      if (!window.aadhaarVerified) {
-        showToast("Aadhaar verification failed. Please upload valid Aadhaar.", "error");
-
-        return;
-      }
-
-      // LICENSE VERIFICATION
-      if (!window.licenseVerified) {
-        showFieldError("license", "Driving License verification failed. Please upload a valid license.");
-        return;
-      }
+     
 
       // PICKUP METHOD
       const pickupMethod = document.getElementById("pickupMethod").value;
