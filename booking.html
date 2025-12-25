@@ -617,8 +617,10 @@
 
 
       <label>Upload Aadhaar (Front/Back or PDF)</label>
-      <input type="file" id="aadharFiles" name="aadharPhoto" accept="image/*,application/pdf"
-        onchange="processAadhaarOCR()" multiple required>
+      <input type="file" id="aadharFiles" name="aadharPhoto" accept="image/*,application/pdf" capture="environment"
+        multiple required onchange="processAadhaarOCR()">
+      <div id="aadhaarCount" style="color:#ffd700;font-size:13px;margin-top:6px;"></div>
+
 
       <div id="aadhaarStatus" style="color:#ffd700; margin-top:8px; font-weight:600;">
       </div>
@@ -914,7 +916,12 @@
       const files = document.getElementById("aadharFiles").files;
       const statusBox = document.getElementById("aadhaarStatus");
 
-      if (!files.length) {
+      // 🔴 REQUIRE AT LEAST 2 FILES
+      if (!files || files.length < 2) {
+        window.aadhaarVerified = false;
+        statusBox.innerHTML =
+          "📸 Please upload BOTH Aadhaar front & back photos (minimum 2 images).";
+        statusBox.style.color = "orange";
         aadhaarProcessing = false;
         return;
       }
@@ -923,16 +930,19 @@
       const addressInput = document.getElementById("address").value.trim();
 
       if (!nameInput || !addressInput) {
-        statusBox.innerHTML = "⚠ Please enter Name and Address before Aadhaar upload.";
+        statusBox.innerHTML =
+          "⚠ Please enter Name and Address before Aadhaar upload.";
         statusBox.style.color = "orange";
         aadhaarProcessing = false;
         return;
       }
 
-      statusBox.innerHTML = "Reading Aadhaar… ⏳";
+      statusBox.innerHTML = "🔍 Verifying Aadhaar… ⏳";
+      window.aadhaarVerified = false;
 
       let extractedText = "";
 
+      // ✅ OCR BOTH IMAGES
       for (let file of files) {
         const text = await extractTextFromFile(file);
         extractedText += " " + text;
@@ -940,36 +950,40 @@
 
       extractedText = extractedText.replace(/\s+/g, " ").toLowerCase();
 
-      const nameParts = nameInput.toLowerCase().split(" ").filter(n => n.length > 2);
+      // 🔍 NAME MATCH
+      const nameParts = nameInput
+        .toLowerCase()
+        .split(" ")
+        .filter(n => n.length > 2);
 
-      let nameMatch = false;
-      for (let part of nameParts) {
-        if (extractedText.includes(part)) {
-          nameMatch = true;
-          break;
-        }
-      }
+      let nameMatch = nameParts.some(part => extractedText.includes(part));
 
-      // Aadhaar number pattern (XXXX XXXX XXXX)
+      // 🔍 AADHAAR NUMBER (XXXX XXXX XXXX)
       const aadhaarPattern = /\b\d{4}\s?\d{4}\s?\d{4}\b/;
       const aadhaarMatch = aadhaarPattern.test(extractedText);
 
       if (nameMatch && aadhaarMatch) {
         window.aadhaarVerified = true;
-        statusBox.innerHTML = "✅ Aadhaar Verified Successfully";
+        statusBox.innerHTML = "✅ Aadhaar Verified (Front & Back)";
         statusBox.style.color = "#00ff7f";
       } else {
         window.aadhaarVerified = false;
         statusBox.innerHTML =
-          "⚠ Aadhaar verification failed. Name or Aadhaar number not matching.";
+          "❌ Aadhaar verification failed. Upload clear front & back photos.";
         statusBox.style.color = "red";
       }
 
       aadhaarProcessing = false;
-
-
-
     }
+
+    document.getElementById("aadharFiles").addEventListener("change", function () {
+      const countBox = document.getElementById("aadhaarCount");
+      const count = this.files.length;
+
+      if (countBox) {
+        countBox.innerText = `📄 ${count} file(s) selected (2 required)`;
+      }
+    });
 
 
     async function processLicenseOCR() {
@@ -1508,15 +1522,25 @@
       showQR();
     }
 
-    function showQR() {
+    async function showQR() {
       const qrImg = document.getElementById("paymentQR");
 
-      // 🔥 wake Render + bypass cache
-      qrImg.src =
-        "https://goridezz-backend.onrender.com/api/qr/qr?t=" + Date.now();
+      try {
+        const res = await fetch(
+          "https://goridezz-backend.onrender.com/api/qr/qr",
+          { cache: "no-store" }
+        );
 
-      document.getElementById("qrPopup").style.display = "flex";
+        const base64 = await res.text();
+        qrImg.src = base64;   // ✅ THIS IS THE KEY
+
+        document.getElementById("qrPopup").style.display = "flex";
+
+      } catch (err) {
+        showToast("Failed to load payment QR", "error");
+      }
     }
+
 
     function closeQR() {
       document.getElementById("qrPopup").style.display = "none";
