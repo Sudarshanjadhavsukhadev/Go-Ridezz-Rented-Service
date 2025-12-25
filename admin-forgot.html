@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Goridezz – Admin Forgot Password</title>
-<link rel="icon" href="logo.png" type="image/jpeg">
+  <link rel="icon" href="logo.png" type="image/jpeg">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -317,6 +317,8 @@
   </div>
 
   <script>
+    const API = "https://goridezz-backend.onrender.com/api/admin/otp";
+
     const step1 = document.getElementById("step1");
     const step2 = document.getElementById("step2");
     const step3 = document.getElementById("step3");
@@ -344,11 +346,12 @@
       btn.classList.add("loading");
 
       try {
-        const res = await fetch("https://goridezz-backend.onrender.com/api/otp/send", {
+        const res = await fetch(`${API}/send`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email })
         });
+
 
         const data = await res.json();
 
@@ -386,11 +389,12 @@
       }
 
       try {
-        const res = await fetch("https://goridezz-backend.onrender.com/api/otp/verify", {
+        const res = await fetch(`${API}/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, otp })
         });
+
 
         const data = await res.json();
 
@@ -420,53 +424,48 @@
 
 
     async function resetPassword() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("newPass").value;
-  const status = document.getElementById("statusMsg");
-  const statusText = document.getElementById("statusText");
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("newPass").value;
+      const otp = document.getElementById("otp").value;
+      const status = document.getElementById("statusMsg");
+      const statusText = document.getElementById("statusText");
 
-  if (!password) {
-    status.classList.remove("success", "final");
-    statusText.innerHTML = "⚠️ Please enter a new password.";
-    status.classList.remove("hidden");
-    return;
-  }
+      if (!password) {
+        statusText.innerHTML = "⚠️ Please enter a new password.";
+        status.classList.remove("hidden");
+        return;
+      }
 
-  try {
-    const res = await fetch("https://goridezz-backend.onrender.com/api/otp/reset", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+      try {
+        const res = await fetch(`${API}/reset`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, otp })
+        });
 
-    const data = await res.json();
 
-    if (data.success) {
-      status.classList.remove("success");
-      status.classList.add("final");
+        const data = await res.json();
 
-      statusText.innerHTML =
-        "🎉 Password reset successful!<br>You will be redirected to login.";
+        if (data.success) {
+          status.classList.add("final");
+          statusText.innerHTML =
+            "🎉 Password reset successful!<br>Redirecting to login...";
+          status.classList.remove("hidden");
 
-      status.classList.remove("hidden");
+          setTimeout(() => {
+            window.location.href = "adminlogin.html";
+          }, 2500);
+        } else {
+          statusText.innerHTML = data.message || "❌ Reset failed.";
+          status.classList.remove("hidden");
+        }
 
-      // redirect after 2.5 seconds
-      setTimeout(() => {
-        window.location.href = "adminlogin.html";
-      }, 2500);
-
-    } else {
-      status.classList.remove("final");
-      statusText.innerHTML = "❌ Failed to reset password. Try again.";
-      status.classList.remove("hidden");
+      } catch (err) {
+        statusText.innerHTML = "⚠️ Network error. Try again.";
+        status.classList.remove("hidden");
+      }
     }
 
-  } catch (err) {
-    status.classList.remove("final");
-    statusText.innerHTML = "⚠️ Network error. Please try again.";
-    status.classList.remove("hidden");
-  }
-}
 
   </script>
 

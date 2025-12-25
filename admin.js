@@ -110,35 +110,7 @@ function checkCustomModel() {
 }
 
 
-/* ---------------------------------------------------
-   IMAGE COMPRESSION
---------------------------------------------------- */
-function compressImage(file) {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = new Image();
-      img.src = e.target.result;
 
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-
-        canvas.width = img.width * 0.5;
-        canvas.height = img.height * 0.5;
-
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        canvas.toBlob(
-          blob => resolve(blob),
-          "image/jpeg",
-          0.7
-        );
-      };
-    };
-    reader.readAsDataURL(file);
-  });
-}
 
 /* ---------------------------------------------------
    ADD CAR
@@ -165,18 +137,18 @@ async function addCar() {
 
   fd.append("brand", brand.value);
   const finalModel =
-  model.value === "__custom__"
-    ? document.getElementById("customModel").value.trim()
-    : model.value;
+    model.value === "__custom__"
+      ? document.getElementById("customModel").value.trim()
+      : model.value;
 
-if (!finalModel) {
-  alert("Please select or enter model name");
-  btn.disabled = false;
-  btn.innerText = "Add Car";
-  return;
-}
+  if (!finalModel) {
+    alert("Please select or enter model name");
+    btn.disabled = false;
+    btn.innerText = "Add Car";
+    return;
+  }
 
-fd.append("name", finalModel);
+  fd.append("name", finalModel);
 
   fd.append("category", category.value);
   fd.append("fuel", fuel.value);
@@ -194,12 +166,17 @@ fd.append("name", finalModel);
   fd.append("tag", document.getElementById("tag").value);
   fd.append("primaryImageIndex", primaryImageIndex);
 
-  for (let file of images.files) {
-    const compressed = await compressImage(file);
-    fd.append("images", compressed);
-  }
-   
+  const files = Array.from(images.files);
+
+files.forEach(file => {
+  fd.append("images", file);
+});
+
+
   
+
+
+
 
   const res = await fetch("https://goridezz-backend.onrender.com/api/cars", {
     method: "POST",
@@ -211,22 +188,22 @@ fd.append("name", finalModel);
   btn.innerText = "Add Car";
   btn.disabled = false;
 
- if (!data.success) {
-  showStatus("❌ Failed to add car. Please try again.", "error");
-  btn.innerText = "Add Car";
-  btn.disabled = false;
-  return;
-}
+  if (!data.success) {
+    showStatus("❌ Failed to add car. Please try again.", "error");
+    btn.innerText = "Add Car";
+    btn.disabled = false;
+    return;
+  }
 
-// ✅ SUCCESS UI MESSAGE
-showStatus("🚗 Car added successfully! Redirecting...", "success");
+  // ✅ SUCCESS UI MESSAGE
+  showStatus("🚗 Car added successfully! Redirecting...", "success");
 
-// ⏳ Redirect after 2 seconds
-setTimeout(() => {
-  window.location.href = "admindashboard.html";
-}, 2000);
+  // ⏳ Redirect after 2 seconds
+  setTimeout(() => {
+    window.location.href = "admindashboard.html";
+  }, 2000);
 
- 
+
 }
 
 /* ---------------------------------------------------
@@ -286,8 +263,8 @@ async function deleteCar(id) {
    LOAD BOOKINGS
 --------------------------------------------------- */
 async function loadBookings() {
-   console.log("loadBookings called");
-   
+  console.log("loadBookings called");
+
   const table = document.getElementById("bookingList");
   if (!table) return;
 
@@ -310,8 +287,8 @@ async function loadBookings() {
       </tr>`;
     return;
   }
-    data.bookings.forEach(b => {
-  table.innerHTML += `
+  data.bookings.forEach(b => {
+    table.innerHTML += `
     <tr>
       <td>${safe(b.fullname)}</td>
       <td>${safe(b.email)}</td>
@@ -319,8 +296,8 @@ async function loadBookings() {
 
       <td>
         ${b.carId
-          ? `${safe(b.carId.brand)} ${safe(b.carId.name)}`
-          : "Deleted Car"}
+        ? `${safe(b.carId.brand)} ${safe(b.carId.name)}`
+        : "Deleted Car"}
       </td>
 
       <td>
@@ -354,7 +331,7 @@ async function loadBookings() {
       </td>
     </tr>
   `;
-});
+  });
 
 }
 
