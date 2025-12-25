@@ -646,8 +646,7 @@
         ➕ Add Second Aadhaar Photo (Back Side)
       </button>
 
-      <input type="file" id="aadhaarBack" accept="image/*,application/pdf" capture="environment" style="display:none"
-       >
+      <input type="file" id="aadhaarBack" accept="image/*,application/pdf" capture="environment" style="display:none">
 
 
       <div id="aadhaarBackMsg" style="color:#00ff7f;font-size:13px;margin-top:6px;">
@@ -662,50 +661,51 @@
       <input type="file" id="licensePhoto" name="licensePhoto" accept="image/*" ">
 
 
-      <div id="licenseStatus" style="color:#ffd700; margin-top:8px; font-weight:600;"></div>
-      <div class="field-error" id="error-upload"></div>
-      <!-- ===============================
+      <div id=" licenseStatus" style="color:#ffd700; margin-top:8px; font-weight:600;">
+  </div>
+  <div class="field-error" id="error-upload"></div>
+  <!-- ===============================
    SECURITY DEPOSIT SECTION
 ================================ -->
-      <label>Security Deposit</label>
-      <div class="deposit-options">
+  <label>Security Deposit</label>
+  <div class="deposit-options">
 
-        <label class="deposit-card">
-          <input type="radio" name="depositType" value="bike" onclick="toggleDeposit()">
-          <span class="radio-dot"></span>
+    <label class="deposit-card">
+      <input type="radio" name="depositType" value="bike" onclick="toggleDeposit()">
+      <span class="radio-dot"></span>
 
-          <div class="deposit-text">
-            Deposit<br><b>Bike</b>
-          </div>
-        </label>
-        <div class="field-error" id="error-depositType"></div>
-
-        <label class="deposit-card">
-          <input type="radio" name="depositType" value="cash" onclick="toggleDeposit()">
-          <span class="radio-dot"></span>
-
-          <div class="deposit-text">
-            Deposit<br><b>₹10000</b>
-          </div>
-        </label>
-
+      <div class="deposit-text">
+        Deposit<br><b>Bike</b>
       </div>
-      <div class="field-error" id="error"></div>
+    </label>
+    <div class="field-error" id="error-depositType"></div>
 
+    <label class="deposit-card">
+      <input type="radio" name="depositType" value="cash" onclick="toggleDeposit()">
+      <span class="radio-dot"></span>
 
-      <!-- BIKE RC UPLOAD (HIDDEN INITIALLY) -->
-      <div id="bikeRCBox" style="display:none;">
-        <label>Upload Bike RC Photo</label>
-        <input type="file" id="bikeRCPhoto" accept="image/*">
+      <div class="deposit-text">
+        Deposit<br><b>₹10000</b>
       </div>
+    </label>
 
-      <button type="button" class="booking-btn" onclick="openSummary()" style="position:relative; z-index:10;">
-        Proceed to Payment
-      </button>
-      <div class="field-error" id="error"></div>
+  </div>
+  <div class="field-error" id="error"></div>
 
 
-    </form>
+  <!-- BIKE RC UPLOAD (HIDDEN INITIALLY) -->
+  <div id="bikeRCBox" style="display:none;">
+    <label>Upload Bike RC Photo</label>
+    <input type="file" id="bikeRCPhoto" accept="image/*">
+  </div>
+
+  <button type="button" class="booking-btn" onclick="openSummary()" style="position:relative; z-index:10;">
+    Proceed to Payment
+  </button>
+  <div class="field-error" id="error"></div>
+
+
+  </form>
   </div>
 
   <!-- CALENDAR POPUP -->
@@ -915,8 +915,11 @@
       this.value = this.value.replace(/[^A-Za-z ]/g, "");
     });
 
-    document.getElementById("email").addEventListener("input", function () {
-      this.value = this.value.trim();
+    document.getElementById("email").addEventListener("blur", function () {
+      this.value = this.value
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "");
     });
 
     // CONTACT NUMBER – Only digits (0-9)
@@ -933,12 +936,12 @@
 
 
 
-   
-   
 
-  
-   
-    
+
+
+
+
+
     function resetConfirmButton() {
       const btn = document.getElementById("confirmBookingBtn");
       btn.innerText = "Confirm Booking";
@@ -955,7 +958,7 @@
 
     async function confirmBooking() {
 
-     
+
 
       const btn = document.getElementById("confirmBookingBtn");
       btn.innerText = "Confirming...";
@@ -993,7 +996,13 @@
       form.append("fullname", fullname.value.trim());
 
       form.append("carId", localStorage.getItem("selectedCar"));
-      form.append("email", emailEl.value.trim()); // ✅ FIX HERE
+      const safeEmail = emailEl.value
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "");
+
+      form.append("email", safeEmail);
+      // ✅ FIX HERE
 
       form.append("contact", contact.value);
       form.append("address", address.value);
@@ -1176,7 +1185,7 @@
         return;
       }
 
-     
+
 
       // PICKUP METHOD
       const pickupMethod = document.getElementById("pickupMethod").value;
