@@ -803,6 +803,12 @@
 "></div>
 
   <script>
+    window.aadhaarVerified = false;
+    window.licenseVerified = false;
+
+    let aadhaarProcessing = false;
+    let licenseProcessing = false;
+
 
     const fullname = document.getElementById("fullname");
     const emailEl = document.getElementById("email");
@@ -902,10 +908,16 @@
     console.log("AADHAAR VERIFIED:", window.aadhaarVerified);
 
     async function processAadhaarOCR() {
+      if (aadhaarProcessing) return;
+      aadhaarProcessing = true;
+
       const files = document.getElementById("aadharFiles").files;
       const statusBox = document.getElementById("aadhaarStatus");
 
-      if (!files.length) return;
+      if (!files.length) {
+        aadhaarProcessing = false;
+        return;
+      }
 
       const nameInput = document.getElementById("fullname").value.trim();
       const addressInput = document.getElementById("address").value.trim();
@@ -913,6 +925,7 @@
       if (!nameInput || !addressInput) {
         statusBox.innerHTML = "⚠ Please enter Name and Address before Aadhaar upload.";
         statusBox.style.color = "orange";
+        aadhaarProcessing = false;
         return;
       }
 
@@ -927,38 +940,42 @@
 
       extractedText = extractedText.replace(/\s+/g, " ").toLowerCase();
 
-      const firstName = nameInput.toLowerCase().split(" ")[0];
-      const nameMatch = extractedText.includes(firstName);
+      const nameParts = nameInput.toLowerCase().split(" ").filter(n => n.length > 2);
 
-      const cleanAddress = addressInput
-        .toLowerCase()
-        .replace(/[^a-z0-9 ]/g, "");
-
-      const addressWords = cleanAddress.split(" ").filter(w => w.length > 4);
-
-      let addressMatch = false;
-      for (let word of addressWords) {
-        if (extractedText.includes(word)) {
-          addressMatch = true;
+      let nameMatch = false;
+      for (let part of nameParts) {
+        if (extractedText.includes(part)) {
+          nameMatch = true;
           break;
         }
       }
 
-      if (nameMatch && addressMatch) {
-        window.aadhaarVerified = true;   // ✅ IMPORTANT
+      // Aadhaar number pattern (XXXX XXXX XXXX)
+      const aadhaarPattern = /\b\d{4}\s?\d{4}\s?\d{4}\b/;
+      const aadhaarMatch = aadhaarPattern.test(extractedText);
+
+      if (nameMatch && aadhaarMatch) {
+        window.aadhaarVerified = true;
         statusBox.innerHTML = "✅ Aadhaar Verified Successfully";
         statusBox.style.color = "#00ff7f";
       } else {
-        window.aadhaarVerified = false;  // ✅ IMPORTANT
+        window.aadhaarVerified = false;
         statusBox.innerHTML =
-          "⚠ Aadhaar verification failed. Name or Address not matching.";
+          "⚠ Aadhaar verification failed. Name or Aadhaar number not matching.";
         statusBox.style.color = "red";
       }
+
+      aadhaarProcessing = false;
+
+
 
     }
 
 
     async function processLicenseOCR() {
+      if (licenseProcessing) return;
+      licenseProcessing = true;
+
       const fileInput = document.getElementById("licensePhoto");
       const statusBox = document.getElementById("licenseStatus");
       const enteredLicense = document.getElementById("license").value
@@ -968,10 +985,15 @@
       if (!enteredLicense) {
         statusBox.innerHTML = "⚠ Enter license number first";
         statusBox.style.color = "orange";
+        licenseProcessing = false;
         return;
       }
 
-      if (!fileInput.files.length) return;
+      if (!fileInput.files.length) {
+        licenseProcessing = false;
+        return;
+      }
+
 
       statusBox.innerHTML = "Reading License… ⏳";
       window.licenseVerified = false;
@@ -981,14 +1003,19 @@
       // compress image (reuse your function)
       const compressed = await compressImage(file);
 
-      Tesseract.recognize(compressed, "eng", {
-        logger: m => {
-          statusBox.innerHTML = "Processing… " + Math.round(m.progress * 100) + "%";
+      Tesseract.recognize(
+        compressed,
+        "eng",
+        {
+          tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+          logger: m => {
+            statusBox.innerHTML =
+              "Verifying… " + Math.round(m.progress * 100) + "%";
+          }
         }
-      }).then(({ data }) => {
-        const extractedText = data.text
-          .replace(/\s+/g, "")
-          .toUpperCase();
+      ).then(({ data }) => {
+
+        const extractedText = data.text.replace(/\s+/g, "").toUpperCase();
 
         if (extractedText.includes(enteredLicense)) {
           window.licenseVerified = true;
@@ -1000,7 +1027,10 @@
             "❌ License verification failed. Number not matching.";
           statusBox.style.color = "red";
         }
+        licenseProcessing = false;
       });
+
+
     }
 
     async function compressImage(file) {
@@ -1037,41 +1067,45 @@
 
     async function extractTextFromFile(file) {
       return new Promise(async (resolve) => {
+
+        // PDF case
         if (file.type === "application/pdf") {
           const reader = new FileReader();
           reader.onload = async function () {
             const typedarray = new Uint8Array(this.result);
             const pdf = await pdfjsLib.getDocument(typedarray).promise;
-            let text = "";
 
-            const page = await pdf.getPage(1);
+            let text = "";
+            const page = await pdf.getPage(1); // only first page (FAST)
             const content = await page.getTextContent();
-            content.items.forEach((item) => {
+
+            content.items.forEach(item => {
               text += item.str + " ";
             });
 
             resolve(text);
           };
           reader.readAsArrayBuffer(file);
-        } else {
-          // 1) Compress the image before OCR
+        }
+
+        // IMAGE case
+        else {
           const smallFile = await compressImage(file);
 
-          // 2) Faster OCR
-          Tesseract.recognize(smallFile, "eng", {
-            logger: m => {
-              document.getElementById("aadhaarStatus").innerHTML =
-                "Processing… " + Math.round(m.progress * 100) + "%";
+          Tesseract.recognize(
+            smallFile,
+            "eng",
+            {
+              tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ",
+              preserve_interword_spaces: 1
             }
-          }).then(({ data }) => {
+          ).then(({ data }) => {
             resolve(data.text);
           });
-
         }
+
       });
     }
-
-
 
     function resetConfirmButton() {
       const btn = document.getElementById("confirmBookingBtn");
@@ -1249,8 +1283,11 @@
 
     function openCalendar(inputID) {
       activeDateInput = inputID;
+      const cal = document.getElementById("calendarInput");
+      cal.min = new Date().toISOString().split("T")[0];
       document.getElementById("calendarPopup").style.display = "flex";
     }
+
 
     function closeCalendar() {
       document.getElementById("calendarPopup").style.display = "none";
@@ -1341,6 +1378,10 @@
 
       if (pickupMethod === "delivery" && !deliveryAddress.value.trim()) {
         showFieldError("deliveryAddress", "Delivery address is required");
+        return;
+      }
+      if (returnDate.value < pickupDate.value) {
+        showFieldError("returnDate", "Return date cannot be before pickup date");
         return;
       }
 
