@@ -624,6 +624,14 @@
 
       <div id="aadhaarStatus" style="color:#ffd700; margin-top:8px; font-weight:600;">
       </div>
+      <div id="aadhaarHint" style="
+  color:#ffd700;
+  font-size:13px;
+  margin-top:6px;
+  display:none;
+">
+      </div>
+
       <div class="field-error" id="error-aadharFiles"></div>
 
 
@@ -805,6 +813,7 @@
 "></div>
 
   <script>
+
     window.aadhaarVerified = false;
     window.licenseVerified = false;
 
@@ -978,12 +987,26 @@
 
     document.getElementById("aadharFiles").addEventListener("change", function () {
       const countBox = document.getElementById("aadhaarCount");
+      const hintBox = document.getElementById("aadhaarHint");
       const count = this.files.length;
 
-      if (countBox) {
-        countBox.innerText = `📄 ${count} file(s) selected (2 required)`;
+      countBox.innerText = `📄 ${count} file(s) selected`;
+
+      if (count === 1) {
+        hintBox.style.display = "block";
+        hintBox.innerText = "➕ Please add second Aadhaar photo (Back side)";
+        hintBox.style.color = "#ffd700";
+      }
+      else if (count >= 2) {
+        hintBox.style.display = "block";
+        hintBox.innerText = "✅ Aadhaar Front & Back selected";
+        hintBox.style.color = "#00ff7f";
+      }
+      else {
+        hintBox.style.display = "none";
       }
     });
+
 
 
     async function processLicenseOCR() {

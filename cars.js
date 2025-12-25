@@ -11,6 +11,8 @@ function toDateTime(date, time) {
 
 
 async function initPage() {
+  localStorage.setItem("carTag", "rent"); // 🔥 FORCE RENT BY DEFAULT
+
   await loadBookings();
   await loadCars();
 
