@@ -646,7 +646,8 @@
         ➕ Add Second Aadhaar Photo (Back Side)
       </button>
 
-      <input type="file" id="aadhaarBack" accept="image/*,application/pdf" capture="environment" style="display:none">
+      <input type="file" id="aadhaarBack" accept="image/*,application/pdf" capture="environment" style="display:none"
+        onchange="handleAadhaarBack()">
 
 
       <div id="aadhaarBackMsg" style="color:#00ff7f;font-size:13px;margin-top:6px;">
@@ -802,7 +803,8 @@
   ">
 
 
-      <button id="confirmBookingBtn" onclick="confirmBooking()" class="qr-confirm-btn">
+      <button type="button" id="confirmBookingBtn" onclick="confirmBooking()" class="qr-confirm-btn">
+
         Confirm Booking
       </button>
 
@@ -956,7 +958,8 @@
 
 
 
-    async function confirmBooking() {
+    async function confirmBooking(event) {
+      if (event) event.preventDefault();
 
 
 
@@ -1074,14 +1077,19 @@
         const data = await res.json();
 
         if (res.ok && data.success) {
-          // 🔥 SAVE BOOKING ID FOR REVIEW
           localStorage.setItem("lastBookingId", data.booking._id);
+
+          // 🔥 CLOSE QR POPUP FIRST
+          document.getElementById("qrPopup").style.display = "none";
 
           showToast("Booking successful!", "success");
 
-          // redirect to review page
-          window.location.href = "review.html";
+          // 🔥 SMALL DELAY FOR SMOOTH UX
+          setTimeout(() => {
+            window.location.href = "review.html";
+          }, 500);
         }
+
         else {
           showToast(data.message || "Booking failed", "error");
           resetConfirmButton();
@@ -1585,11 +1593,23 @@
       btn.style.display = "block";
     }
 
+    function handleAadhaarBack() {
+      const backInput = document.getElementById("aadhaarBack");
+      const msg = document.getElementById("aadhaarBackMsg");
+
+      if (!backInput.files.length) return;
+
+      aadhaarBackFile = backInput.files[0];
+
+      msg.innerText = "✅ Aadhaar BACK uploaded successfully";
+      msg.style.color = "#00ff7f";
+    }
+
     function openAadhaarBack() {
       document.getElementById("aadhaarBack").click();
     }
 
-    
+
 
 
   </script>
