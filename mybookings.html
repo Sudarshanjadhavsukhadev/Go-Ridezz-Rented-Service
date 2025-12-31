@@ -1,232 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goridezz – My Bookings</title>
-<link rel="icon" href="logo.png" type="image/jpeg">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Goridezz – My Bookings</title>
+  <link rel="icon" href="logo.png" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<style>
-/* 🍎 iOS INPUT FIX */
-input[type="email"] {
-  -webkit-text-size-adjust: 100%;
-  -webkit-appearance: none;
-  appearance: none;
-}
+  <style>
+    /* 🍎 iOS INPUT FIX */
+    input[type="email"] {
+      -webkit-text-size-adjust: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+    }
 
-/* === GLOBAL THEME === */
-body {
-  margin: 0;
-  background: #050505;
-  font-family: "Poppins", sans-serif;
-  color: white;
-  overflow-x: hidden;
-}
+    /* === GLOBAL THEME === */
+    body {
+      margin: 0;
+      background: #050505;
+      font-family: "Poppins", sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
 
-header {
-  width: 100%;
-  padding: 16px;
-  background: rgba(10, 10, 10, 0.85);
-  border-bottom: 1px solid rgba(255, 215, 0, 0.35);
+    header {
+      width: 100%;
+      padding: 16px;
+      background: rgba(10, 10, 10, 0.85);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.35);
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-  position: sticky;
-  top: 0;
-  z-index: 100;
+      position: sticky;
+      top: 0;
+      z-index: 100;
 
-  box-sizing: border-box;
-}
+      box-sizing: border-box;
+    }
 
-.dots-menu {
-  position: fixed;   /* 🔥 instead of absolute */
-  top: 70px;
-  right: 16px;
+    .dots-menu {
+      position: fixed;
+      /* 🔥 instead of absolute */
+      top: 70px;
+      right: 16px;
 
-  width: 200px;
-  border-radius: 18px;
-  padding: 12px 0;
+      width: 200px;
+      border-radius: 18px;
+      padding: 12px 0;
 
-  background: rgba(20,20,20,0.95);
-  border: 1px solid rgba(255,215,0,0.4);
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid rgba(255, 215, 0, 0.4);
 
-  display: none;
-  flex-direction: column;
-  z-index: 9999;
-}
-
-
-.logo {
-  font-size: 28px;
-  font-weight: 700;
-  color: #ffd700;
-}
-
-.menu-dots {
-  font-size: 30px;
-  padding: 8px 14px;
-  border-radius: 12px;
-  background: rgba(255, 215, 0, 0.18);
-  cursor: pointer;
-}
+      display: none;
+      flex-direction: column;
+      z-index: 9999;
+    }
 
 
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffd700;
+    }
 
-.dots-menu a {
-  padding: 14px 20px;
-  text-decoration: none;
-  color: white;
-}
-
-h2 {
-  text-align: center;
-  font-size: 30px;
-  margin: 28px 0;
-  color: #ffd700;
-}
-
-/* === BOOKING CARD === */
-.booking-card {
-  width: calc(100% - 32px);
-  margin: 20px auto;
-  padding: 18px;
-
-  background: rgba(15, 15, 15, 0.55);
-  border-radius: 22px;
-  border: 1px solid rgba(255, 215, 0, 0.25);
-
-  box-shadow: 0 0 25px rgba(255,215,0,0.18);
-}
+    .menu-dots {
+      font-size: 30px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      background: rgba(255, 215, 0, 0.18);
+      cursor: pointer;
+    }
 
 
-.booking-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 16px;
-  cursor: pointer;
-}
 
-.car-name {
-  font-size: 22px;
-  font-weight: 700;
-  color: #ffd700;
-  text-align: center;
-  margin-bottom: 12px;
-}
+    .dots-menu a {
+      padding: 14px 20px;
+      text-decoration: none;
+      color: white;
+    }
 
-.info-grid p {
-  margin: 5px 0;
-  font-size: 15px;
-}
+    h2 {
+      text-align: center;
+      font-size: 30px;
+      margin: 28px 0;
+      color: #ffd700;
+    }
 
-/* === POPUP FULLSCREEN GALLERY === */
-.popup-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 99999;
-}
+    /* === BOOKING CARD === */
+    .booking-card {
+      width: calc(100% - 32px);
+      margin: 20px auto;
+      padding: 18px;
 
-.popup-container {
-  position: relative;
-  width: 90%;
-  max-width: 480px;
-}
+      background: rgba(15, 15, 15, 0.55);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 215, 0, 0.25);
 
-.popup-slide {
-  width: 100%;
-  display: none;
-}
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.18);
+    }
 
-.popup-slide img {
-  width: 100%;
-  border-radius: 16px;
-}
 
-.popup-close {
-  position: absolute;
-  top: -45px;
-  right: 5px;
-  font-size: 40px;
-  color: #ffd700;
-  cursor: pointer;
-}
+    .booking-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 16px;
+      cursor: pointer;
+    }
 
-/* Arrows */
-.popup-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 38px;
-  color: #ffd700;
-  cursor: pointer;
-  padding: 8px;
-}
+    .car-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffd700;
+      text-align: center;
+      margin-bottom: 12px;
+    }
 
-.popup-prev { left: -40px; }
-.popup-next { right: -40px; }
+    .info-grid p {
+      margin: 5px 0;
+      font-size: 15px;
+    }
 
-/* Dots */
-.popup-dots {
-  text-align: center;
-  margin-top: 10px;
-}
+    /* === POPUP FULLSCREEN GALLERY === */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+    }
 
-.popup-dots span {
-  height: 10px;
-  width: 10px;
-  background: #666;
-  display: inline-block;
-  border-radius: 50%;
-  margin: 0 4px;
-}
+    .popup-container {
+      position: relative;
+      width: 90%;
+      max-width: 480px;
+    }
 
-.popup-dots .active {
-  background: #ffd700;
-}
+    .popup-slide {
+      width: 100%;
+      display: none;
+    }
 
-.cancel-btn {
-  margin-top: 15px;
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(45deg, #ff4d4d, #ff1a1a);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
+    .popup-slide img {
+      width: 100%;
+      border-radius: 16px;
+    }
 
-.cancel-btn:hover {
-  opacity: 0.9;
-}
+    .popup-close {
+      position: absolute;
+      top: -45px;
+      right: 5px;
+      font-size: 40px;
+      color: #ffd700;
+      cursor: pointer;
+    }
 
-</style>
+    /* Arrows */
+    .popup-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 38px;
+      color: #ffd700;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .popup-prev {
+      left: -40px;
+    }
+
+    .popup-next {
+      right: -40px;
+    }
+
+    /* Dots */
+    .popup-dots {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .popup-dots span {
+      height: 10px;
+      width: 10px;
+      background: #666;
+      display: inline-block;
+      border-radius: 50%;
+      margin: 0 4px;
+    }
+
+    .popup-dots .active {
+      background: #ffd700;
+    }
+
+    .cancel-btn {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #ff4d4d, #ff1a1a);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cancel-btn:hover {
+      opacity: 0.9;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">Goridezz</div>
-  <div class="menu-dots" onclick="toggleDotsMenu()">⋮</div>
+  <header>
+    <div class="logo">Goridezz</div>
+    <div class="menu-dots" onclick="toggleDotsMenu()">⋮</div>
 
-  <div class="dots-menu" id="dotsMenu">
-    <a href="cars.html">Home</a>
-    
-   
-  </div>
-</header>
+    <div class="dots-menu" id="dotsMenu">
+      <a href="cars.html">Home</a>
 
-<div id="emailLookup" style="
+
+    </div>
+  </header>
+
+  <div id="emailLookup" style="
   max-width:320px;
   margin:30px auto;
   padding:18px;
@@ -236,13 +244,9 @@ h2 {
   text-align:center;
   display:none;
 ">
-  <h3 style="color:#ffd700;margin-bottom:10px;">Find Your Booking</h3>
+    <h3 style="color:#ffd700;margin-bottom:10px;">Find Your Booking</h3>
 
-  <input
-  id="lookupEmail"
-  type="email"
-  placeholder="Enter your booking email"
-  style="
+    <input id="lookupEmail" type="email" placeholder="Enter your booking email" style="
     width:100%;
     height:48px;                 /* 🔥 fixed height */
     padding:0 14px;              /* 🔥 horizontal only */
@@ -257,12 +261,11 @@ h2 {
     margin-bottom:14px;
     -webkit-appearance:none;     /* 🔥 Safari reset */
     appearance:none;
-  "
->
+  ">
 
 
 
-  <button onclick="loadBookingsByEmail()" style="
+    <button onclick="loadBookingsByEmail()" style="
     width:100%;
     padding:12px;
     border-radius:12px;
@@ -270,32 +273,32 @@ h2 {
     background:linear-gradient(45deg,#ffd700,#ffb300);
     font-weight:600;
   ">
-    View Bookings
-  </button>
-</div>
-
-
-<h2>Your Bookings</h2>
-
-<div id="bookingList"></div>
-
-<!-- POPUP FULLSCREEN GALLERY -->
-<div id="imgPopup" class="popup-overlay">
-  <div class="popup-container">
-
-    <span class="popup-close" onclick="closePopup()">✕</span>
-
-    <div id="popupSlides"></div>
-
-    <div class="popup-arrow popup-prev" onclick="changePopupSlide(-1)">❮</div>
-    <div class="popup-arrow popup-next" onclick="changePopupSlide(1)">❯</div>
-
-    <div class="popup-dots" id="popupDots"></div>
-
+      View Bookings
+    </button>
   </div>
-</div>
- <!-- TOAST MESSAGE -->
-<div id="toast" style="
+
+
+  <h2>Your Bookings</h2>
+
+  <div id="bookingList"></div>
+
+  <!-- POPUP FULLSCREEN GALLERY -->
+  <div id="imgPopup" class="popup-overlay">
+    <div class="popup-container">
+
+      <span class="popup-close" onclick="closePopup()">✕</span>
+
+      <div id="popupSlides"></div>
+
+      <div class="popup-arrow popup-prev" onclick="changePopupSlide(-1)">❮</div>
+      <div class="popup-arrow popup-next" onclick="changePopupSlide(1)">❯</div>
+
+      <div class="popup-dots" id="popupDots"></div>
+
+    </div>
+  </div>
+  <!-- TOAST MESSAGE -->
+  <div id="toast" style="
   position: fixed;
   bottom: 25px;
   left: 50%;
@@ -311,8 +314,8 @@ h2 {
   backdrop-filter: blur(12px);
 "></div>
 
-<!-- CANCEL CONFIRM POPUP -->
-<div id="confirmPopup" style="
+  <!-- CANCEL CONFIRM POPUP -->
+  <div id="confirmPopup" style="
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.75);
@@ -321,7 +324,7 @@ h2 {
   align-items: center;
   z-index: 9998;
 ">
-  <div style="
+    <div style="
     background: rgba(20,20,20,0.95);
     border: 1px solid rgba(255,215,0,0.4);
     border-radius: 18px;
@@ -330,12 +333,12 @@ h2 {
     max-width: 320px;
     text-align: center;
   ">
-    <h3 style="color:#ffd700;margin-bottom:10px;">Cancel Booking?</h3>
-    <p style="color:#ccc;font-size:14px;">
-      ₹500 advance is <b style="color:#ff6b6b;">NON-REFUNDABLE</b>.
-    </p>
+      <h3 style="color:#ffd700;margin-bottom:10px;">Cancel Booking?</h3>
+      <p style="color:#ccc;font-size:14px;">
+        ₹500 advance is <b style="color:#ff6b6b;">NON-REFUNDABLE</b>.
+      </p>
 
-    <button onclick="confirmCancelYes()" style="
+      <button onclick="confirmCancelYes()" style="
       margin-top:15px;
       width:100%;
       padding:12px;
@@ -345,10 +348,10 @@ h2 {
       color:white;
       font-weight:600;
     ">
-      Yes, Cancel Booking
-    </button>
+        Yes, Cancel Booking
+      </button>
 
-    <button onclick="closeConfirmPopup()" style="
+      <button onclick="closeConfirmPopup()" style="
       margin-top:10px;
       width:100%;
       padding:12px;
@@ -357,27 +360,27 @@ h2 {
       background:transparent;
       color:#ffd700;
     ">
-      No, Keep Booking
-    </button>
+        No, Keep Booking
+      </button>
+    </div>
   </div>
-</div>
 
 
-<script>
+  <script>
 
-const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-let currentPopupIndex = 0;
-let popupImages = [];
+    let currentPopupIndex = 0;
+    let popupImages = [];
 
-/* LOAD BOOKINGS */
-async function loadBookings() {
-  const box = document.getElementById("bookingList");
+    /* LOAD BOOKINGS */
+    async function loadBookings() {
+      const box = document.getElementById("bookingList");
 
-  // ✅ NO TOKEN → SHOW EMAIL LOOKUP
-  if (!token) {
-    document.getElementById("emailLookup").style.display = "block";
-    box.innerHTML = `
+      // ✅ NO TOKEN → SHOW EMAIL LOOKUP
+      if (!token) {
+        document.getElementById("emailLookup").style.display = "block";
+        box.innerHTML = `
       <p style="
         text-align:center;
         color:#ccc;
@@ -387,70 +390,97 @@ async function loadBookings() {
         Enter your email to view bookings.
       </p>
     `;
-    return;
-  }
-
-  // ✅ TOKEN EXISTS → FETCH BOOKINGS
-  try {
-    const res = await fetch(
-      "https://goridezz-backend.onrender.com/api/bookings/mine",
-      {
-        headers: { Authorization: "Bearer " + token }
+        return;
       }
-    );
 
-    const data = await res.json();
+      // ✅ TOKEN EXISTS → FETCH BOOKINGS
+      try {
+        const res = await fetch(
+          "https://goridezz-backend.onrender.com/api/bookings/mine",
+          {
+            headers: { Authorization: "Bearer " + token }
+          }
+        );
 
-    if (!data.success || data.bookings.length === 0) {
-      box.innerHTML = `
+        const data = await res.json();
+
+        if (!data.success || data.bookings.length === 0) {
+          box.innerHTML = `
         <p style="text-align:center;color:#ccc;">
           No bookings found.
         </p>`;
-      return;
-    }
+          return;
+        }
 
-    // 🔥 RENDER BOOKINGS (extracted)
-    renderBookings(data.bookings);
+        // 🔥 RENDER BOOKINGS (extracted)
+        renderBookings(data.bookings);
 
-  } catch (err) {
-    console.error(err);
-    box.innerHTML = `
+      } catch (err) {
+        console.error(err);
+        box.innerHTML = `
       <p style="text-align:center;color:#ff6b6b;">
         Unable to load bookings.
       </p>`;
-  }
-}
+      }
+    }
 
-function renderBookings(bookings) {
-  const box = document.getElementById("bookingList");
-  box.innerHTML = "";
+    function renderBookings(bookings) {
+      const box = document.getElementById("bookingList");
+      box.innerHTML = "";
 
-  // 1️⃣ Separate bookings
-  const upcomingBookings = bookings.filter(
-    b => b.userStatus !== "cancelled"
-  );
+      const now = new Date();
 
-  const cancelledBookings = bookings.filter(
-    b => b.userStatus === "cancelled"
-  );
+      const upcomingBookings = bookings.filter(b => {
+        if (b.userStatus === "cancelled") return false;
 
-  // 2️⃣ Merge: upcoming first, cancelled last
-  const sortedBookings = [
-    ...upcomingBookings,
-    ...cancelledBookings
-  ];
+        const returnDateTime = new Date(`${b.returnDate} ${b.returnTime}`);
+        return returnDateTime >= now;
+      });
 
-  // 3️⃣ Render cards
-  sortedBookings.forEach(b => {
+      const completedBookings = bookings.filter(b => {
+        if (b.userStatus === "cancelled") return false;
 
-    if (!b.carId) return; // skip broken booking safely
+        const returnDateTime = new Date(`${b.returnDate} ${b.returnTime}`);
+        return returnDateTime < now;
+      });
 
-    const imgList =
-      Array.isArray(b.carId.imageUrls) && b.carId.imageUrls.length > 0
-        ? b.carId.imageUrls
-        : (b.carId.imageUrl ? [b.carId.imageUrl] : ["fallback-car.jpg"]);
+      const cancelledBookings = bookings.filter(
+        b => b.userStatus === "cancelled"
+      );
 
-    box.innerHTML += `
+      const sortedBookings = [
+        ...upcomingBookings,
+        ...completedBookings,
+        ...cancelledBookings
+      ];
+
+
+      // 3️⃣ Render cards
+      sortedBookings.forEach(b => {
+
+        // 🔥 AUTO STATUS CALCULATION
+        let status = "active";
+        let statusColor = "#00ff7f";
+
+        const returnDateTime = new Date(`${b.returnDate} ${b.returnTime}`);
+        const nowTime = new Date();
+
+        if (b.userStatus === "cancelled") {
+          status = "cancelled";
+          statusColor = "#ff6b6b";
+        } else if (returnDateTime < nowTime) {
+          status = "completed";
+          statusColor = "#9ca3af"; // gray
+        }
+
+        if (!b.carId) return; // skip broken booking safely
+
+        const imgList =
+          Array.isArray(b.carId.imageUrls) && b.carId.imageUrls.length > 0
+            ? b.carId.imageUrls
+            : (b.carId.imageUrl ? [b.carId.imageUrl] : ["fallback-car.jpg"]);
+
+        box.innerHTML += `
       <div class="booking-card">
         <img src="${imgList[0]}" onclick='openPopup(${JSON.stringify(imgList)})'>
 
@@ -488,11 +518,12 @@ function renderBookings(bookings) {
 
           <p><b>Deposit Type:</b> ${b.depositType || "-"}</p>
 
-          <p><b>Status:</b>
-            <span style="color:${b.userStatus === "cancelled" ? "#ff6b6b" : "#00ff7f"}">
-              ${b.userStatus || "confirmed"}
-            </span>
-          </p>
+<p><b>Status:</b>
+  <span style="color:${statusColor}">
+    ${status}
+  </span>
+</p>
+
 
           <hr style="border-color:rgba(255,215,0,0.25)">
 
@@ -511,197 +542,203 @@ function renderBookings(bookings) {
             📄 Download Invoice
           </button>
 
-          ${b.userStatus !== "cancelled" ? `
-            <button onclick="cancelBooking('${b._id}')" style="
-              width:100%;
-              margin-top:10px;
-              padding:12px;
-              border-radius:12px;
-              border:none;
-              background:linear-gradient(45deg,#ff4d4d,#ff1a1a);
-              color:white;
-              font-size:15px;
-              font-weight:600;
-              cursor:pointer;
-            ">
-              ❌ Cancel Booking
-            </button>
-          ` : `
-            <p style="color:#ff6b6b;font-weight:600;margin-top:10px;text-align:center;">
-              Booking Cancelled
-            </p>
-          `}
+          ${status === "active" ? `
+  <button onclick="cancelBooking('${b._id}')" style="
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    background:linear-gradient(45deg,#ff4d4d,#ff1a1a);
+    color:white;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+  ">
+    ❌ Cancel Booking
+  </button>
+` : status === "cancelled" ? `
+  <p style="color:#ff6b6b;font-weight:600;margin-top:10px;text-align:center;">
+    Booking Cancelled
+  </p>
+` : `
+  <p style="color:#9ca3af;font-weight:600;margin-top:10px;text-align:center;">
+    ✅ Trip Completed
+  </p>
+`}
+
         </div>
       </div>`;
-  });
-}
+      });
+    }
 
-/* POPUP FUNCTIONS */
-function openPopup(images) {
-  popupImages = images;
-  currentPopupIndex = 0;
-  renderPopup();
-  document.getElementById("imgPopup").style.display = "flex";
-}
+    /* POPUP FUNCTIONS */
+    function openPopup(images) {
+      popupImages = images;
+      currentPopupIndex = 0;
+      renderPopup();
+      document.getElementById("imgPopup").style.display = "flex";
+    }
 
-function closePopup() {
-  document.getElementById("imgPopup").style.display = "none";
-}
+    function closePopup() {
+      document.getElementById("imgPopup").style.display = "none";
+    }
 
-function changePopupSlide(step) {
-  currentPopupIndex = (currentPopupIndex + step + popupImages.length) % popupImages.length;
-  renderPopup();
-}
+    function changePopupSlide(step) {
+      currentPopupIndex = (currentPopupIndex + step + popupImages.length) % popupImages.length;
+      renderPopup();
+    }
 
-function renderPopup() {
-  let slideHtml = "";
-  let dotsHtml = "";
+    function renderPopup() {
+      let slideHtml = "";
+      let dotsHtml = "";
 
-  popupImages.forEach((src, i) => {
-    slideHtml += `
+      popupImages.forEach((src, i) => {
+        slideHtml += `
       <div class="popup-slide" style="display:${i === currentPopupIndex ? "block" : "none"};">
         <img src="${src}">
       </div>
     `;
 
-    dotsHtml += `<span class="${i === currentPopupIndex ? "active" : ""}"></span>`;
-  });
+        dotsHtml += `<span class="${i === currentPopupIndex ? "active" : ""}"></span>`;
+      });
 
-  document.getElementById("popupSlides").innerHTML = slideHtml;
-  document.getElementById("popupDots").innerHTML = dotsHtml;
-}
-
-/* MENU */
-function toggleDotsMenu() {
-  const menu = document.getElementById("dotsMenu");
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-}
-
-loadBookings();
-
-
-
-let pendingCancelId = null;
-
-function cancelBooking(bookingId) {
-  pendingCancelId = bookingId;
-  document.getElementById("confirmPopup").style.display = "flex";
-}
-
-function closeConfirmPopup() {
-  pendingCancelId = null;
-  document.getElementById("confirmPopup").style.display = "none";
-}
-
-async function confirmCancelYes() {
-  if (!pendingCancelId) {
-    showToast("Invalid booking ID", "error");
-    return;
-  }
-
-  const bookingId = pendingCancelId; // 🔥 store locally
-  closeConfirmPopup();
-
-  try {
-    const res = await fetch(
-      `https://goridezz-backend.onrender.com/api/bookings/cancel/${bookingId}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" }
-      }
-    );
-
-    const data = await res.json();
-
-    if (data.success) {
-      showToast("Booking cancelled successfully", "success");
-      loadBookings();
-    } else {
-      showToast(data.message || "Cancel failed", "error");
+      document.getElementById("popupSlides").innerHTML = slideHtml;
+      document.getElementById("popupDots").innerHTML = dotsHtml;
     }
 
-  } catch (err) {
-    console.error(err);
-    showToast("Cancel error", "error");
-  }
-}
+    /* MENU */
+    function toggleDotsMenu() {
+      const menu = document.getElementById("dotsMenu");
+      menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+    }
+
+    loadBookings();
 
 
-function showToast(message, type = "error") {
-  const toast = document.getElementById("toast");
 
-  let bg = "rgba(255,0,0,0.15)";
-  let border = "rgba(255,0,0,0.5)";
-  let color = "#ff6b6b";
+    let pendingCancelId = null;
 
-  if (type === "success") {
-    bg = "rgba(0,255,127,0.15)";
-    border = "rgba(0,255,127,0.5)";
-    color = "#00ff7f";
-  }
+    function cancelBooking(bookingId) {
+      pendingCancelId = bookingId;
+      document.getElementById("confirmPopup").style.display = "flex";
+    }
 
-  if (type === "info") {
-    bg = "rgba(255,215,0,0.15)";
-    border = "rgba(255,215,0,0.5)";
-    color = "#ffd700";
-  }
+    function closeConfirmPopup() {
+      pendingCancelId = null;
+      document.getElementById("confirmPopup").style.display = "none";
+    }
 
-  toast.innerText = message;
-  toast.style.background = bg;
-  toast.style.border = `1px solid ${border}`;
-  toast.style.color = color;
-  toast.style.display = "block";
+    async function confirmCancelYes() {
+      if (!pendingCancelId) {
+        showToast("Invalid booking ID", "error");
+        return;
+      }
 
-  clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(() => {
-    toast.style.display = "none";
-  }, 3000);
-}
+      const bookingId = pendingCancelId; // 🔥 store locally
+      closeConfirmPopup();
 
-function downloadInvoice(bookingId) {
-  window.open(
-    `https://goridezz-backend.onrender.com/api/bookings/invoice/${bookingId}`,
-    "_blank"
-  );
-}
+      try {
+        const res = await fetch(
+          `https://goridezz-backend.onrender.com/api/bookings/cancel/${bookingId}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" }
+          }
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+          showToast("Booking cancelled successfully", "success");
+          loadBookings();
+        } else {
+          showToast(data.message || "Cancel failed", "error");
+        }
+
+      } catch (err) {
+        console.error(err);
+        showToast("Cancel error", "error");
+      }
+    }
 
 
-async function loadBookingsByEmail() {
-  const email = document.getElementById("lookupEmail").value.trim();
-  const box = document.getElementById("bookingList");
+    function showToast(message, type = "error") {
+      const toast = document.getElementById("toast");
 
-  if (!email) {
-    showToast("Please enter your email", "info");
-    return;
-  }
+      let bg = "rgba(255,0,0,0.15)";
+      let border = "rgba(255,0,0,0.5)";
+      let color = "#ff6b6b";
 
-  try {
-    const res = await fetch(
-      `https://goridezz-backend.onrender.com/api/bookings/by-email/${encodeURIComponent(email)}`
-    );
+      if (type === "success") {
+        bg = "rgba(0,255,127,0.15)";
+        border = "rgba(0,255,127,0.5)";
+        color = "#00ff7f";
+      }
 
-    const data = await res.json();
+      if (type === "info") {
+        bg = "rgba(255,215,0,0.15)";
+        border = "rgba(255,215,0,0.5)";
+        color = "#ffd700";
+      }
 
-    if (!data.success) {
-      box.innerHTML = `
+      toast.innerText = message;
+      toast.style.background = bg;
+      toast.style.border = `1px solid ${border}`;
+      toast.style.color = color;
+      toast.style.display = "block";
+
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    function downloadInvoice(bookingId) {
+      window.open(
+        `https://goridezz-backend.onrender.com/api/bookings/invoice/${bookingId}`,
+        "_blank"
+      );
+    }
+
+
+    async function loadBookingsByEmail() {
+      const email = document.getElementById("lookupEmail").value.trim();
+      const box = document.getElementById("bookingList");
+
+      if (!email) {
+        showToast("Please enter your email", "info");
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `https://goridezz-backend.onrender.com/api/bookings/by-email/${encodeURIComponent(email)}`
+        );
+
+        const data = await res.json();
+
+        if (!data.success) {
+          box.innerHTML = `
         <p style="text-align:center;color:#ccc;margin-top:20px;">
           No bookings found for this email.
         </p>
       `;
-      return;
+          return;
+        }
+
+        document.getElementById("emailLookup").style.display = "none";
+        renderBookings(data.bookings);
+
+      } catch (err) {
+        console.error(err);
+        showToast("Unable to fetch bookings", "error");
+      }
     }
 
-    document.getElementById("emailLookup").style.display = "none";
-    renderBookings(data.bookings);
 
-  } catch (err) {
-    console.error(err);
-    showToast("Unable to fetch bookings", "error");
-  }
-}
-
-
-</script>
+  </script>
 
 </body>
+
 </html>
