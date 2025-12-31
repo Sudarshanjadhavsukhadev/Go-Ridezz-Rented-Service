@@ -448,11 +448,8 @@
         b => b.userStatus === "cancelled"
       );
 
-      const sortedBookings = [
-        ...upcomingBookings,
-        ...completedBookings,
-        ...cancelledBookings
-      ];
+      const sortedBookings = upcomingBookings;
+
 
 
       // 3️⃣ Render cards
